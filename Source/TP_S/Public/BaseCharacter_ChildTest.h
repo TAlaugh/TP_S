@@ -4,16 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
-#include "Test3.generated.h"
+#include "BaseCharacter_ChildTest.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TP_S_API ATest3 : public ABaseCharacter
+class TP_S_API ABaseCharacter_ChildTest : public ABaseCharacter
 {
 	GENERATED_BODY()
+
+public:
+	// Commit TEst
+	//Commit Test 2
 	
 	
-	// Test Again From audwns
 };
