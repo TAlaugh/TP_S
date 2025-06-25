@@ -13,5 +13,5 @@ UCLASS()
 class TP_S_API ATest3 : public ABaseCharacter
 {
 	GENERATED_BODY()
-	
+	//aaaaaaa
 };
