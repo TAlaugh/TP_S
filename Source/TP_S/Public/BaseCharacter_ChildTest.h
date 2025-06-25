@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseCharacter.h"
+#include "Character/BaseCharacter.h"
 #include "BaseCharacter_ChildTest.generated.h"
 
 /**
