@@ -72,3 +72,23 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# === Rider용 (JetBrains IDE)
+.idea/
+*.iml
+
+# Google Drive로 관리하는 대형 콘텐츠
+Content/HeavyAssets/
+
+# 개인 테스트·임시 자산
+Content/Temp/
+
+# (선택) 팀 내 문서/스크립트 임시 출력물
+Docs/Drafts/
+Scripts/__pycache__/
+*.pyc
+
+# Plugins folders
+Plugins/**/Saved/
+Plugins/**/Binaries/
+Plugins/**/Intermediate/
