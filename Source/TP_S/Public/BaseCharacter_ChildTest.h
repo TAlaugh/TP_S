@@ -16,5 +16,7 @@ class TP_S_API ABaseCharacter_ChildTest : public ABaseCharacter
 
 public:
 	// Commit TEst
+	//Commit Test 2
+	
 	
 };
