@@ -16,14 +16,17 @@ UCLASS()
 class TP_S_API ABasePlayerCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
-
+public:
 	ABasePlayerCharacter();
 
 #pragma region Component
+private:
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta=(AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta=(AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
 #pragma endregion
 };
