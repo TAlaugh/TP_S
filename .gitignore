@@ -92,3 +92,6 @@ Scripts/__pycache__/
 Plugins/**/Saved/
 Plugins/**/Binaries/
 Plugins/**/Intermediate/
+Content/Common/ThirdPerson/Maps/ThirdPersonMap.umap
+Content/Common/_BP/Character/Player/Shared/BP_BaseGameMode.uasset
+Content/Common/_BP/Character/Player/Saiqi/BP_Saiqi.uasset
