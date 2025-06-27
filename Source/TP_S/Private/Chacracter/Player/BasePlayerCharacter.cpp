@@ -4,12 +4,14 @@
 #include "Chacracter/Player/BasePlayerCharacter.h"
 
 #include "BaseGameplayTags.h"
+#include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
+#include "DataAssets/DataAsset_StartupBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -59,6 +61,19 @@ void ABasePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ABasePlayerCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!CharacterStartUpData.IsNull())
+	{
+		if (UDataAsset_StartupBase* LoadedData = CharacterStartUpData.LoadSynchronous())
+		{
+			LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
+		}
+	}
 }
 
 void ABasePlayerCharacter::Input_Move(const FInputActionValue& InputActionValue)
