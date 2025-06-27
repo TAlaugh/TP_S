@@ -1,7 +1,22 @@
 #pragma once
 
-class BaseEnumType
+UENUM()
+enum class EBaseConfirmType : uint8
 {
-public:
-	
+	Yes,
+	No
+};
+
+UENUM()
+enum class EBaseValidType : uint8
+{
+	Valid,
+	InValid
+};
+
+UENUM()
+enum class EBaseSuccessType : uint8
+{
+	Successful,
+	Failed
 };

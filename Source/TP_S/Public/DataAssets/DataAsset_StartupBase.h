@@ -6,6 +6,8 @@
 #include "Engine/DataAsset.h"
 #include "DataAsset_StartupBase.generated.h"
 
+class UBaseAbilitySystemComponent;
+class UBaseGameplayAbility;
 /**
  * 
  */
@@ -13,5 +15,16 @@ UCLASS()
 class TP_S_API UDataAsset_StartupBase : public UDataAsset
 {
 	GENERATED_BODY()
+
+public:
+	virtual void GiveToAbilitySystemComponent(UBaseAbilitySystemComponent* ASC, int32 ApplyLevel = 1);
 	
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "StartUpData")
+	TArray<TSubclassOf<UBaseGameplayAbility>> ActivateOnGivenAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "StartUpData")
+	TArray<TSubclassOf<UBaseGameplayAbility>> ReactiveAbilities;
+
+	void GrantAbilities(TArray<TSubclassOf<UBaseGameplayAbility>>& InAbilitiesToGive, UBaseAbilitySystemComponent* ASC, int32 ApplyLevel = 1);
 };
