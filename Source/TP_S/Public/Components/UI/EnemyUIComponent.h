@@ -13,5 +13,5 @@ UCLASS()
 class TP_S_API UEnemyUIComponent : public UBaseUIComponent
 {
 	GENERATED_BODY()
-	//jjjjj
+	
 };
