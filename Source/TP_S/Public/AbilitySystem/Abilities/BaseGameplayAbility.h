@@ -6,6 +6,9 @@
 #include "Abilities/GameplayAbility.h"
 #include "BaseGameplayAbility.generated.h"
 
+class UBaseAbilitySystemComponent;
+class UBaseCombatComponent;
+
 UENUM()
 enum class EbaseAbilityActivationPolicy : uint8
 {
@@ -19,7 +22,15 @@ UCLASS()
 class TP_S_API UBaseGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintPure, Category = "Ability")
+	UBaseCombatComponent* GetBaseCombatComponentFromActorInfo() const;
 
+	UFUNCTION(BlueprintPure, Category = "Ability")
+	UBaseAbilitySystemComponent* GetBaseAbilitySystemComponentFromActorInfo() const;
+	
+	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle);
+	
 protected:
 	
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;

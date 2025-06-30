@@ -3,27 +3,28 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Chacracter/BaseCharacter.h"
 #include "BasePlayerCharacter.generated.h"
 
-struct FInputActionValue;
+
 class UDataAsset_InputConfig;
 class USpringArmComponent;
 class UCameraComponent;
 
-/**
- * 
- */
+struct FInputActionValue;
+
+
 UCLASS()
 class TP_S_API ABasePlayerCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 	
-public:
+protected:
 	ABasePlayerCharacter();
 
 protected:
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
 	
@@ -39,12 +40,16 @@ private:
 #pragma endregion
 
 #pragma region Input
-
+protected:
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	virtual void Landed(const FHitResult& Hit) override;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta=(AllowPrivateAccess = "true"))
 	UDataAsset_InputConfig* InputConfigDataAsset;
 
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
+	void Input_AbilityInputPressed(const FGameplayTag InputTag);
+	void Input_AbilityInputReleased(const FGameplayTag InputTag);
 	
 #pragma endregion
 };
