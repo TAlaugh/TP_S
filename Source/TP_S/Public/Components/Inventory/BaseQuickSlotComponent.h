@@ -4,14 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/BaseExtensionComponent.h"
-#include "BaseCombatComponent.generated.h"
+#include "BaseQuickSlotComponent.generated.h"
 
+class UConsumableItem;
 /**
  * 
  */
 UCLASS()
-class TP_S_API UBaseCombatComponent : public UBaseExtensionComponent
+class TP_S_API UBaseQuickSlotComponent : public UBaseExtensionComponent
 {
 	GENERATED_BODY()
 
+	
+	
 };

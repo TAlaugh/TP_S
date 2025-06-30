@@ -9,5 +9,9 @@ namespace BaseGamePlayTags
 	// Input Tags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Look);
+
+
+	// Item Tags
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Consumable_HpPotion);
 	
 }
