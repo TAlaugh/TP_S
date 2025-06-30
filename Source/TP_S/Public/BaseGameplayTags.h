@@ -32,4 +32,9 @@ namespace BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Slide);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Dodge);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Crouch);
+
+
+	// Item Tags
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Consumable_HpPotion);
+	
 }

@@ -29,4 +29,8 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement_Slide, "Player.Ability.Movement.Slide");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement_Dodge, "Player.Ability.Movement.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement_Crouch, "Player.Ability.Movement.Crouch");
+
+
+	// Item Tags
+	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");
 }

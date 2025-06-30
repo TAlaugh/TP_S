@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
 #include "BaseWeapon.generated.h"
+
+
+DECLARE_DELEGATE_OneParam(FOnTargetInteractedDelegate, AActor*)
 
 class UBoxComponent;
 
@@ -17,6 +21,9 @@ public:
 	// Sets default values for this actor's properties
 	ABaseWeapon();
 
+	FOnTargetInteractedDelegate OnWeaponHitTarget;
+	FOnTargetInteractedDelegate OnWeaponPulledFromTarget;
+	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons")
 	UStaticMeshComponent* WeaponMesh;
@@ -26,4 +33,13 @@ protected:
 
 public:
 	FORCEINLINE UBoxComponent* GetWeaponCollisionBox() const { return WeaponCollisionBox; }
+
+
+	UFUNCTION()
+	virtual void OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	virtual void OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };
