@@ -32,6 +32,7 @@ void ABaseCharacter::PossessedBy(AController* NewController)
 	{
 		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
 
-		ensure(CharacterStartUpData.IsNull());
+		// Editor 오류로 잠시 주석
+		//ensure(CharacterStartUpData.IsNull());
 	}
 }

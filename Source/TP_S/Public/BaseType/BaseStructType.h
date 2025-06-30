@@ -2,14 +2,43 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+#include "ScalableFloat.h"
+#include "BaseStructType.generated.h"
 
-/**
- * 
- */
-class TP_S_API BaseStructType
+class UPlayerGameplayAbility;
+
+USTRUCT(BlueprintType)
+struct FPlayerAbilitiySet
 {
-public:
-	BaseStructType();
-	~BaseStructType();
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Catgories = "InputTag"))
+	FGameplayTag InputTag;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UPlayerGameplayAbility> AbilityToGrant;
+
+	bool IsValid() const;
+	
+};
+
+USTRUCT(BlueprintType)
+struct FPlayerWeaponData
+{
+	GENERATED_BODY()
+
+	/*
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UHeroLinkedAnimLayer> WeaponAnimLayerLink;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UInputMappingContext* WeaponInputMappingContext;
+	*/
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<FPlayerAbilitiySet> WeaponAbilities;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FScalableFloat WeaponBaseDamage;
 };

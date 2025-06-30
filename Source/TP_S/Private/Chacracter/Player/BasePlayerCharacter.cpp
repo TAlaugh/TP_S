@@ -3,6 +3,7 @@
 
 #include "Chacracter/Player/BasePlayerCharacter.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
@@ -55,6 +56,20 @@ void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 	BaseInputComponent->BindNativeInputAction(InputConfigDataAsset, BaseGamePlayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 	BaseInputComponent->BindNativeInputAction(InputConfigDataAsset, BaseGamePlayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
+	BaseInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ABasePlayerCharacter::Input_AbilityInputPressed, &ABasePlayerCharacter::Input_AbilityInputReleased);
+}
+
+void ABasePlayerCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	FGameplayEventData Data;
+	Data.EventTag = BaseGamePlayTags::Shared_Event_Land;
+	Data.Instigator = this;
+	Data.Target = this;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Data.EventTag, Data);
+	
 }
 
 void ABasePlayerCharacter::BeginPlay()
@@ -74,6 +89,8 @@ void ABasePlayerCharacter::PossessedBy(AController* NewController)
 			LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
 		}
 	}
+
+	ensureMsgf(!CharacterStartUpData.IsNull(), TEXT("Forget to assigned Startup data to : %s"), *GetName());
 }
 
 void ABasePlayerCharacter::Input_Move(const FInputActionValue& InputActionValue)
@@ -110,4 +127,14 @@ void ABasePlayerCharacter::Input_Look(const FInputActionValue& InputActionValue)
 	{
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ABasePlayerCharacter::Input_AbilityInputPressed(const FGameplayTag InputTag)
+{
+	BaseAbilitySystemComponent->OnAbilityInputPressed(InputTag);
+}
+
+void ABasePlayerCharacter::Input_AbilityInputReleased(const FGameplayTag InputTag)
+{
+	BaseAbilitySystemComponent->OnAbilityInputReleased(InputTag);
 }
