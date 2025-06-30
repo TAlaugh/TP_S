@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Components/BaseExtensionComponent.h"
-#include "BaseCombatComponent.generated.h"
+#include "BaseUIComponent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TP_S_API UBaseCombatComponent : public UBaseExtensionComponent
+class TP_S_API UBaseUIComponent : public UBaseExtensionComponent
 {
 	GENERATED_BODY()
-
+	
 };
