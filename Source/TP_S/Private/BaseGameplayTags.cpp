@@ -12,6 +12,7 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Slide, "InputTag.Slide");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge, "InputTag.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Crouch, "InputTag.Crouch");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
 	
 	// Shared Status(Dead, Idle, Jump, etc)
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Idle, "Shared.Status.Idle");

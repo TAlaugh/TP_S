@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Chacracter/Player/BasePlayerCharacter.h"
+#include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BaseGameplayTags.h"
@@ -43,7 +43,7 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	check(InputConfigDataAsset)
+	checkf(InputConfigDataAsset, TEXT("Forgot to assign a valid data asset as Input Config"));
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem =  ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Chacracter/Enemy/BaseEnemyCharacter.h"
+#include "TP_S/Public/Character/Enemy/BaseEnemyCharacter.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/BaseAttributeSet.h"
 #include "Components/WidgetComponent.h"
