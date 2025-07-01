@@ -11,6 +11,8 @@
 #include "Camera/CameraComponent.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/Inventory/BaseQuickSlotComponent.h"
+#include "Components/Inventory/ConsumableInventoryComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -38,7 +40,10 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.5f, 500.f, 0.f);
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
-	
+
+	ConsumableInventoryComponent = CreateDefaultSubobject<UConsumableInventoryComponent>(TEXT("ConsumableInventory"));
+	QuickSlotComponent = CreateDefaultSubobject<UBaseQuickSlotComponent>(TEXT("QuickSlot"));
+
 }
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -75,7 +80,11 @@ void ABasePlayerCharacter::Landed(const FHitResult& Hit)
 void ABasePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (QuickSlotComponent && ConsumableInventoryComponent)
+	{
+		QuickSlotComponent->Initialize(ConsumableInventoryComponent);
+	}
 }
 
 void ABasePlayerCharacter::PossessedBy(AController* NewController)

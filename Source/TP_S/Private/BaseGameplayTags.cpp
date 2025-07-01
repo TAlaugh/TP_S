@@ -34,4 +34,5 @@ namespace BaseGamePlayTags
 
 	// Item Tags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_ActionPotion, "Item.Consumable.ActionPotion");
 }

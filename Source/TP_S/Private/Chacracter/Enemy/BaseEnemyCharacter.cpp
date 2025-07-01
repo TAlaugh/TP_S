@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "Chacracter/Enemy/BaseEnemyCharacter.h"
+
 #include "TP_S/Public/Character/Enemy/BaseEnemyCharacter.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/BaseAttributeSet.h"
@@ -10,6 +12,7 @@
 #include "Components/UI/EnemyUIComponent.h"
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "Engine/AssetManager.h"
+#include "MotionWarpingComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Widget/WidgetBase.h"
 
@@ -28,10 +31,12 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 1000.0f;
 
-	BaseEnemyCombatComponent = CreateDefaultSubobject<UEnemyCombatComponent>(TEXT("BaseEnemyCombatComponent"));
+	EnemyCombatComponent = CreateDefaultSubobject<UEnemyCombatComponent>(TEXT("BaseEnemyCombatComponent"));
 	EnemyUIComponent = CreateDefaultSubobject<UEnemyUIComponent>(TEXT("EnemyUIComponent"));
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
 	WidgetComponent->SetupAttachment(GetMesh());
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
+
 }
 
 
@@ -39,6 +44,11 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 void ABaseEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (UWidgetBase* HealthWidget = Cast<UWidgetBase>(WidgetComponent->GetUserWidgetObject()))
+	{
+		HealthWidget->InitEnemyCreateWidget(this);
+	}
 }
 
 void ABaseEnemyCharacter::PossessedBy(AController* NewController)
@@ -49,7 +59,7 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 
 UBaseCombatComponent* ABaseEnemyCharacter::GetBaseCombatComponent() const
 {
-	return BaseEnemyCombatComponent;
+	return EnemyCombatComponent;
 }
 
 UBaseUIComponent* ABaseEnemyCharacter::GetBaseUIComponent() const
