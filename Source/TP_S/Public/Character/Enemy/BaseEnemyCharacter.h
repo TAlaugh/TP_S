@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Chacracter/BaseCharacter.h"
+#include "TP_S/Public/Character/BaseCharacter.h"
+#include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "AbilitySystem/BaseAttributeSet.h"
 #include "Components/UI/BaseUIComponent.h"
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "Interfaces/BaseCombatInterface.h"

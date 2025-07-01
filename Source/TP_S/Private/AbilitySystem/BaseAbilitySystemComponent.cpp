@@ -14,17 +14,18 @@ void UBaseAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& Inpu
 	{
 		return;
 	}
+	
 	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{
 		if (!Spec.DynamicAbilityTags.HasTagExact(InputTag)) continue;
-
+		
 		TryActivateAbility(Spec.Handle);
 	}
 }
 
 void UBaseAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InputTag)
 {
-	if (!InputTag.IsValid())
+	if (!InputTag.IsValid() || !InputTag.MatchesTag(BaseGamePlayTags::InputTag_Hold) )
 	{
 		return;
 	}

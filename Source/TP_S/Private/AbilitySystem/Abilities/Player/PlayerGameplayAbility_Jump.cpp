@@ -5,18 +5,20 @@
 
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
-#include "Chacracter/Player/BasePlayerCharacter.h"
+#include "Character/Player/BasePlayerCharacter.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 void UPlayerGameplayAbility_Jump::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                   const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                                   const FGameplayEventData* TriggerEventData)
 {
-	//Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
 	GetPlayerCharacterFromActorInfo();
+	
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
 	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
@@ -26,11 +28,26 @@ void UPlayerGameplayAbility_Jump::ActivateAbility(const FGameplayAbilitySpecHand
 	if (CachedPlayerCharacter.IsValid() && CachedPlayerCharacter->CanJump())
 	{
 		CachedPlayerCharacter->Jump();
+		
 		if (JumpStartMontage)
 		{
-			CachedPlayerCharacter->PlayAnimMontage(JumpStartMontage);
+			 //CachedPlayerCharacter->PlayAnimMontage(JumpStartMontage);
+			PlayMontageAndWait = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+				this,
+				TEXT("None"),
+				JumpStartMontage ,
+				1.f
+				);
+			PlayMontageAndWait->Activate();
+			PlayMontageAndWait->OnCancelled.AddDynamic(this, &ThisClass::OnCanceled);
+			PlayMontageAndWait->OnInterrupted.AddDynamic(this, &ThisClass::OnInterrupted);
+			PlayMontageAndWait->OnCompleted.AddDynamic(this, &ThisClass::OnCompleted);
+			PlayMontageAndWait->OnBlendOut.AddDynamic(this, &ThisClass::OnBlendOut);
+			Debug::Print("0");
+			PlayMontageAndWait->ReadyForActivation();
+			Debug::Print("1");
 		}
-
+		/*
 		WaitLand = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this,
 			BaseGamePlayTags::Shared_Event_Land,
@@ -38,9 +55,11 @@ void UPlayerGameplayAbility_Jump::ActivateAbility(const FGameplayAbilitySpecHand
 			false,
 			true
 		);
-
+		
 		WaitLand->EventReceived.AddDynamic(this, &ThisClass::OnLandedEvent);
 		WaitLand->ReadyForActivation();
+		*/
+		//CachedPlayerCharacter->PlayAnimMontage(JumpLoopMontage);
 	}
 	else
 	{
@@ -57,4 +76,27 @@ void UPlayerGameplayAbility_Jump::OnLandedEvent(FGameplayEventData Payload)
 		CachedPlayerCharacter->PlayAnimMontage(JumpEndMontage);
 	}
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+}
+
+void UPlayerGameplayAbility_Jump::OnCanceled()
+{
+	Debug::Print("Cancelled", FColor::Red);
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
+}
+
+void UPlayerGameplayAbility_Jump::OnCompleted()
+{
+	Debug::Print("Completed", FColor::Green);
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void UPlayerGameplayAbility_Jump::OnInterrupted()
+{
+	Debug::Print("Interrupted", FColor::Red);
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
+}
+
+void UPlayerGameplayAbility_Jump::OnBlendOut()
+{
+	Debug::Print("BlendOut", FColor::Green);
 }

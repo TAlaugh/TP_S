@@ -4,7 +4,7 @@
 #include "AnimInstances/Player/BasePlayerAnimInstance.h"
 
 #include "DebugHelper.h"
-#include "Chacracter/Player/BasePlayerCharacter.h"
+#include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 
 void UBasePlayerAnimInstance::NativeInitializeAnimation()
 {

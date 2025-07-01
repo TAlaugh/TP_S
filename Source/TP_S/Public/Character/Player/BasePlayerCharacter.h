@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Chacracter/BaseCharacter.h"
+#include "TP_S/Public/Character/BaseCharacter.h"
 #include "BasePlayerCharacter.generated.h"
 
 

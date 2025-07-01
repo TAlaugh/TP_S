@@ -3,7 +3,7 @@
 
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
 
-#include "Chacracter/Player/BasePlayerCharacter.h"
+#include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
 
 

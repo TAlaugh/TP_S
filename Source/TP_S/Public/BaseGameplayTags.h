@@ -13,6 +13,7 @@ namespace BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Slide);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Dodge);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Crouch);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Hold);
 
 
 	// Shared Status(Dead, Idle, Jump, etc)
