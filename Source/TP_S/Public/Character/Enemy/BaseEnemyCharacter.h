@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Chacracter/BaseCharacter.h"
+//#include "Chacracter/BaseCharacter.h"
 #include "TP_S/Public/Character/BaseCharacter.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/BaseAttributeSet.h"
