@@ -24,28 +24,40 @@ void UPlayerGameplayAbility_Jump::ActivateAbility(const FGameplayAbilitySpecHand
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 		return;
 	}
+
+	UAnimInstance* AnimInstance = GetAvatarActorFromActorInfo()->FindComponentByClass<USkeletalMeshComponent>()->GetAnimInstance();
 	
-	if (CachedPlayerCharacter.IsValid() && CachedPlayerCharacter->CanJump())
+	if (!AnimInstance)
 	{
-		CachedPlayerCharacter->Jump();
+		UE_LOG(LogTemp, Error, TEXT("AnimInstance is NULL!"));
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+		return;
+	}
+	
+	if (GetPlayerCharacterFromActorInfo() && GetPlayerCharacterFromActorInfo()->CanJump() && CurrentActorInfo->SkeletalMeshComponent->GetAnimInstance())
+	{
+		GetPlayerCharacterFromActorInfo()->Jump();
 		
 		if (JumpStartMontage)
 		{
-			 //CachedPlayerCharacter->PlayAnimMontage(JumpStartMontage);
-			PlayMontageAndWait = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+			/*
+			UAbilityTask_PlayMontageAndWait* PlayMontageAndWait = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 				this,
 				TEXT("None"),
 				JumpStartMontage ,
 				1.f
 				);
-			PlayMontageAndWait->Activate();
+			
 			PlayMontageAndWait->OnCancelled.AddDynamic(this, &ThisClass::OnCanceled);
 			PlayMontageAndWait->OnInterrupted.AddDynamic(this, &ThisClass::OnInterrupted);
 			PlayMontageAndWait->OnCompleted.AddDynamic(this, &ThisClass::OnCompleted);
 			PlayMontageAndWait->OnBlendOut.AddDynamic(this, &ThisClass::OnBlendOut);
-			Debug::Print("0");
+			PlayMontageAndWait->Activate();
+			
+			//Debug::Print(PlayMontageAndWait->GetDebugString(), GetWorld()->GetTimeSeconds());
 			PlayMontageAndWait->ReadyForActivation();
-			Debug::Print("1");
+			//Debug::Print(!CachedPlayerCharacter->GetMesh()->GetAnimInstance() ? "AnimInstance is NULL" : "AnimInstance exists");
+			*/
 		}
 		/*
 		WaitLand = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
@@ -73,7 +85,7 @@ void UPlayerGameplayAbility_Jump::OnLandedEvent(FGameplayEventData Payload)
 	Debug::Print("Lande2d",FColor::Green);
 	if (CachedPlayerCharacter.IsValid() && JumpEndMontage)
 	{
-		CachedPlayerCharacter->PlayAnimMontage(JumpEndMontage);
+		//CachedPlayerCharacter->PlayAnimMontage(JumpEndMontage);
 	}
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }
@@ -92,7 +104,7 @@ void UPlayerGameplayAbility_Jump::OnCompleted()
 
 void UPlayerGameplayAbility_Jump::OnInterrupted()
 {
-	Debug::Print("Interrupted", FColor::Red);
+	Debug::Print("Interrupted");
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
 }
 
