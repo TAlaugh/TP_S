@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Chacracter/BaseCharacter.h"
-#include "AbilitySystem/BaseAbilitySystemComponent.h"
-#include "AbilitySystem/BaseAttributeSet.h"
 #include "Components/UI/BaseUIComponent.h"
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "Interfaces/BaseCombatInterface.h"
@@ -32,6 +30,8 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 	public:
 
 	protected:
+
+	
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="MotionWarping")
 	UMotionWarpingComponent* MotionWarpingComponent;
@@ -40,7 +40,10 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 	TSoftObjectPtr<UDataAsset_StartupBase> StartupData;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UEnemyCombatComponent* BaseEnemyCombatComponent;
+	UEnemyCombatComponent* EnemyCombatComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UBaseCombatComponent* BaseCombatComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UBaseUIComponent* EnemyUIComponent;
@@ -60,5 +63,5 @@ private:
 	void InitEnemyStartUpData();
 
 public:
-	FORCEINLINE UEnemyCombatComponent* GetBaseEnemyCombatComponent() const {return BaseEnemyCombatComponent;}
+	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const {return EnemyCombatComponent;}
 };

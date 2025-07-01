@@ -6,6 +6,7 @@
 #include "Components/BaseExtensionComponent.h"
 #include "BaseUIComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPercentChangeDelegate, float, NewPercent);
 /**
  * 
  */
@@ -14,4 +15,7 @@ class TP_S_API UBaseUIComponent : public UBaseExtensionComponent
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnPercentChangeDelegate OnCurrentHpChanged;
 };
