@@ -36,5 +36,6 @@ namespace BaseGamePlayTags
 
 	// Item Tags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Consumable_HpPotion);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Consumable_ActionPotion);
 	
 }
