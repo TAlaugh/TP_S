@@ -6,12 +6,18 @@
 #include "UObject/Interface.h"
 #include "BaseUIInterface.generated.h"
 
+
+class UHeroUIComponent;
+class UEnemyUIComponent;
+class UBaseUIComponent;
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UBaseUIInterface : public UInterface
 {
 	GENERATED_BODY()
 };
+
 
 /**
  * 
@@ -22,4 +28,7 @@ class TP_S_API IBaseUIInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+	virtual UBaseUIComponent* GetBaseUIComponent() const = 0;
+	virtual UEnemyUIComponent* GetEnemyUIComponent() const;
 };
