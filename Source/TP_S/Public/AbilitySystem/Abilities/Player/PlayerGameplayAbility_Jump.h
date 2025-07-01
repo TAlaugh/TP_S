@@ -46,8 +46,10 @@ protected:
 	UPROPERTY()
 	UAbilityTask_WaitGameplayEvent* WaitLand;
 
+	/*
 	UPROPERTY()
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWait;
+	*/
 
 	UPROPERTY(EditAnywhere, Category = "Data")
 	float JumpX;

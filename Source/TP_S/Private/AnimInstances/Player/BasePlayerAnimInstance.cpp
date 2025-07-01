@@ -5,6 +5,8 @@
 
 #include "DebugHelper.h"
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 
 void UBasePlayerAnimInstance::NativeInitializeAnimation()
 {
@@ -22,10 +24,15 @@ void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds
 
 	if (bHasAcceleration)
 	{
-		FootPhase = GetCurveValue("FootPhase");		
+		FootPhase = GetCurveValue("FootPhase");
+
+		UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Idle);
+		UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Run);
 	} else
 	{
 		FootPhase = 0;
+		UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Run);
+		UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Idle);
 	}
 	
 	//Debug::Print(TEXT("%f"), FootPhase);
