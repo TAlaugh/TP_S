@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Chacracter/Player/BasePlayerCharacter.h"
+#include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
+
+#include <string>
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BaseGameplayTags.h"
@@ -11,6 +13,8 @@
 #include "Camera/CameraComponent.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/Inventory/BaseQuickSlotComponent.h"
+#include "Components/Inventory/ConsumableInventoryComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -38,12 +42,18 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.5f, 500.f, 0.f);
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
-	
+	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanJump = true;
+	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanWalk = true;
+
+	ConsumableInventoryComponent = CreateDefaultSubobject<UConsumableInventoryComponent>(TEXT("ConsumableInventory"));
+	QuickSlotComponent = CreateDefaultSubobject<UBaseQuickSlotComponent>(TEXT("QuickSlot"));
+
 }
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	check(InputConfigDataAsset)
+	checkf(InputConfigDataAsset, TEXT("Forgot to assign a valid data asset as Input Config"));
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem =  ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
@@ -63,19 +73,26 @@ void ABasePlayerCharacter::Landed(const FHitResult& Hit)
 {
 	Super::Landed(Hit);
 
+	JumpCount = 0;
+	Debug::Print(FString::FromInt(JumpCount));
+	/*
 	FGameplayEventData Data;
 	Data.EventTag = BaseGamePlayTags::Shared_Event_Land;
 	Data.Instigator = this;
 	Data.Target = this;
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Data.EventTag, Data);
-	
+	*/
 }
 
 void ABasePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (QuickSlotComponent && ConsumableInventoryComponent)
+	{
+		QuickSlotComponent->Initialize(ConsumableInventoryComponent);
+	}
 }
 
 void ABasePlayerCharacter::PossessedBy(AController* NewController)

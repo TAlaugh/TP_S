@@ -4,7 +4,9 @@
 #include "AnimInstances/Player/BasePlayerAnimInstance.h"
 
 #include "DebugHelper.h"
-#include "Chacracter/Player/BasePlayerCharacter.h"
+#include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 
 void UBasePlayerAnimInstance::NativeInitializeAnimation()
 {
@@ -20,13 +22,44 @@ void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds
 {
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
 
-	if (bHasAcceleration)
-	{
-		FootPhase = GetCurveValue("FootPhase");		
-	} else
-	{
-		FootPhase = 0;
-	}
 	
-	//Debug::Print(TEXT("%f"), FootPhase);
+	if (OwningPlayerCharacter != nullptr)
+	{
+		if (bCrouch)
+		{
+			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Crouch);
+		}
+		else
+		{
+			if (DoesOwnerHaveTag(BaseGamePlayTags::Shared_Status_Crouch))
+			{
+				UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Crouch);
+			}
+		}
+
+		if (bFalling)
+		{
+			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_InAir);
+		}
+		else
+		{
+			if (DoesOwnerHaveTag(BaseGamePlayTags::Shared_Status_InAir))
+			{
+				UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_InAir);
+			}
+		}
+	
+		if (bHasAcceleration)
+		{
+			FootPhase = GetCurveValue("FootPhase");
+			UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Idle);
+			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Run);
+		}
+		else
+		{
+			FootPhase = 0;
+			UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Run);
+			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Idle);
+		}
+	}
 }

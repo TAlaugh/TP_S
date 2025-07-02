@@ -3,58 +3,62 @@
 
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility_Jump.h"
 
+#include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
-#include "Chacracter/Player/BasePlayerCharacter.h"
+#include "Character/Player/BasePlayerCharacter.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 void UPlayerGameplayAbility_Jump::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                   const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                                   const FGameplayEventData* TriggerEventData)
 {
-	//Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
 	GetPlayerCharacterFromActorInfo();
+	UAnimInstance* AnimInstance = GetAvatarActorFromActorInfo()->FindComponentByClass<USkeletalMeshComponent>()->GetAnimInstance();
+
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
 	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 		return;
 	}
-	
-	if (CachedPlayerCharacter.IsValid() && CachedPlayerCharacter->CanJump())
+
+	if (AnimInstance != nullptr)
 	{
-		CachedPlayerCharacter->Jump();
-		if (JumpStartMontage)
+
+		if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_Run))
 		{
-			CachedPlayerCharacter->PlayAnimMontage(JumpStartMontage);
+			MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_Run];
 		}
-
-		WaitLand = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
-			this,
-			BaseGamePlayTags::Shared_Event_Land,
-			nullptr,
-			false,
-			true
-		);
-
-		WaitLand->EventReceived.AddDynamic(this, &ThisClass::OnLandedEvent);
-		WaitLand->ReadyForActivation();
+		if (MontageToPlay != nullptr)
+		{
+			//Debug::Print("Is Exist");
+			/*
+			PlayMontageAndWait = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+				this,
+				FName("None"),
+				MontageToPlay
+				);
+			PlayMontageAndWait->Activate();
+			PlayMontageAndWait->ReadyForActivation();
+			*/
+		}
+		
 	}
-	else
-	{
-		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);		
-	}
-	
+
 }
 
 void UPlayerGameplayAbility_Jump::OnLandedEvent(FGameplayEventData Payload)
 {
-	Debug::Print("Lande2d",FColor::Green);
-	if (CachedPlayerCharacter.IsValid() && JumpEndMontage)
-	{
-		CachedPlayerCharacter->PlayAnimMontage(JumpEndMontage);
-	}
+	//Debug::Print("Lande2d",FColor::Green);
+	//if (CachedPlayerCharacter.IsValid() && JumpEndMontage)
+	//{
+		//CachedPlayerCharacter->PlayAnimMontage(JumpEndMontage);
+	//}
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }
+

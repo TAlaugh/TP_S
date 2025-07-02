@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
 #include "PlayerGameplayAbility_Jump.generated.h"
 
@@ -21,16 +22,38 @@ protected:
 	UFUNCTION()
 	virtual void OnLandedEvent(FGameplayEventData Payload);
 protected:
-	UPROPERTY(EditAnywhere, Category = "Montage")
-	UAnimMontage* JumpStartMontage;
-
-	UPROPERTY(EditAnywhere, Category = "Montage")
-	UAnimMontage* JumpEndMontage;
-
-	UPROPERTY(EditAnywhere, Category = "Montage")
-	UAnimMontage* JumpLoopMontage;
-
-	UPROPERTY()
-	UAbilityTask_WaitGameplayEvent* WaitLand;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
+	TMap<FGameplayTag, UAnimMontage*> MontageByTag;
 	
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
+	//UAnimMontage* JumpEndMontage;
+
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
+	//UAnimMontage* JumpLoopMontage;
+
+	//UPROPERTY()
+	//UAbilityTask_WaitGameplayEvent* WaitLand;
+
+	
+	UPROPERTY()
+	UAbilityTask_PlayMontageAndWait* PlayMontageAndWait;
+	
+
+	UPROPERTY(EditAnywhere, Category = "Data")
+	float JumpX;
+	
+	UPROPERTY(EditAnywhere, Category = "Data")
+	float JumpY;
+
+	UPROPERTY(EditAnywhere, Category = "Data")
+	float JumpZ;
+
+	UPROPERTY(EditAnywhere, Category = "Data")
+	float DashX;
+
+	UPROPERTY(EditAnywhere, Category = "Data")
+	float DashY;
+
+	UPROPERTY(EditAnywhere, Category = "Data")
+	float DashZ;
 };

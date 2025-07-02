@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Chacracter/BaseCharacter.h"
+#include "TP_S/Public/Character/BaseCharacter.h"
 #include "BasePlayerCharacter.generated.h"
 
 
+class UBaseQuickSlotComponent;
+class UConsumableInventoryComponent;
 class UDataAsset_InputConfig;
 class USpringArmComponent;
 class UCameraComponent;
@@ -37,6 +39,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta=(AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta=(AllowPrivateAccess = "true"))
+	UConsumableInventoryComponent* ConsumableInventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta=(AllowPrivateAccess = "true"))
+	UBaseQuickSlotComponent* QuickSlotComponent;
+
 #pragma endregion
 
 #pragma region Input
@@ -52,4 +60,10 @@ protected:
 	void Input_AbilityInputReleased(const FGameplayTag InputTag);
 	
 #pragma endregion
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterData")
+	int JumpCount = 0;
+protected:
+	void OpenInventory();
 };
