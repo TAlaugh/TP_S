@@ -22,7 +22,8 @@ public:
 	
 	// Grant Abilities in WeaponData
 	UFUNCTION(BlueprintCallable, Category = "Ability", meta = (Level = "1"))
-	void GrantPlayerWeaponAbilities(const TArray<FPlayerAbilitiySet>& WeaponAbilities, int32 Level, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles);
+	void GrantPlayerWeaponAbilities(const TArray<FPlayerAbilitiySet>& WeaponAbilities, int32 Level,
+		TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles);
 
 	// Remove Granted Spec Handle Abililites in WeaponData
 	UFUNCTION(BlueprintCallable, Category = "Ability")

@@ -86,7 +86,36 @@ void UEnemyCombatComponent::OnHitTagetActor(AActor* HitActor)
 
 	OverlappedActors.AddUnique(HitActor);
 
-	//블락 머시기 넣어야함 
+// 	//TODO:: Implement Block Check
+// 	//블락 판단유무
+// 	bool bIsValidBlock = false;
+// 	
+// 	//플레이어 블락중인지
+// 	const bool bIsPlayerBlocking = UBaseFunctionLibrary::NativeActorHasTag(HitActor, BaseGamePlayTags::Player_Status_Blocking);
+//
+// 	//블락이 불가능한 상태인지 (무적기)
+// 	const bool bIsAttackUnBlockable = false;
+//
+// 	if (bIsPlayerBlocking && !bIsAttackUnBlockable)
+// 	{
+// 		bIsValidBlock = UBaseFunctionLibrary::IsValidBlock(GetOwningPawn(), HitActor);
+// 	}
+//
+// 	FGameplayEventData EventData;
+// 	EventData.Instigator = GetOwningPawn();
+// 	EventData.Target = HitActor;
+//
+// 	if (bIsValidBlock)
+// 	{
+// 		//피격자에게 게임플레이이벤트 전송 GA_Hero_Block
+// 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, BaseGamePlayTags::Player_Event_SuccessBlock,EventData);
+// 		
+// 	}
+// 	else
+// 	{
+// 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_MeleeHit, EventData);
+// 	}
+// 
 }
 
 void UEnemyCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)

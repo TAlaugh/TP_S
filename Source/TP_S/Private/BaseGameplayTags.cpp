@@ -26,9 +26,21 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_InAir, "Shared.Status.InAir");
 
 	// Shared Event(HitReact, Land)
-	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact, "Shared.Event.HitReact");
-	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Land, "Shared.Event.Land");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact, "Shared.Event.HitReact")
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Land, "Shared.Event.Land")
+	
+	//Shared Ability(HitReact, Death)
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_HitReact,"Shared.Ability.HitReact")
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_Death,"Shared.Ability.Death")
+	
+	//Shared Status(Dead)
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Dead,"Shared.Status.Dead")
 
+
+	// Shared SetByCaller(BaseDamage)
+	UE_DEFINE_GAMEPLAY_TAG(Shared_SetByCaller_BaseDamage,"Shared.SetByCaller.BaseDamage")
+
+	
 	// Player Ability(Movement)
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement_Jump, "Player.Ability.Movement.Jump");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement_DoubleJump, "Player.Ability.Movement.DoubleJump");
@@ -43,4 +55,18 @@ namespace BaseGamePlayTags
 	// Item Tags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_ActionPotion, "Item.Consumable.ActionPotion");
+
+	// Enemy Tag
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Weapon,"Enemy.Weapon")
+	
+	// Enemy Ability
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Melee,"Enemy.Ability.Melee")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Ranged,"Enemy.Ability.Ranged")
+
+	// Enemy Status
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_Strafing,"Enemy.Status.Strafing")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_UnderAttack,"Enemy.Status.UnderAttack")
 }
+
+
+
