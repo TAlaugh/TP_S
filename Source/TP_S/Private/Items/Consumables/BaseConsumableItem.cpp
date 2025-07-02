@@ -39,7 +39,6 @@ void ABaseConsumableItem::HandleOverlap(UPrimitiveComponent* OverlappedComponent
 
 	if (auto* ConsumableInventory = Pawn->FindComponentByClass<UConsumableInventoryComponent>())
 	{
-		Debug::Print(TEXT("Pawn->FindComponentByClass<UConsumableInventoryComponent>()"));
 		ConsumableInventory->AddItem(ItemData, 1);
 		Destroy();
 	}

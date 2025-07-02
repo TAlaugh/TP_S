@@ -26,8 +26,6 @@ void UConsumableInventoryComponent::AddItem(UConsumableItem* Item, int32 Amount)
 	InventorySlots.Add(NewSlot);
 
 	OnInventoryUpdated.Broadcast();
-
-	Debug::Print(TEXT("UConsumableInventoryComponent::AddItem %s"));
 }
 
 void UConsumableInventoryComponent::ConsumeItem(int32 SlotIndex)
