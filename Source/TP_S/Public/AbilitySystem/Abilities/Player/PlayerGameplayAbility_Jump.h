@@ -21,35 +21,23 @@ protected:
 
 	UFUNCTION()
 	virtual void OnLandedEvent(FGameplayEventData Payload);
-
-	UFUNCTION()
-	void OnCanceled();
-
-	UFUNCTION()
-	void OnCompleted();
-
-	UFUNCTION()
-	void OnInterrupted();
-
-	UFUNCTION()
-	void OnBlendOut();
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
-	UAnimMontage* JumpStartMontage;
+	TMap<FGameplayTag, UAnimMontage*> MontageByTag;
+	
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
+	//UAnimMontage* JumpEndMontage;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
-	UAnimMontage* JumpEndMontage;
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
+	//UAnimMontage* JumpLoopMontage;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
-	UAnimMontage* JumpLoopMontage;
+	//UPROPERTY()
+	//UAbilityTask_WaitGameplayEvent* WaitLand;
 
-	UPROPERTY()
-	UAbilityTask_WaitGameplayEvent* WaitLand;
-
-	/*
+	
 	UPROPERTY()
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWait;
-	*/
+	
 
 	UPROPERTY(EditAnywhere, Category = "Data")
 	float JumpX;

@@ -19,11 +19,13 @@ namespace BaseGamePlayTags
 
 	// Shared Status(Dead, Idle, Jump, etc)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Idle);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Crouch);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Jump);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Walk);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Run);
-	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Jump);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_DoubleJump);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Slide);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_InAir);
 
 	// Shared Event(HitReact, Land)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact);
@@ -31,9 +33,13 @@ namespace BaseGamePlayTags
 
 	// Player Ability(Movement)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Jump);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_DoubleJump);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Slide);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Dodge);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Crouch);
+
+	// Player Event
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_DoubleJump);
 
 
 	// Item Tags

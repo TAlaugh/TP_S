@@ -3,6 +3,8 @@
 
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 
+#include <string>
+
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
@@ -40,6 +42,9 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.5f, 500.f, 0.f);
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanJump = true;
+	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanWalk = true;
 
 	ConsumableInventoryComponent = CreateDefaultSubobject<UConsumableInventoryComponent>(TEXT("ConsumableInventory"));
 	QuickSlotComponent = CreateDefaultSubobject<UBaseQuickSlotComponent>(TEXT("QuickSlot"));
@@ -68,13 +73,16 @@ void ABasePlayerCharacter::Landed(const FHitResult& Hit)
 {
 	Super::Landed(Hit);
 
+	JumpCount = 0;
+	Debug::Print(FString::FromInt(JumpCount));
+	/*
 	FGameplayEventData Data;
 	Data.EventTag = BaseGamePlayTags::Shared_Event_Land;
 	Data.Instigator = this;
 	Data.Target = this;
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Data.EventTag, Data);
-	
+	*/
 }
 
 void ABasePlayerCharacter::BeginPlay()
