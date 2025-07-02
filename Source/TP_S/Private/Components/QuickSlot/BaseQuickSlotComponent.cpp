@@ -32,7 +32,7 @@ void UBaseQuickSlotComponent::UseEquippedItem()
 	if (Slot.Amount <= 0 || InventoryComponent->IsOnCooldown(Slot)) return;
 
 	// TODO : AbilitySystem 연동
-	Debug::Print(TEXT("BaseQuickSlotComponent.cpp->UseEquippedItem()"));
+	Debug::Print(TEXT("BaseQuickSlotComponent.cpp->UseEquippedItem(), AbilitySystem 연동"));
 	
 	InventoryComponent->ConsumeItem(EquippedSlotIndex);
 }
