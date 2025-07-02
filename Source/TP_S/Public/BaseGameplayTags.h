@@ -4,7 +4,7 @@
 
 #include "NativeGameplayTags.h"
 
-namespace BaseGamePlayTags
+namespace	BaseGamePlayTags
 {
 	// Input Tags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
@@ -23,9 +23,24 @@ namespace BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Jump);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Slide);
 
+	
 	// Shared Event(HitReact, Land)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Land);
+
+
+	// Shared Ability(HitReact, Death)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Ability_HitReact);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Ability_Death);
+
+	
+	// Shared Status(Dead)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Dead);
+
+	
+	// Shared SetByCaller(BaseDamage)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_SetByCaller_BaseDamage);
+
 
 	// Player Ability(Movement)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Jump);
@@ -36,5 +51,18 @@ namespace BaseGamePlayTags
 
 	// Item Tags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Consumable_HpPotion);
+
 	
+	// Enemy Tag
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Weapon)
+
+	
+	// Enemy Ability
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Melee)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Ranged)
+
+	
+	// Enemy Status
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Status_Strafing)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Status_UnderAttack)
 }

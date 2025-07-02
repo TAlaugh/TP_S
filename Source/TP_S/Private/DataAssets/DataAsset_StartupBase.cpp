@@ -19,17 +19,16 @@ void UDataAsset_StartupBase::GrantAbilities(TArray<TSubclassOf<UBaseGameplayAbil
 {
 	if (InAbilitiesToGive.IsEmpty())
 	{
-		return;
-	}
+	
+		for (const TSubclassOf<UBaseGameplayAbility>& Ability : InAbilitiesToGive)
+		{
+			if (!Ability) continue;
 
-	for (const TSubclassOf<UBaseGameplayAbility>& Ability : InAbilitiesToGive)
-	{
-		if (!Ability) continue;
-
-		FGameplayAbilitySpec AbilitySpec(Ability);
-		AbilitySpec.SourceObject = ASC->GetAvatarActor();
-		AbilitySpec.Level = ApplyLevel;
+			FGameplayAbilitySpec AbilitySpec(Ability);
+			AbilitySpec.SourceObject = ASC->GetAvatarActor();
+			AbilitySpec.Level = ApplyLevel;
 		
-		ASC->GiveAbility(AbilitySpec);
+			ASC->GiveAbility(AbilitySpec);
+		}
 	}
 }
