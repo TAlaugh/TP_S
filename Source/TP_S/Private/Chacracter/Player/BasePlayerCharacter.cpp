@@ -74,7 +74,7 @@ void ABasePlayerCharacter::Landed(const FHitResult& Hit)
 	Super::Landed(Hit);
 
 	JumpCount = 0;
-	Debug::Print(FString::FromInt(JumpCount));
+	
 	/*
 	FGameplayEventData Data;
 	Data.EventTag = BaseGamePlayTags::Shared_Event_Land;

@@ -48,6 +48,12 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement_Dodge, "Player.Ability.Movement.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement_Crouch, "Player.Ability.Movement.Crouch");
 
+	// Player Ability(Attack)
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Light, "Player.Ability.Attack.Melee.Light");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Heavy, "Player.Ability.Attack.Melee.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Single, "Player.Ability.Attack.Range.Single");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Stream, "Player.Ability.Attack.Range.Stream");
+
 	// Player Event
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DoubleJump, "Player.Event.DoubleJump");
 

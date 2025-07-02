@@ -53,6 +53,12 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Dodge);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Crouch);
 
+	// Player Ability(Attack)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee_Light);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee_Heavy);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Range_Single);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Range_Stream);
+
 	// Player Event
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_DoubleJump);
 
