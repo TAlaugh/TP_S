@@ -18,6 +18,10 @@ ABaseWeapon::ABaseWeapon()
 	WeaponCollisionBox->SetupAttachment(GetRootComponent());
 	WeaponCollisionBox->SetBoxExtent(FVector(20.f));
 	WeaponCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	//Overlap Connect
+	WeaponCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ABaseWeapon::OnCollisionBoxBeginOverlap);
+	WeaponCollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &ABaseWeapon::OnCollisionBoxEndOverlap);
 }
 
 void ABaseWeapon::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
