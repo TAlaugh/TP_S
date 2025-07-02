@@ -34,4 +34,22 @@ public:
 protected:
 	TWeakObjectPtr<ABasePlayerCharacter> CachedPlayerCharacter;
 	TWeakObjectPtr<ABasePlayerController> CachedPlayerController;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
+	UAnimMontage* MontageToPlay;
+
+	// 디버깅용
+	/*
+	UFUNCTION()
+	virtual	void OnCanceled() const;
+
+	UFUNCTION()
+	virtual void OnCompleted() const;
+
+	UFUNCTION()
+	virtual void OnInterrupted() const;
+
+	UFUNCTION()
+	virtual void OnBlendOut() const;
+	*/
 };

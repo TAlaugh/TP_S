@@ -60,4 +60,10 @@ protected:
 	void Input_AbilityInputReleased(const FGameplayTag InputTag);
 	
 #pragma endregion
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterData")
+	int JumpCount = 0;
+protected:
+	void OpenInventory();
 };
