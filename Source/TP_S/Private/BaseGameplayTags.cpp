@@ -14,6 +14,8 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge, "InputTag.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Crouch, "InputTag.Crouch");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Light, "InputTag.Attack.Melee.Light");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Heavy, "InputTag.Attack.Melee.Heavy");
 	
 	// Shared Status(Dead, Idle, Jump, etc)
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Idle, "Shared.Status.Idle");
@@ -56,7 +58,7 @@ namespace BaseGamePlayTags
 
 	// Player Event
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DoubleJump, "Player.Event.DoubleJump");
-
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Next, "Player.Event.Attack_Next");
 
 	// Item Tags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");

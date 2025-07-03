@@ -15,6 +15,8 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Dodge);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Crouch);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Hold);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Melee_Light);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Melee_Heavy);
 
 
 	// Shared Status(Dead, Idle, Jump, etc)
@@ -61,6 +63,7 @@ namespace	BaseGamePlayTags
 
 	// Player Event
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_DoubleJump);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Next);
 
 
 	// Item Tags

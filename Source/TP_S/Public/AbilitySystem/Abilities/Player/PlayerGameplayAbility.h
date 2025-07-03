@@ -35,7 +35,9 @@ protected:
 	TWeakObjectPtr<ABasePlayerCharacter> CachedPlayerCharacter;
 	TWeakObjectPtr<ABasePlayerController> CachedPlayerController;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
+	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
 	UAnimMontage* MontageToPlay;
 
 	// 디버깅용

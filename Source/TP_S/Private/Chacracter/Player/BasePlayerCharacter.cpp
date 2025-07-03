@@ -56,6 +56,8 @@ void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	checkf(InputConfigDataAsset, TEXT("Forgot to assign a valid data asset as Input Config"));
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
 
+	
+	
 	UEnhancedInputLocalPlayerSubsystem* Subsystem =  ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
 	check(Subsystem);
@@ -149,9 +151,19 @@ void ABasePlayerCharacter::Input_Look(const FInputActionValue& InputActionValue)
 void ABasePlayerCharacter::Input_AbilityInputPressed(const FGameplayTag InputTag)
 {
 	BaseAbilitySystemComponent->OnAbilityInputPressed(InputTag);
+
+	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
+	{
+		bAttackLight = true;
+	}
 }
 
 void ABasePlayerCharacter::Input_AbilityInputReleased(const FGameplayTag InputTag)
 {
 	BaseAbilitySystemComponent->OnAbilityInputReleased(InputTag);
+
+	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
+	{
+		bAttackLight = false;
+	}
 }
