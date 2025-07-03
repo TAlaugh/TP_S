@@ -15,11 +15,16 @@ void UBaseAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& Inpu
 		return;
 	}
 	
-	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{
 		if (!Spec.DynamicAbilityTags.HasTagExact(InputTag)) continue;
-		
+
+		if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
+		{
+			AbilitySpecInputPressed(Spec);
+		}
 		TryActivateAbility(Spec.Handle);
+		
 	}
 }
 

@@ -3,13 +3,16 @@
 
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility_Attack.h"
 
+#include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Character/Player/BasePlayerCharacter.h"
 
 UPlayerGameplayAbility_Attack::UPlayerGameplayAbility_Attack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+	
 }
 
 void UPlayerGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -17,32 +20,34 @@ void UPlayerGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHa
                                                     const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("Attack"), MontageToPlay, 1.f, GetNextSection());
+	
+	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+		this,
+		TEXT("Attack"),
+		MontageToPlay,
+		1.f,
+		GetNextSection(),
+		false);
 	Task->OnCancelled.AddDynamic(this, &ThisClass::OnInterruptedCallback);
 	Task->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptedCallback);
 	Task->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
 	Task->OnBlendOut.AddDynamic(this, &ThisClass::OnCompleteCallback);
-	
 	Task->ReadyForActivation();
-	Debug::Print("Activate");
+	
+	UAbilityTask_WaitGameplayEvent* TaskToNext = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		BaseGamePlayTags::Player_Ability_Attack_Melee_Light
+		);
+	TaskToNext->EventReceived.AddDynamic(this, &UPlayerGameplayAbility_Attack::CheckComboInput);
+	TaskToNext->ReadyForActivation();
+	
+	
 }
 
 void UPlayerGameplayAbility_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
-
-	if (!ComboTimer.IsValid())
-	{
-		HasNextComboInput = false;
-	}
-	else
-	{
-		HasNextComboInput = true;
-	}
-
-	Debug::Print("InputPressed");
+	HasNextComboInput = true;
 }
 
 void UPlayerGameplayAbility_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle,
@@ -64,15 +69,15 @@ void UPlayerGameplayAbility_Attack::EndAbility(const FGameplayAbilitySpecHandle 
 
 void UPlayerGameplayAbility_Attack::OnCompleteCallback()
 {
-	bool bReplicateEndAbility = true;
-	bool bWasCancelled = true;
+	bool bReplicateEndAbility = false;
+	bool bWasCancelled = false;
 	
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
 void UPlayerGameplayAbility_Attack::OnInterruptedCallback()
 {
-	bool bReplicateEndAbility = true;
+	bool bReplicateEndAbility = false;
 	bool bWasCancelled = true;
 	
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
@@ -88,20 +93,16 @@ FName UPlayerGameplayAbility_Attack::GetNextSection()
 	return *FString::Printf(TEXT("%d"), CurrentCombo);
 }
 
-void UPlayerGameplayAbility_Attack::StartComboTimer()
-{
-	const float FrameRate = 1.5f;
-	//GetWorld()->GetTimerManager().SetTimer(ComboTimer, this, &ThisClass::CheckComboInput, FrameRate,false);
-}
 
-void UPlayerGameplayAbility_Attack::CheckComboInput()
+void UPlayerGameplayAbility_Attack::CheckComboInput(FGameplayEventData TargetData)
 {
-	ComboTimer.Invalidate();
-
 	if (HasNextComboInput)
 	{
 		MontageJumpToSection(GetNextSection());
-		StartComboTimer();
 		HasNextComboInput = false;
+	}
+	else
+	{
+		OnCompleteCallback();
 	}
 }
