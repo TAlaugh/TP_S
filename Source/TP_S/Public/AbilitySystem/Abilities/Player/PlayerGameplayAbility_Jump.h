@@ -22,7 +22,7 @@ protected:
 	UFUNCTION()
 	virtual void OnLandedEvent(FGameplayEventData Payload);
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
 	TMap<FGameplayTag, UAnimMontage*> MontageByTag;
 	
 	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")

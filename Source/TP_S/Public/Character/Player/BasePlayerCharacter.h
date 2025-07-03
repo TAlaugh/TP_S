@@ -64,6 +64,9 @@ protected:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterData")
 	int JumpCount = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterData")
+	bool bAttackLight = false;
 protected:
 	void OpenInventory();
 };
