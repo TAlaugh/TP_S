@@ -4,7 +4,8 @@
 #include "AbilitySystem/Abilities/Enemy/EnemyGameplayAbility.h"
 #include "BaseGamePlayTags.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
-#include "Chacracter/Enemy/BaseEnemyCharacter.h"
+#include "TP_S/Public/Character/Enemy/BaseEnemyCharacter.h"
+//#include "Chacracter/Enemy/BaseEnemyCharacter.h"
 
 ABaseEnemyCharacter* UEnemyGameplayAbility::GetEnemyCharacterFromActorInfo()
 {

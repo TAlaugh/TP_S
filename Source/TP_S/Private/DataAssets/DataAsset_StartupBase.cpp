@@ -3,6 +3,7 @@
 
 #include "DataAssets/DataAsset_StartupBase.h"
 
+#include "DebugHelper.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/BaseGameplayAbility.h"
 
@@ -19,16 +20,18 @@ void UDataAsset_StartupBase::GrantAbilities(TArray<TSubclassOf<UBaseGameplayAbil
 {
 	if (InAbilitiesToGive.IsEmpty())
 	{
+		return;
+	}
 	
-		for (const TSubclassOf<UBaseGameplayAbility>& Ability : InAbilitiesToGive)
-		{
-			if (!Ability) continue;
-
-			FGameplayAbilitySpec AbilitySpec(Ability);
-			AbilitySpec.SourceObject = ASC->GetAvatarActor();
-			AbilitySpec.Level = ApplyLevel;
+	for (const TSubclassOf<UBaseGameplayAbility>& Ability : InAbilitiesToGive)
+	{
+		if (!Ability) continue;
+			
+		FGameplayAbilitySpec AbilitySpec(Ability);
+		AbilitySpec.SourceObject = ASC->GetAvatarActor();
+		AbilitySpec.Level = ApplyLevel;
 		
-			ASC->GiveAbility(AbilitySpec);
-		}
+		ASC->GiveAbility(AbilitySpec);
+	
 	}
 }
