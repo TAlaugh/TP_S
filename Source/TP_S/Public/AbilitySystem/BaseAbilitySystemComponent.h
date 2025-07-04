@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-#include "BaseType/BaseStructType.h"
+#include "BaseType/Player/PlayerStructType.h"
 #include "GameplayTagContainer.h"
 #include "BaseAbilitySystemComponent.generated.h"
 

@@ -53,16 +53,3 @@ public:
 	}
 };
 
-/* 수업기반으로 재작성
-template <class UserObject, typename CallBackFunc>
-void UBaseInputComponent::BindNativeInputAction(const UDataAsset_InputConfig* InInputConfig,
-	const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent, UserObject* ContextObject, CallBackFunc Func)
-{
-	check(InInputConfig);
-
-	if (UInputAction* FoundAction = InInputConfig->FindNativeInputActionByTag(InInputTag))
-	{
-		BindAction(FoundAction, TriggerEvent, ContextObject, Func);
-	}
-}
-*/

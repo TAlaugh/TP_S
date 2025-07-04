@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "BaseType/BaseEnumType.h"
+#include "BaseType/Player/PlayerEnumType.h"
 #include "BaseGameplayAbility.generated.h"
 
 class UBaseAbilitySystemComponent;
