@@ -26,10 +26,13 @@ void UDataAsset_StartupBase::GrantAbilities(TArray<TSubclassOf<UBaseGameplayAbil
 	for (const TSubclassOf<UBaseGameplayAbility>& Ability : InAbilitiesToGive)
 	{
 		if (!Ability) continue;
-			
+
+		const UBaseGameplayAbility* AbilityCDO = Ability.GetDefaultObject();
+		
 		FGameplayAbilitySpec AbilitySpec(Ability);
 		AbilitySpec.SourceObject = ASC->GetAvatarActor();
 		AbilitySpec.Level = ApplyLevel;
+		AbilitySpec.InputID = static_cast<int32>(AbilityCDO->AbilityInputID); 
 		
 		ASC->GiveAbility(AbilitySpec);
 	

@@ -32,18 +32,16 @@ protected:
 	UFUNCTION(blueprintcallable)
 	FName GetNextSection();
 
-	UFUNCTION(blueprintcallable)
-	void StartComboTimer();
-	
-	UFUNCTION(blueprintcallable)
-	void CheckComboInput();
+	UFUNCTION(BlueprintCallable)
+	void CheckComboInput(FGameplayEventData TargetData);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UPlayerGameplayAbility> Ability;
 
 	uint8 CurrentCombo = 0;
-	FTimerHandle ComboTimer;
+	uint8 CachedCurrentCombo = 0;
+	FTimerHandle ComboTimerHandle;
 	bool HasNextComboInput = false;
 	
 	

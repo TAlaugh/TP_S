@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "BaseType/BaseEnumType.h"
 #include "BaseGameplayAbility.generated.h"
 
 class UBaseAbilitySystemComponent;
@@ -38,5 +39,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "BaseAbility")
 	EbaseAbilityActivationPolicy AbilityActivationPolicy = EbaseAbilityActivationPolicy::OnTriggered;
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BaseAbility")
+	EAbility AbilityInputID = EAbility::None;
 	
 };

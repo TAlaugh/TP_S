@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "BaseEnumType.h"
 #include "GameplayTagContainer.h"
 #include "ScalableFloat.h"
 #include "BaseStructType.generated.h"
@@ -18,6 +19,9 @@ struct FPlayerAbilitiySet
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UPlayerGameplayAbility> AbilityToGrant;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	EAbility InputId = EAbility::None;
 
 	bool IsValid() const;
 	
