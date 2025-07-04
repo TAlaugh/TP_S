@@ -3,6 +3,8 @@
 
 #include "DataAssets/DataAsset_InputConfig.h"
 
+#include "DebugHelper.h"
+
 UInputAction* UDataAsset_InputConfig::FindNativeInputActionByTag(const FGameplayTag& InInputTag) const
 {
 	for (const FBaseInputActionConfig& InputActionConfig : NativeInputActions)

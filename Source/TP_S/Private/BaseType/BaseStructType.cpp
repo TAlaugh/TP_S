@@ -3,10 +3,9 @@
 
 #include "BaseType/BaseStructType.h"
 
-BaseStructType::BaseStructType()
-{
-}
+#include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
 
-BaseStructType::~BaseStructType()
+bool FPlayerAbilitiySet::IsValid() const
 {
+	return InputTag.IsValid() && AbilityToGrant;
 }

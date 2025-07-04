@@ -4,7 +4,7 @@
 #include "AnimInstances/BaseAnimInstance.h"
 #include "KismetAnimationLibrary.h"
 #include "BaseFunctionLibrary.h"
-#include "Chacracter/BaseCharacter.h"
+#include "TP_S/Public/Character/BaseCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 bool UBaseAnimInstance::DoesOwnerHaveTag(FGameplayTag TagToCheck) const
@@ -39,5 +39,9 @@ void UBaseAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 	bHasAcceleration = OwningMovementComponent->GetCurrentAcceleration().SizeSquared2D() > 0.f;
 
 	LocomotionDirection = UKismetAnimationLibrary::CalculateDirection(OwningCharacter->GetVelocity(), OwningCharacter->GetActorRotation());
+
+	bCrouch = OwningMovementComponent->IsCrouching();
+
+	bFalling = OwningMovementComponent->IsFalling();
 	
 }

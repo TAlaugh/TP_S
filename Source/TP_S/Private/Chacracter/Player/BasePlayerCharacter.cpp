@@ -1,15 +1,23 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Chacracter/Player/BasePlayerCharacter.h"
+#include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 
+#include <string>
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "BaseGameplayTags.h"
+#include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "BaseType/BaseEnumType.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/Inventory/BaseQuickSlotComponent.h"
+#include "Components/Inventory/ConsumableInventoryComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
+#include "DataAssets/DataAsset_StartupBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -35,14 +43,22 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.5f, 500.f, 0.f);
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
-	
+	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanJump = true;
+	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanWalk = true;
+
+	ConsumableInventoryComponent = CreateDefaultSubobject<UConsumableInventoryComponent>(TEXT("ConsumableInventory"));
+	QuickSlotComponent = CreateDefaultSubobject<UBaseQuickSlotComponent>(TEXT("QuickSlot"));
+
 }
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	check(InputConfigDataAsset)
+	checkf(InputConfigDataAsset, TEXT("Forgot to assign a valid data asset as Input Config"));
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
 
+	
+	
 	UEnhancedInputLocalPlayerSubsystem* Subsystem =  ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
 	check(Subsystem);
@@ -53,12 +69,53 @@ void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 	BaseInputComponent->BindNativeInputAction(InputConfigDataAsset, BaseGamePlayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 	BaseInputComponent->BindNativeInputAction(InputConfigDataAsset, BaseGamePlayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
+	BaseInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ABasePlayerCharacter::Input_AbilityInputPressed, &ABasePlayerCharacter::Input_AbilityInputReleased);
+	
+	BaseAbilitySystemComponent->BindAbilityActivationToInputComponent(BaseInputComponent,
+		FGameplayAbilityInputBinds("Confirm", "Cancel", FTopLevelAssetPath(TEXT("/Script/TP_S.EAbility")),
+			static_cast<int32>(EAbility::Confirm), static_cast<int32>(EAbility::Cancel)));
+
+}
+
+void ABasePlayerCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	JumpCount = 0;
+	
+	/*
+	FGameplayEventData Data;
+	Data.EventTag = BaseGamePlayTags::Shared_Event_Land;
+	Data.Instigator = this;
+	Data.Target = this;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Data.EventTag, Data);
+	*/
 }
 
 void ABasePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (QuickSlotComponent && ConsumableInventoryComponent)
+	{
+		QuickSlotComponent->Initialize(ConsumableInventoryComponent);
+	}
+}
+
+void ABasePlayerCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!CharacterStartUpData.IsNull())
+	{
+		if (UDataAsset_StartupBase* LoadedData = CharacterStartUpData.LoadSynchronous())
+		{
+			LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
+		}
+	}
+
+	ensureMsgf(!CharacterStartUpData.IsNull(), TEXT("Forget to assigned Startup data to : %s"), *GetName());
 }
 
 void ABasePlayerCharacter::Input_Move(const FInputActionValue& InputActionValue)
@@ -94,5 +151,25 @@ void ABasePlayerCharacter::Input_Look(const FInputActionValue& InputActionValue)
 	if (LookAxisVector.Y != 0.f)
 	{
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ABasePlayerCharacter::Input_AbilityInputPressed(const FGameplayTag InputTag)
+{
+	BaseAbilitySystemComponent->OnAbilityInputPressed(InputTag);
+
+	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
+	{
+		bAttackLight = true;
+	}
+}
+
+void ABasePlayerCharacter::Input_AbilityInputReleased(const FGameplayTag InputTag)
+{
+	BaseAbilitySystemComponent->OnAbilityInputReleased(InputTag);
+
+	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
+	{
+		bAttackLight = false;
 	}
 }

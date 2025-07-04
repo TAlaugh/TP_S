@@ -13,5 +13,5 @@ UCLASS()
 class TP_S_API UBaseCombatComponent : public UBaseExtensionComponent
 {
 	GENERATED_BODY()
-	
+
 };
