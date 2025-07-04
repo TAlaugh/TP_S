@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BaseConsumableItem.generated.h"
 
+class UConsumableItemDataAsset;
 class UConsumableItem;
 class USphereComponent;
 
@@ -25,7 +26,7 @@ public:
 	TObjectPtr<USphereComponent> Collision;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UConsumableItem> ItemData = nullptr;
+	TObjectPtr<UConsumableItemDataAsset> ItemData = nullptr;
 	
 protected:
 	// Called when the game starts or when spawned

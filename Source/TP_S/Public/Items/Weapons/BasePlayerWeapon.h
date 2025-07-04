@@ -6,6 +6,8 @@
 #include "Items/Weapons/BaseWeapon.h"
 #include "BasePlayerWeapon.generated.h"
 
+class UWeaponItemDataAsset;
+class UPlayerWeaponDataAsset;
 /**
  * 
  */
@@ -13,5 +15,8 @@ UCLASS()
 class TP_S_API ABasePlayerWeapon : public ABaseWeapon
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UWeaponItemDataAsset> ItemDataAsset;
 };

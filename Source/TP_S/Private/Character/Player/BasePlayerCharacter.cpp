@@ -14,8 +14,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/Inventory/BaseQuickSlotComponent.h"
-#include "Components/Inventory/ConsumableInventoryComponent.h"
+#include "Components/Inventory/PlayerInventoryComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -47,9 +46,7 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanJump = true;
 	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanWalk = true;
 
-	ConsumableInventoryComponent = CreateDefaultSubobject<UConsumableInventoryComponent>(TEXT("ConsumableInventory"));
-	QuickSlotComponent = CreateDefaultSubobject<UBaseQuickSlotComponent>(TEXT("QuickSlot"));
-
+	PlayerInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("InventoryComponent"));
 }
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -97,10 +94,7 @@ void ABasePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (QuickSlotComponent && ConsumableInventoryComponent)
-	{
-		QuickSlotComponent->Initialize(ConsumableInventoryComponent);
-	}
+
 }
 
 void ABasePlayerCharacter::PossessedBy(AController* NewController)

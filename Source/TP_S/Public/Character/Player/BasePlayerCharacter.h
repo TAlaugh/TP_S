@@ -8,6 +8,9 @@
 #include "BasePlayerCharacter.generated.h"
 
 
+class UPlayerInventoryComponent;
+class URangedWeaponInventoryComponent;
+class UMeleeWeaponInventoryComponent;
 class UBaseQuickSlotComponent;
 class UConsumableInventoryComponent;
 class UDataAsset_InputConfig;
@@ -40,11 +43,8 @@ private:
 	UCameraComponent* FollowCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta=(AllowPrivateAccess = "true"))
-	UConsumableInventoryComponent* ConsumableInventoryComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta=(AllowPrivateAccess = "true"))
-	UBaseQuickSlotComponent* QuickSlotComponent;
-
+	UPlayerInventoryComponent* PlayerInventoryComponent;
+	
 #pragma endregion
 
 #pragma region Input
@@ -67,6 +67,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterData")
 	bool bAttackLight = false;
+	
 protected:
 	void OpenInventory();
 };
