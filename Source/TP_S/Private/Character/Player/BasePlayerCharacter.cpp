@@ -10,13 +10,16 @@
 #include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "AbilitySystem/Player/PlayerAttributeSet.h"
 #include "BaseType/BaseEnumType.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartupBase.h"
+#include "DataAssets/Player/DataAsset_StartupBasePlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -47,14 +50,16 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanWalk = true;
 
 	PlayerInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("InventoryComponent"));
+	PlayerCombatComponent = CreateDefaultSubobject<UBasePlayerCombatComponent>(TEXT("PlayerCombatComponent"));
+
+	PlayerAbilitySystemComponent = CreateDefaultSubobject<UPlayerAbilitySystemComponent>(TEXT("PlayerAbilitySystemComponent"));
+	PlayerAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("PlayerAttributeSet"));
 }
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	checkf(InputConfigDataAsset, TEXT("Forgot to assign a valid data asset as Input Config"));
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
-
-	
 	
 	UEnhancedInputLocalPlayerSubsystem* Subsystem =  ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
@@ -66,9 +71,9 @@ void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 	BaseInputComponent->BindNativeInputAction(InputConfigDataAsset, BaseGamePlayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 	BaseInputComponent->BindNativeInputAction(InputConfigDataAsset, BaseGamePlayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
-	BaseInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ABasePlayerCharacter::Input_AbilityInputPressed, &ABasePlayerCharacter::Input_AbilityInputReleased);
+	BaseInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ABasePlayerCharacter::Input_AbilityInputPressed, &ABasePlayerCharacter::Input_AbilityInputTriggered, &ABasePlayerCharacter::Input_AbilityInputReleased);
 	
-	BaseAbilitySystemComponent->BindAbilityActivationToInputComponent(BaseInputComponent,
+	PlayerAbilitySystemComponent->BindAbilityActivationToInputComponent(BaseInputComponent,
 		FGameplayAbilityInputBinds("Confirm", "Cancel", FTopLevelAssetPath(TEXT("/Script/TP_S.EAbility")),
 			static_cast<int32>(EAbility::Confirm), static_cast<int32>(EAbility::Cancel)));
 
@@ -101,15 +106,26 @@ void ABasePlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	if (PlayerAbilitySystemComponent)
+	{
+		PlayerAbilitySystemComponent->InitAbilityActorInfo(this, this);
+	}
+	
 	if (!CharacterStartUpData.IsNull())
 	{
 		if (UDataAsset_StartupBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 		{
-			LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
+			PlayerStartUpData = Cast<UDataAsset_StartupBasePlayer>(LoadedData);
+			PlayerStartUpData->GiveToAbilitySystemComponent(PlayerAbilitySystemComponent);
 		}
 	}
 
 	ensureMsgf(!CharacterStartUpData.IsNull(), TEXT("Forget to assigned Startup data to : %s"), *GetName());
+}
+
+UAbilitySystemComponent* ABasePlayerCharacter::GetAbilitySystemComponent() const
+{
+	return GetPlayerAbilitySystemComponent();
 }
 
 void ABasePlayerCharacter::Input_Move(const FInputActionValue& InputActionValue)
@@ -150,18 +166,25 @@ void ABasePlayerCharacter::Input_Look(const FInputActionValue& InputActionValue)
 
 void ABasePlayerCharacter::Input_AbilityInputPressed(const FGameplayTag InputTag)
 {
-	BaseAbilitySystemComponent->OnAbilityInputPressed(InputTag);
-
+	PlayerAbilitySystemComponent->OnAbilityInputPressed(InputTag);
 	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
 	{
 		bAttackLight = true;
 	}
 }
 
+void ABasePlayerCharacter::Input_AbilityInputTriggered(const FGameplayTag InputTag)
+{
+	PlayerAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
+	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
+	{
+		bAttackLight = false;
+	}
+}
+
 void ABasePlayerCharacter::Input_AbilityInputReleased(const FGameplayTag InputTag)
 {
-	BaseAbilitySystemComponent->OnAbilityInputReleased(InputTag);
-
+	PlayerAbilitySystemComponent->OnAbilityInputReleased(InputTag);
 	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
 	{
 		bAttackLight = false;

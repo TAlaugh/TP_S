@@ -13,7 +13,7 @@ class TP_S_API UDataAsset_StartupBasePlayer : public UDataAsset_StartupBase
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	virtual void GiveToAbilitySystemComponent(UBaseAbilitySystemComponent* ASC, int32 ApplyLevel = 1) override;
 
 protected:

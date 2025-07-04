@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystem/Player/PlayerAbilitySystemComponent.h"
 #include "TP_S/Public/Character/BaseCharacter.h"
 #include "BasePlayerCharacter.generated.h"
 
 
+class UPlayerAttributeSet;
+class UDataAsset_StartupBasePlayer;
 class UPlayerInventoryComponent;
-class URangedWeaponInventoryComponent;
-class UMeleeWeaponInventoryComponent;
 class UBaseQuickSlotComponent;
 class UConsumableInventoryComponent;
 class UDataAsset_InputConfig;
@@ -32,6 +33,13 @@ protected:
 	
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
+	UPlayerAbilitySystemComponent* PlayerAbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
+	UPlayerAttributeSet* PlayerAttributeSet;
 	
 #pragma region Component
 private:
@@ -44,7 +52,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta=(AllowPrivateAccess = "true"))
 	UPlayerInventoryComponent* PlayerInventoryComponent;
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
+	UBasePlayerCombatComponent* PlayerCombatComponent;
+
 #pragma endregion
 
 #pragma region Input
@@ -57,6 +68,7 @@ protected:
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
 	void Input_AbilityInputPressed(const FGameplayTag InputTag);
+	void Input_AbilityInputTriggered(const FGameplayTag InputTag);
 	void Input_AbilityInputReleased(const FGameplayTag InputTag);
 	
 #pragma endregion
@@ -69,5 +81,9 @@ public:
 	bool bAttackLight = false;
 	
 protected:
-	void OpenInventory();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
+	TSoftObjectPtr<UDataAsset_StartupBasePlayer> PlayerStartUpData;
+	
+	FORCEINLINE UPlayerAbilitySystemComponent* GetPlayerAbilitySystemComponent() const { return PlayerAbilitySystemComponent; }
+	FORCEINLINE UBasePlayerCombatComponent* GetPlayerCombatComponent() const { return PlayerCombatComponent; }
 };

@@ -8,6 +8,7 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Character/Player/BasePlayerCharacter.h"
+#include "Components/Combat/Player/BasePlayerCombatComponent.h"
 
 UPlayerGameplayAbility_Attack::UPlayerGameplayAbility_Attack()
 {
@@ -20,6 +21,8 @@ void UPlayerGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHa
                                                     const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	//GetPlayerCombatComponentFromActorInfo()->EquipWeapon();
 	
 	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
@@ -47,12 +50,19 @@ void UPlayerGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHa
 void UPlayerGameplayAbility_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
+	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
 	HasNextComboInput = true;
 }
 
+void UPlayerGameplayAbility_Attack::InputReleased(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
+}
+
 void UPlayerGameplayAbility_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	bool bReplicateCancelAbility)
+                                                  const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                                  bool bReplicateCancelAbility)
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 }
@@ -61,6 +71,8 @@ void UPlayerGameplayAbility_Attack::EndAbility(const FGameplayAbilitySpecHandle 
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {
+	//GetPlayerCombatComponentFromActorInfo()->UnEquipWeapon();
+	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 	CurrentCombo = 0;
