@@ -5,7 +5,4 @@
 
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
 
-bool FPlayerAbilitiySet::IsValid() const
-{
-	return InputTag.IsValid() && AbilityToGrant;
-}
+

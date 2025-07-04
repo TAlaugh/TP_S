@@ -6,7 +6,7 @@
 #include "BaseGamePlayTags.h"
 #include "DebugHelper.h"
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
-#include "BaseType/BaseStructType.h"
+#include "BaseType/Player/PlayerStructType.h"
 
 void UBaseAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InputTag)
 {
@@ -19,7 +19,7 @@ void UBaseAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& Inpu
 	{
 		if (!Spec.DynamicAbilityTags.HasTagExact(InputTag)) continue;
 
-		if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
+		if (Spec.InputID != static_cast<int32>(EAbility::None))
 		{
 			AbilitySpecInputPressed(Spec);
 		}
