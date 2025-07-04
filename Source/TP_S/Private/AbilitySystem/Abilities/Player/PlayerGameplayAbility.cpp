@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
 
 #include "DebugHelper.h"
+#include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
 
@@ -30,7 +31,7 @@ ABasePlayerController* UPlayerGameplayAbility::GetPlayerControllerFromActorInfo(
 
 UBasePlayerCombatComponent* UPlayerGameplayAbility::GetPlayerCombatComponentFromActorInfo()
 {
-	return nullptr;
+	return GetPlayerCharacterFromActorInfo()->FindComponentByClass<UBasePlayerCombatComponent>();
 }
 
 FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerDamageGameplayEffectHandle(
@@ -43,6 +44,10 @@ void UPlayerGameplayAbility::InputPressed(const FGameplayAbilitySpecHandle Handl
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
 	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
+}
 
-	Debug::Print("InputPressed");
+void UPlayerGameplayAbility::InputReleased(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
 }

@@ -5,7 +5,7 @@
 
 #include "DebugHelper.h"
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
-#include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "AbilitySystem/Player/PlayerAbilitySystemComponent.h"
 #include "BaseType/BaseStructType.h"
 
 void UDataAsset_StartupBasePlayer::GiveToAbilitySystemComponent(UBaseAbilitySystemComponent* ASC, int32 ApplyLevel)
@@ -19,9 +19,8 @@ void UDataAsset_StartupBasePlayer::GiveToAbilitySystemComponent(UBaseAbilitySyst
 		FGameplayAbilitySpec Spec(AbilitySet.AbilityToGrant);
 		Spec.SourceObject = ASC->GetAvatarActor();
 		Spec.Level = ApplyLevel;
-
 		Spec.DynamicAbilityTags.AddTag(AbilitySet.InputTag);
+		Spec.InputID = static_cast<int32>(AbilitySet.InputId);
 		ASC->GiveAbility(Spec);
-		
 	}
 }

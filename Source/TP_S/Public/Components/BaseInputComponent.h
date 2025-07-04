@@ -37,7 +37,7 @@ public:
 
 	template<class UserObject, typename CallbackFunc>
 	void BindAbilityInputAction(const UDataAsset_InputConfig* InInputConfig,
-		UserObject* ContextObject, CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc)
+		UserObject* ContextObject, CallbackFunc InputPressedFunc, CallbackFunc InputTriggeredFunc, CallbackFunc InputReleasedFunc)
 	{
 		checkf(InInputConfig, TEXT("Input Config data asset is null, can not proceed with Binding"))
 
@@ -46,7 +46,7 @@ public:
 			if (!AbilityInputActionConfig.IsValid()) continue;
 
 			BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Started, ContextObject, InputPressedFunc, AbilityInputActionConfig.InputTag);
-			
+			BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Triggered, ContextObject, InputTriggeredFunc, AbilityInputActionConfig.InputTag);
 			BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Completed, ContextObject, InputReleasedFunc, AbilityInputActionConfig.InputTag);
 			
 		}

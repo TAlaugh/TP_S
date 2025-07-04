@@ -8,7 +8,9 @@ enum class EAbility : uint8
 	Cancel      UMETA(DisplayName = "Cancel"),
 	Attack      UMETA(DisplayName = "Attack"),
 	Jump        UMETA(DisplayName = "Jump"),
+	DoubleJump	UMETA(DisplayName = "DoubleJump"),
 	Dash        UMETA(DisplayName = "Dash"),
+	Dodge       UMETA(DisplayName = "Dodge"),
 	Slide       UMETA(DisplayName = "Slide"),
 	Special     UMETA(DisplayName = "Special"),
 };

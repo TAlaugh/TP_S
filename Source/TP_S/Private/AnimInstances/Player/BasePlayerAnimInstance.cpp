@@ -23,12 +23,14 @@ void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds
 {
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
 
-	bCrouch = OwningMovementComponent->IsCrouching(); 
 
-	bFalling = OwningMovementComponent->IsFalling();
 	
 	if (OwningPlayerCharacter != nullptr)
 	{
+		bCrouch = OwningMovementComponent->IsCrouching(); 
+
+		bFalling = OwningMovementComponent->IsFalling();
+		
 		if (bCrouch)
 		{
 			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Crouch);
