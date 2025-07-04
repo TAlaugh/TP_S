@@ -14,3 +14,12 @@ enum class EAbility : uint8
 	Slide       UMETA(DisplayName = "Slide"),
 	Special     UMETA(DisplayName = "Special"),
 };
+
+UENUM(BlueprintType)
+enum class EInventoryCategory : uint8
+{
+	None,
+	Consumable,
+	Melee,
+	Ranged
+};

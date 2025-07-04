@@ -3,6 +3,8 @@
 
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 
+#include <string>
+
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
@@ -14,8 +16,7 @@
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
-#include "Components/Inventory/BaseQuickSlotComponent.h"
-#include "Components/Inventory/ConsumableInventoryComponent.h"
+#include "Components/Inventory/PlayerInventoryComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "DataAssets/Player/DataAsset_StartupBasePlayer.h"
@@ -48,8 +49,7 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanJump = true;
 	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanWalk = true;
 
-	ConsumableInventoryComponent = CreateDefaultSubobject<UConsumableInventoryComponent>(TEXT("ConsumableInventory"));
-	QuickSlotComponent = CreateDefaultSubobject<UBaseQuickSlotComponent>(TEXT("QuickSlot"));
+	PlayerInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("InventoryComponent"));
 	PlayerCombatComponent = CreateDefaultSubobject<UBasePlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 
 	PlayerAbilitySystemComponent = CreateDefaultSubobject<UPlayerAbilitySystemComponent>(TEXT("PlayerAbilitySystemComponent"));
@@ -84,16 +84,22 @@ void ABasePlayerCharacter::Landed(const FHitResult& Hit)
 	Super::Landed(Hit);
 
 	JumpCount = 0;
+	
+	/*
+	FGameplayEventData Data;
+	Data.EventTag = BaseGamePlayTags::Shared_Event_Land;
+	Data.Instigator = this;
+	Data.Target = this;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Data.EventTag, Data);
+	*/
 }
 
 void ABasePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (QuickSlotComponent && ConsumableInventoryComponent)
-	{
-		QuickSlotComponent->Initialize(ConsumableInventoryComponent);
-	}
+
 }
 
 void ABasePlayerCharacter::PossessedBy(AController* NewController)

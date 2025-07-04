@@ -11,6 +11,7 @@
 
 class UPlayerAttributeSet;
 class UDataAsset_StartupBasePlayer;
+class UPlayerInventoryComponent;
 class UBaseQuickSlotComponent;
 class UConsumableInventoryComponent;
 class UDataAsset_InputConfig;
@@ -50,10 +51,7 @@ private:
 	UCameraComponent* FollowCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta=(AllowPrivateAccess = "true"))
-	UConsumableInventoryComponent* ConsumableInventoryComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta=(AllowPrivateAccess = "true"))
-	UBaseQuickSlotComponent* QuickSlotComponent;
+	UPlayerInventoryComponent* PlayerInventoryComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
 	UBasePlayerCombatComponent* PlayerCombatComponent;
@@ -81,6 +79,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterData")
 	bool bAttackLight = false;
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_StartupBasePlayer> PlayerStartUpData;
