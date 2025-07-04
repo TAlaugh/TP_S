@@ -39,6 +39,7 @@ void UDataAsset_StartupBase::GrantAbilities(TArray<TSubclassOf<UBaseGameplayAbil
 		if (!Ability) continue;
 
 		const UBaseGameplayAbility* AbilityCDO = Ability.GetDefaultObject();
+
 		
 		FGameplayAbilitySpec AbilitySpec(Ability);
 		AbilitySpec.SourceObject = ASC->GetAvatarActor();
