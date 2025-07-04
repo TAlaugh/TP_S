@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
 
+#include "DebugHelper.h"
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
 
@@ -36,4 +37,12 @@ FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerDamageGameplayEffect
 	TSubclassOf<UGameplayEffect> Effect, float WeaponBaseDamage, FGameplayTag AttackTypeTag, int32 ComboCount)
 {
 	return nullptr;
+}
+
+void UPlayerGameplayAbility::InputPressed(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
+
+	Debug::Print("InputPressed");
 }

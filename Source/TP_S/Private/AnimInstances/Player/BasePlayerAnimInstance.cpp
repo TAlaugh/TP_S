@@ -7,6 +7,7 @@
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void UBasePlayerAnimInstance::NativeInitializeAnimation()
 {
@@ -22,6 +23,9 @@ void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds
 {
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
 
+	bCrouch = OwningMovementComponent->IsCrouching(); 
+
+	bFalling = OwningMovementComponent->IsFalling();
 	
 	if (OwningPlayerCharacter != nullptr)
 	{

@@ -40,8 +40,6 @@ void UBaseAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 
 	LocomotionDirection = UKismetAnimationLibrary::CalculateDirection(OwningCharacter->GetVelocity(), OwningCharacter->GetActorRotation());
 
-	bCrouch = OwningMovementComponent->IsCrouching();
 
-	bFalling = OwningMovementComponent->IsFalling();
 	
 }
