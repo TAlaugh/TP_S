@@ -43,6 +43,7 @@ class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Damage;
 class UAISenseConfig_Team;
+
 class UBlackboardComponent;
 class UBehaviorTreeComponent;
 /**
@@ -110,7 +111,7 @@ protected:
 	UFUNCTION(BlueprintCallable, Category="AI|Perception")
 	void HandleTeamStimulus(AActor* Actor, FAIStimulus Stimulus);
 
-	//메모리 관리
+	// //메모리 관리
 	UFUNCTION(BlueprintCallable, Category="AI|Memory")
 	void UpdateLastKnownLocation(AActor* Actor, FVector Location);
     
@@ -220,20 +221,20 @@ private:
 
 	//상태 및 메모리
 	
-	UPROPERTY()
-	float StressLevel = 0.0f;
+	 UPROPERTY()
+	 float StressLevel = 0.0f;
 	
-	UPROPERTY()
-	EAIState PreviousState = EAIState::Idle;
+	 UPROPERTY()
+	 EAIState PreviousState = EAIState::Idle;
 	
-	UPROPERTY()
-	FTimerHandle LoseSightTimerHandle;
-
-	UPROPERTY()
-	TMap<AActor*, FVector> LastKnownLocations;
-    
-	UPROPERTY()
-	TMap<AActor*, float> LastSeenTimes;
+	 UPROPERTY()
+	 FTimerHandle LoseSightTimerHandle;
+	
+	 UPROPERTY()
+	 TMap<AActor*, FVector> LastKnownLocations;
+     
+	 UPROPERTY()
+	 TMap<AActor*, float> LastSeenTimes;
 	
 	//Crowd Avoidance 설정
 	UPROPERTY(EditDefaultsOnly, Category="AI")

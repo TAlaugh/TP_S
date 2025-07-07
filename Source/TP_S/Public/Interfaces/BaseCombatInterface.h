@@ -6,6 +6,8 @@
 #include "UObject/Interface.h"
 #include "BaseCombatInterface.generated.h"
 
+class UBaseCombatComponent;
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UBaseCombatInterface : public UInterface
