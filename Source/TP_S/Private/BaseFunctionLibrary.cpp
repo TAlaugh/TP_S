@@ -71,6 +71,7 @@ UBaseCombatComponent* UBaseFunctionLibrary::BP_GetBaseCombatComponentFromActor(A
 	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
 	return CombatComponent;
 }
+/*
 UBaseCombatComponent* UBaseFunctionLibrary::NativeGetBaseCombatComponentFromActor(AActor* InActor)
 {
 	check(InActor);
@@ -162,3 +163,4 @@ bool UBaseFunctionLibrary::IsValidBlock(AActor* InAttacker, AActor* InDefender)
 	
 	return DotResult < -0.1f;
 }
+*/

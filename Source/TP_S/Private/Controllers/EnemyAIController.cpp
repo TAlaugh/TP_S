@@ -15,7 +15,7 @@ AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializ
 {
 	if (UCrowdFollowingComponent* CrowdComp = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent()))
 	{
-		Debug::Print(TEXT("CrowdFollowingComponent valid"),FColor::Green);
+		//Debug::Print(TEXT("CrowdFollowingComponent valid"),FColor::Green);
 	}
 	
 	AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>("EnemySenseConfig_Sight");
