@@ -92,3 +92,6 @@ Scripts/__pycache__/
 Plugins/**/Saved/
 Plugins/**/Binaries/
 Plugins/**/Intermediate/
+
+# 개인 세팅
+DotSettings.user
