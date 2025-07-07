@@ -4,10 +4,22 @@
 #include "Items/Inventory/InventoryMainWidget.h"
 
 #include "Components/Button.h"
+#include "Components/ScrollBox.h"
+#include "Components/Inventory/PlayerInventoryComponent.h"
+#include "Components/Inventory/QuickSlotComponent.h"
+#include "Items/Consumables/ConsumableItemDataAsset.h"
+#include "Items/Inventory/InventorySlotWidget.h"
 
 void UInventoryMainWidget::Init(UPlayerInventoryComponent* InInventory)
 {
+	Inventory = InInventory;
+
+	if (Inventory)
+	{
+		Inventory->OnInventoryChanged.AddDynamic(this, &UInventoryMainWidget::Refresh);
+	}
 	
+	Refresh(); // 처음 로드
 }
 
 bool UInventoryMainWidget::Initialize()
@@ -34,17 +46,87 @@ bool UInventoryMainWidget::Initialize()
 
 void UInventoryMainWidget::OnConsumableTab()
 {
-	
+	CurrentTab = EInventoryCategory::Consumable;
+	Refresh();
 }
 
 void UInventoryMainWidget::OnMeleeTab()
 {
+	CurrentTab = EInventoryCategory::Melee;
+	Refresh();
 }
 
 void UInventoryMainWidget::OnRangedTab()
 {
+	CurrentTab = EInventoryCategory::Ranged;
+	Refresh();
 }
 
 void UInventoryMainWidget::Refresh()
 {
+	// UE_LOG(LogTemp,Warning,TEXT("Refresh called"));
+	
+	if (!Inventory || !ScrollItems || !SlotClass)
+	{
+		// UE_LOG(LogTemp,Error,TEXT("Null ptr: ScrollItems=%s SlotClass=%s Inv=%s"), *GetNameSafe(ScrollItems), *GetNameSafe(SlotClass), *GetNameSafe(Inventory));
+		return;
+	}
+
+	ScrollItems->ClearChildren();
+	const TArray<FItemStack>& Items = Inventory->GetStacks();
+	// UE_LOG(LogTemp,Warning,TEXT("Stacks = %d"), Items.Num());
+	
+	for (const FItemStack& Stack : Items)
+	{
+		// UE_LOG(LogTemp,Warning,TEXT("  item %s cat %d cnt %d"), *Stack.ItemData->GetName(), int32(Stack.ItemData->Category), Stack.Count);
+		
+		if (CurrentTab != EInventoryCategory::None && Stack.ItemData->Category != CurrentTab) continue;
+
+		UInventorySlotWidget* SlotWidget = CreateWidget<UInventorySlotWidget>(this, SlotClass);
+		SlotWidget->SetupSlot(Stack.ItemData, Stack.Count);
+		ScrollItems->AddChild(SlotWidget);
+	}
+}
+
+void UInventoryMainWidget::HandleSlotClicked(UInventorySlotWidget* Clicked)
+{
+	if (!Clicked) return;
+	
+	SetSelectedSlot(Clicked);
+
+	UItemDataAsset* Item = Clicked->GetItem();
+	if (!Item) return;
+
+	if (Item->Category == EInventoryCategory::Consumable)
+	{
+		if (APawn* P = GetOwningPlayerPawn())
+		{
+			if (auto* QSC = P->FindComponentByClass<UQuickSlotComponent>())
+			{
+				if (auto* Inv = P->FindComponentByClass<UPlayerInventoryComponent>())
+				{
+					QSC->RegisterItem(Cast<UConsumableItemDataAsset>(Item), Inv);
+				}
+			}
+		}
+	}
+	else if (Item->Category == EInventoryCategory::Melee || Item->Category == EInventoryCategory::Ranged)
+	{
+		// TODO : 무기 장착 / 해제 로직 구현
+	}
+}
+
+void UInventoryMainWidget::SetSelectedSlot(UInventorySlotWidget* NewSlot)
+{
+	if (SelectedSlot && SelectedSlot != NewSlot)
+	{
+		SelectedSlot->SetSelected(false);
+	}
+	
+	SelectedSlot = NewSlot;
+	
+	if (SelectedSlot)
+	{
+		SelectedSlot->SetSelected(true);
+	}
 }

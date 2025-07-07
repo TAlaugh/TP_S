@@ -24,8 +24,4 @@ public:
 	/** 기본 공격력 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Weapon")
 	float BaseDamage = 20.f;
-
-	/** 공격 애니메이션 몽타주(Soft 로더) */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Weapon")
-	TSoftObjectPtr<UAnimMontage> AttackMontage;
 };

@@ -9,6 +9,7 @@
 #include "BasePlayerCharacter.generated.h"
 
 
+class UQuickSlotComponent;
 class UPlayerAttributeSet;
 class UDataAsset_StartupBasePlayer;
 class UPlayerInventoryComponent;
@@ -52,6 +53,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta=(AllowPrivateAccess = "true"))
 	UPlayerInventoryComponent* PlayerInventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta=(AllowPrivateAccess = "true"))
+	UQuickSlotComponent* PlayerQuickSlotComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
 	UBasePlayerCombatComponent* PlayerCombatComponent;

@@ -3,3 +3,160 @@
 
 #include "Controllers/BasePlayerController.h"
 
+#include "DebugHelper.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/Inventory/PlayerInventoryComponent.h"
+#include "Items/Consumables/ConsumableItemDataAsset.h"
+#include "Items/Inventory/InventoryMainWidget.h"
+#include "Items/Inventory/QuickSlotWidget.h"
+#include "Items/Weapons/WeaponItemDataAsset.h"
+
+ABasePlayerController::ABasePlayerController()
+{
+	bShowMouseCursor = false;
+}
+
+void ABasePlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		if (IMC_Default)
+		{
+			Subsystem->AddMappingContext(IMC_Default, 0);
+		}
+	}
+	
+	if (APawn* P = GetPawn())
+	{
+		InventoryComponent = P->FindComponentByClass<UPlayerInventoryComponent>();
+	}
+
+	if (InventoryWidgetClass)
+	{
+		InventoryWidget = CreateWidget<UInventoryMainWidget>(this, InventoryWidgetClass);
+		if (InventoryWidget && InventoryComponent)
+		{
+			InventoryWidget->Init(InventoryComponent);
+		}
+	}
+
+	QuickSlotWidget = CreateWidget<UQuickSlotWidget>(this, QuickSlotWidgetClass);
+	if (QuickSlotWidget)
+	{
+		QuickSlotWidget->AddToViewport();
+	}
+
+	if (QuickSlotWidget && GetPawn())
+	{
+		if (auto* QSC = GetPawn()->FindComponentByClass<UQuickSlotComponent>())
+		{
+			QSC->OnQuickSlotChanged.AddDynamic(QuickSlotWidget, &UQuickSlotWidget::Update);
+			QuickSlotWidget->Update(QSC->GetData());
+		}
+	}
+}
+
+void ABasePlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		if (IA_ToggleInventory)
+		{
+			EIC->BindAction(IA_ToggleInventory, ETriggerEvent::Started, this, &ABasePlayerController::OnToggleInventory);
+		}
+		if (IA_UseQuickSlot)
+		{
+			EIC->BindAction(IA_UseQuickSlot, ETriggerEvent::Started, this, &ABasePlayerController::OnUseQuickSlot);
+		}
+	}
+}
+
+void ABasePlayerController::OnToggleInventory(const FInputActionValue& Value)
+{
+	bInventoryOpen ? HideInventory() : ShowInventory();
+}
+
+void ABasePlayerController::ShowInventory()
+{
+	if (!InventoryWidget) return;
+
+	if (!InventoryWidget->IsInViewport())
+	{
+		InventoryWidget->AddToViewport();
+	}
+
+	InventoryWidget->Refresh();
+
+	FInputModeGameAndUI Mode;
+	Mode.SetWidgetToFocus(InventoryWidget->TakeWidget());
+	Mode.SetHideCursorDuringCapture(false);
+	SetInputMode(Mode);
+
+	bShowMouseCursor = true;
+	bInventoryOpen = true;
+}
+
+void ABasePlayerController::HideInventory()
+{
+	if (!InventoryWidget) return;
+
+	InventoryWidget->RemoveFromParent();
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+	bInventoryOpen = false;
+}
+
+void ABasePlayerController::OnUseQuickSlot(const FInputActionValue& Value)
+{
+	if (auto* QSC = GetPawn()->FindComponentByClass<UQuickSlotComponent>())
+	{
+		if (auto* Inventory = GetPawn()->FindComponentByClass<UPlayerInventoryComponent>())
+		{
+			QSC->UseSlot(Inventory);
+		}
+	}
+}
+
+void ABasePlayerController::GiveItems()
+{
+	if (APawn* MyPawn = GetPawn())
+	{
+		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, (TEXT("%s"), *MyPawn->GetActorNameOrLabel()));
+		if (UPlayerInventoryComponent* Inv = MyPawn->FindComponentByClass<UPlayerInventoryComponent>())
+		{
+			// Debug::Print(TEXT("Call GiveItems"));
+			
+			auto LoadItem = [](const TCHAR* Path) -> UItemDataAsset*
+			{
+				return Cast<UItemDataAsset>(StaticLoadObject(UItemDataAsset::StaticClass(), nullptr, Path));
+			};
+
+			if (auto* Potion = LoadItem(TEXT("/Game/Temp/DA_Item_Consumable_ActionPotion.DA_Item_Consumable_ActionPotion")))
+			{
+				bool bAdded = Inv->AddItem(Potion, 3);
+				// Debug::Print(FString::Printf(TEXT("Potion add %s"), bAdded ? TEXT("OK") : TEXT("FAIL")));
+			}
+
+			if (auto* Potion2 = LoadItem(TEXT("/Game/Temp/DA_Item_Consumable_HpPotion.DA_Item_Consumable_HpPotion")))
+			{
+				Inv->AddItem(Potion2, 5);
+			}
+
+			if (auto* WeaponMelee = LoadItem(TEXT("/Game/Temp/DA_Item_Weapon_Xiji.DA_Item_Weapon_Xiji")))
+			{
+				Inv->AddItem(WeaponMelee);
+			}
+
+			if (auto* WeaponRanged = LoadItem(TEXT("/Game/Temp/DA_Item_Weapon_Range.DA_Item_Weapon_Range")))
+			{
+				Inv->AddItem(WeaponRanged);
+			}
+		}
+	}
+}
