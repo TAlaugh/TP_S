@@ -24,7 +24,6 @@ public:
 	/** 플레이어 인벤토리 컴포넌트를 넘겨 초기화 **/
 	void Init(UPlayerInventoryComponent* InInventory);
 
-protected:
 	virtual bool Initialize() override;
 
 	/** 탭 버튼 콜백 **/
@@ -37,7 +36,7 @@ protected:
 	UFUNCTION()
 	void OnRangedTab();
 
-	/** 인벤토리 변경 시 호출 **/
+	/** 인벤토리 변경 시 호출, 델리게이트 연결 **/
 	UFUNCTION()
 	void Refresh();
 
@@ -57,8 +56,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UInventorySlotWidget> SlotClass;
 
+	UPROPERTY()
+	UInventorySlotWidget* SelectedSlot;
+
+	UFUNCTION()
+	void HandleSlotClicked(UInventorySlotWidget* Clicked);
+	
+	void SetSelectedSlot(UInventorySlotWidget* NewSlot);
+
 private:
 	UPROPERTY()
 	UPlayerInventoryComponent* Inventory;
+	
 	EInventoryCategory CurrentTab = EInventoryCategory::Consumable;
 };

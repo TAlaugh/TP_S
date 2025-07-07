@@ -17,6 +17,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
+#include "Components/Inventory/QuickSlotComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "DataAssets/Player/DataAsset_StartupBasePlayer.h"
@@ -50,6 +51,7 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanWalk = true;
 
 	PlayerInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("InventoryComponent"));
+	PlayerQuickSlotComponent = CreateDefaultSubobject<UQuickSlotComponent>(TEXT("QuickSlotComponent"));
 	PlayerCombatComponent = CreateDefaultSubobject<UBasePlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 
 	PlayerAbilitySystemComponent = CreateDefaultSubobject<UPlayerAbilitySystemComponent>(TEXT("PlayerAbilitySystemComponent"));
