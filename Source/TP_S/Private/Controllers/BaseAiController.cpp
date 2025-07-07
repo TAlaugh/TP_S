@@ -13,6 +13,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/CrowdFollowingComponent.h"
+#include "DebugHelper.h"
 
 
 ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer)
@@ -20,7 +21,7 @@ ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer
 {
 	if (UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent()))
 	{
-		
+		Debug::Print(TEXT("ai 컨트롤러 컴포넌트 장착 완료"), FColor::Green, 5.0f);
 	}
 
 	CurrentHealth = MaxHealth;
@@ -31,6 +32,8 @@ ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer
 	//AISenseConfig_Sight 생성자
 	AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISenseConfig_Sight"));
 	AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
+	AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;
+	AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
 	AISenseConfig_Sight->SightRadius = 1500;
 	AISenseConfig_Sight->LoseSightRadius = 2000;
 	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 160.0f;
@@ -62,13 +65,15 @@ ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer
 	AIPerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ABaseAIController::OnEnemyPerceptionUpdated);
 	SetPerceptionComponent(*AIPerceptionComponent);
 	
+	
 }
 
 
 void ABaseAIController::BeginPlay()
 {
 	Super::BeginPlay();
-
+	SetGenericTeamId(FGenericTeamId(1));
+	
 	if (BehaviorTreeAsset)
 	{
 		RunBehaviorTree(BehaviorTreeAsset);
@@ -97,6 +102,11 @@ void ABaseAIController::HandleLoseSight(AActor* LostActor)
 
 void ABaseAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
+	if (Stimulus.WasSuccessfullySensed() && Actor)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Stimulus not successfully sensed for"));
+	}
+	
 	if (!Actor) return;
 
 	// FAISenseID를 직접 비교

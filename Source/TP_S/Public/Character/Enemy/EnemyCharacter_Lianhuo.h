@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/BaseCharacter.h"
+#include "BaseEnemyCharacter.h"
 #include "EnemyCharacter_Lianhuo.generated.h"
 
 struct FInputActionValue;
@@ -14,7 +14,7 @@ class UCameraComponent;
  * 
  */
 UCLASS()
-class TP_S_API AEnemyCharacter_Lianhuo : public ABaseCharacter
+class TP_S_API AEnemyCharacter_Lianhuo : public ABaseEnemyCharacter
 {
 	GENERATED_BODY()
 
