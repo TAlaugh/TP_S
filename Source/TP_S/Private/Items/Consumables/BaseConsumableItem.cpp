@@ -5,8 +5,6 @@
 
 #include "DebugHelper.h"
 #include "Components/SphereComponent.h"
-#include "Components/Inventory/ConsumableInventoryComponent.h"
-#include "Items/Consumables/ConsumableItem.h"
 
 // Sets default values
 ABaseConsumableItem::ABaseConsumableItem()
@@ -34,12 +32,5 @@ void ABaseConsumableItem::BeginPlay()
 void ABaseConsumableItem::HandleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	APawn* Pawn = Cast<APawn>(OtherActor);
-	if (!Pawn) return;
-
-	if (auto* ConsumableInventory = Pawn->FindComponentByClass<UConsumableInventoryComponent>())
-	{
-		ConsumableInventory->AddItem(ItemData, 1);
-		Destroy();
-	}
+	// TODO : 
 }

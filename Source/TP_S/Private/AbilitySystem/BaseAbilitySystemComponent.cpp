@@ -5,38 +5,7 @@
 
 #include "BaseGamePlayTags.h"
 #include "DebugHelper.h"
-#include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
-#include "BaseType/BaseStructType.h"
-
-void UBaseAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InputTag)
-{
-	if (!InputTag.IsValid())
-	{
-		return;
-	}
-	
-	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
-	{
-		if (!Spec.DynamicAbilityTags.HasTagExact(InputTag)) continue;
-		
-		TryActivateAbility(Spec.Handle);
-	}
-}
-
-void UBaseAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InputTag)
-{
-	if (!InputTag.IsValid() || !InputTag.MatchesTag(BaseGamePlayTags::InputTag_Hold) )
-	{
-		return;
-	}
-	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
-	{
-		if (Spec.DynamicAbilityTags.HasTagExact(InputTag) && Spec.IsActive())
-		{
-			CancelAbilityHandle(Spec.Handle);
-		}
-	}
-}
+#include "BaseType/Player/PlayerStructType.h"
 
 void UBaseAbilitySystemComponent::GrantPlayerWeaponAbilities(const TArray<FPlayerAbilitiySet>& WeaponAbilities,
 	int32 Level, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles)

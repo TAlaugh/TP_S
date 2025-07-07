@@ -7,6 +7,7 @@
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void UBasePlayerAnimInstance::NativeInitializeAnimation()
 {
@@ -22,9 +23,14 @@ void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds
 {
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
 
+
 	
 	if (OwningPlayerCharacter != nullptr)
 	{
+		bCrouch = OwningMovementComponent->IsCrouching(); 
+
+		bFalling = OwningMovementComponent->IsFalling();
+		
 		if (bCrouch)
 		{
 			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Crouch);

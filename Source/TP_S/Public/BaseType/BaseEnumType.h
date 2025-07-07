@@ -20,3 +20,4 @@ enum class EBaseSuccessType : uint8
 	Successful,
 	Failed
 };
+

@@ -51,6 +51,26 @@ void UBaseFunctionLibrary::BP_DoesActorHaveTag(AActor* InActor, FGameplayTag Tag
 	OutConfirmType = NativeDoesActorHaveTag(InActor, TagToCheck) ? EBaseConfirmType::Yes : EBaseConfirmType::No;
 }
 
+UBaseCombatComponent* UBaseFunctionLibrary::NativeGetBaseCombatComponentFromActor(AActor* Actor)
+{
+	//check(Actor);
+
+	if (IBaseCombatInterface* BaseCombatInterface = Cast<IBaseCombatInterface>(Actor))
+	{
+		return BaseCombatInterface->GetBaseCombatComponent();
+	}
+
+	return nullptr;
+}
+
+UBaseCombatComponent* UBaseFunctionLibrary::BP_GetBaseCombatComponentFromActor(AActor* Actor,
+	EBaseValidType& OutValidType)
+{
+	UBaseCombatComponent* CombatComponent = NativeGetBaseCombatComponentFromActor(Actor);
+
+	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
+	return CombatComponent;
+}
 UBaseCombatComponent* UBaseFunctionLibrary::NativeGetBaseCombatComponentFromActor(AActor* InActor)
 {
 	check(InActor);

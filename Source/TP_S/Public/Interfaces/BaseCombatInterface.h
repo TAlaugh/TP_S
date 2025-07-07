@@ -15,6 +15,8 @@ class UBaseCombatInterface : public UInterface
 	GENERATED_BODY()
 };
 
+
+class UBaseCombatComponent;
 /**
  * 
  */

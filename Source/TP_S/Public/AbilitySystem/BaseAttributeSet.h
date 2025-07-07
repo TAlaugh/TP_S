@@ -23,11 +23,9 @@ UCLASS()
 class TP_S_API UBaseAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
-
+public:
 	UBaseAttributeSet();
 
-
-public:
 	UPROPERTY(BlueprintReadOnly, Category="Status")
 	FGameplayAttributeData CurrentHp;
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, CurrentHp)

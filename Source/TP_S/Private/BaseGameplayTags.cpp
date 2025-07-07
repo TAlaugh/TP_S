@@ -14,6 +14,8 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge, "InputTag.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Crouch, "InputTag.Crouch");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Light, "InputTag.Attack.Melee.Light");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Heavy, "InputTag.Attack.Melee.Heavy");
 	
 	// Shared Status(Dead, Idle, Jump, etc)
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Idle, "Shared.Status.Idle");
@@ -60,14 +62,20 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Heavy, "Player.Ability.Attack.Melee.Heavy");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Single, "Player.Ability.Attack.Range.Single");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Stream, "Player.Ability.Attack.Range.Stream");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Equip_Melee, "Player.Ability.Equip.Melee");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Equip_Range, "Player.Ability.Equip.Range");
 
 	// Player Event
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DoubleJump, "Player.Event.DoubleJump");
-
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Next, "Player.Event.Attack.Next");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip, "Player.Event.Attack.Equip");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_UnEquip, "Player.Event.Attack.UnEquip");
 
 	// Item Tags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_ActionPotion, "Item.Consumable.ActionPotion");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Melee_PoleArm, "Item.Equipable.Weapon.Melee.PoleArm");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Range_MachineGun, "Item.Equipable.Weapon.Range.MachineGun");
 
 	// Enemy Tag
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Weapon,"Enemy.Weapon")

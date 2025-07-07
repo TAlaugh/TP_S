@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-#include "BaseType/BaseStructType.h"
+#include "BaseType/Player/PlayerStructType.h"
 #include "GameplayTagContainer.h"
 #include "BaseAbilitySystemComponent.generated.h"
 
@@ -17,9 +17,6 @@ class TP_S_API UBaseAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 
 public:
-	void OnAbilityInputPressed(const FGameplayTag& InputTag);
-	void OnAbilityInputReleased(const FGameplayTag& InputTag);
-	
 	// Grant Abilities in WeaponData
 	UFUNCTION(BlueprintCallable, Category = "Ability", meta = (Level = "1"))
 	void GrantPlayerWeaponAbilities(const TArray<FPlayerAbilitiySet>& WeaponAbilities, int32 Level,

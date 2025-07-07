@@ -13,6 +13,17 @@ void UDataAsset_StartupBase::GiveToAbilitySystemComponent(UBaseAbilitySystemComp
 
 	GrantAbilities(ActivateOnGivenAbilities, ASC);
 	GrantAbilities(ReactiveAbilities, ASC);
+
+	if (!StartUpGameplayEffects.IsEmpty())
+	{
+		for (const TSubclassOf<UGameplayEffect>& EffectClass : StartUpGameplayEffects)
+		{
+			if (!EffectClass) continue;
+
+			UGameplayEffect* Effect = EffectClass->GetDefaultObject<UGameplayEffect>();
+			ASC->ApplyGameplayEffectToSelf(Effect, ApplyLevel, ASC->MakeEffectContext());
+		}
+	}
 }
 
 void UDataAsset_StartupBase::GrantAbilities(TArray<TSubclassOf<UBaseGameplayAbility>>& InAbilitiesToGive,
@@ -26,10 +37,14 @@ void UDataAsset_StartupBase::GrantAbilities(TArray<TSubclassOf<UBaseGameplayAbil
 	for (const TSubclassOf<UBaseGameplayAbility>& Ability : InAbilitiesToGive)
 	{
 		if (!Ability) continue;
-			
+
+		const UBaseGameplayAbility* AbilityCDO = Ability.GetDefaultObject();
+
+		
 		FGameplayAbilitySpec AbilitySpec(Ability);
 		AbilitySpec.SourceObject = ASC->GetAvatarActor();
 		AbilitySpec.Level = ApplyLevel;
+		AbilitySpec.InputID = static_cast<int32>(AbilityCDO->AbilityInputID); 
 		
 		ASC->GiveAbility(AbilitySpec);
 	

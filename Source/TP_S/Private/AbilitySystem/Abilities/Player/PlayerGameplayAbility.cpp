@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
 
+#include "DebugHelper.h"
+#include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
 
@@ -29,11 +31,23 @@ ABasePlayerController* UPlayerGameplayAbility::GetPlayerControllerFromActorInfo(
 
 UBasePlayerCombatComponent* UPlayerGameplayAbility::GetPlayerCombatComponentFromActorInfo()
 {
-	return nullptr;
+	return GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent();
 }
 
 FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerDamageGameplayEffectHandle(
 	TSubclassOf<UGameplayEffect> Effect, float WeaponBaseDamage, FGameplayTag AttackTypeTag, int32 ComboCount)
 {
 	return nullptr;
+}
+
+void UPlayerGameplayAbility::InputPressed(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
+}
+
+void UPlayerGameplayAbility::InputReleased(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
 }

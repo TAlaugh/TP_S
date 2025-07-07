@@ -12,6 +12,7 @@
 class UBaseCombatComponent;
 struct FGameplayTag;
 class UBaseAbilitySystemComponent;
+class UBaseCombatComponent;
 struct FScalableFloat;
 
 /**
@@ -36,21 +37,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs = "OutConfirmType"))
 	static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, EBaseConfirmType& OutConfirmType);
 
-	static UBaseCombatComponent* NativeGetBaseCombatComponentFromActor(AActor* InActor);
+	static UBaseCombatComponent* NativeGetBaseCombatComponentFromActor(AActor* Actor);
 	
-	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Get Pawn Combat Component From Actor",  ExpandEnumAsExecs = "OutValidType"))
-	static UBaseCombatComponent* BP_GetBaseCombatComponentFromActor(AActor* InActor, EBaseValidType& OutValidType);
+	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Get Base Combat Component From Actor",  ExpandEnumAsExecs = "OutValidType"))
+	static UBaseCombatComponent* BP_GetBaseCombatComponentFromActor(AActor* Actor, EBaseValidType& OutValidType);
 
-	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
-	static bool IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn);
-	
-	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary", meta = (CompactNodeTitle = "Get Value At Level"))
-	static float GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel = 1.f);
-	
-	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
-	static FGameplayTag ComputeHitReactDirectionTag(AActor* InAttacker, AActor* InVictim, float& OutAngleDifference);
-	
-	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
-	static bool IsValidBlock(AActor* InAttacker, AActor* InDefender);
-	
+	// UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
+	// static bool IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn);
+	//
+	// UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary", meta = (CompactNodeTitle = "Get Value At Level"))
+	// static float GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel = 1.f);
+	//
+	// UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
+	// static FGameplayTag ComputeHitReactDirectionTag(AActor* InAttacker, AActor* InVictim, float& OutAngleDifference);
+	//
+	// UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
+	// static bool IsValidBlock(AActor* InAttacker, AActor* InDefender);
+	//
 };

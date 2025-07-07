@@ -17,11 +17,6 @@ class TP_S_API UBaseInputComponent : public UEnhancedInputComponent
 	GENERATED_BODY()
 
 public:
-	/*
-	template<class UserObject, typename CallBackFunc>
-	void BindNativeInputAction(const UDataAsset_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent, UserObject* ContextObject, CallBackFunc Func);
-	*/
-
 	template<class UserObject, typename CallbackFunc>
 	void BindNativeInputAction(const UDataAsset_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent,
 		UserObject* ContextObject, CallbackFunc Func)
@@ -37,7 +32,7 @@ public:
 
 	template<class UserObject, typename CallbackFunc>
 	void BindAbilityInputAction(const UDataAsset_InputConfig* InInputConfig,
-		UserObject* ContextObject, CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc)
+		UserObject* ContextObject, CallbackFunc InputPressedFunc, CallbackFunc InputTriggeredFunc, CallbackFunc InputReleasedFunc)
 	{
 		checkf(InInputConfig, TEXT("Input Config data asset is null, can not proceed with Binding"))
 
@@ -46,23 +41,10 @@ public:
 			if (!AbilityInputActionConfig.IsValid()) continue;
 
 			BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Started, ContextObject, InputPressedFunc, AbilityInputActionConfig.InputTag);
-			
+			BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Triggered, ContextObject, InputTriggeredFunc, AbilityInputActionConfig.InputTag);
 			BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Completed, ContextObject, InputReleasedFunc, AbilityInputActionConfig.InputTag);
 			
 		}
 	}
 };
 
-/* 수업기반으로 재작성
-template <class UserObject, typename CallBackFunc>
-void UBaseInputComponent::BindNativeInputAction(const UDataAsset_InputConfig* InInputConfig,
-	const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent, UserObject* ContextObject, CallBackFunc Func)
-{
-	check(InInputConfig);
-
-	if (UInputAction* FoundAction = InInputConfig->FindNativeInputActionByTag(InInputTag))
-	{
-		BindAction(FoundAction, TriggerEvent, ContextObject, Func);
-	}
-}
-*/
