@@ -9,6 +9,7 @@
 
 struct FGameplayTag;
 class UBaseAbilitySystemComponent;
+class UBaseCombatComponent;
 struct FScalableFloat;
 
 /**
@@ -33,10 +34,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs = "OutConfirmType"))
 	static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, EBaseConfirmType& OutConfirmType);
 
-	// static UPawnCombatComponent* NativeGetPawnCombatComponentFromActor(AActor* InActor);
-	//
-	// UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Get Pawn Combat Component From Actor",  ExpandEnumAsExecs = "OutValidType"))
-	// static UPawnCombatComponent* BP_GetPawnCombatComponentFromActor(AActor* InActor, EBaseValidType& OutValidType);
+	static UBaseCombatComponent* NativeGetBaseCombatComponentFromActor(AActor* Actor);
+	
+	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Get Base Combat Component From Actor",  ExpandEnumAsExecs = "OutValidType"))
+	static UBaseCombatComponent* BP_GetBaseCombatComponentFromActor(AActor* Actor, EBaseValidType& OutValidType);
 
 	// UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
 	// static bool IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn);

@@ -17,9 +17,6 @@ class TP_S_API UBaseAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 
 public:
-	void OnAbilityInputPressed(const FGameplayTag& InputTag);
-	void OnAbilityInputReleased(const FGameplayTag& InputTag);
-	
 	// Grant Abilities in WeaponData
 	UFUNCTION(BlueprintCallable, Category = "Ability", meta = (Level = "1"))
 	void GrantPlayerWeaponAbilities(const TArray<FPlayerAbilitiySet>& WeaponAbilities, int32 Level,

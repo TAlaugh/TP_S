@@ -7,6 +7,7 @@
 #include "DebugHelper.h"
 #include "GenericTeamAgentInterface.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "Interfaces/BaseCombatInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UBaseAbilitySystemComponent* UBaseFunctionLibrary::NativeGetBaseASCFromActor(AActor* InActor)
@@ -50,27 +51,26 @@ void UBaseFunctionLibrary::BP_DoesActorHaveTag(AActor* InActor, FGameplayTag Tag
 	OutConfirmType = NativeDoesActorHaveTag(InActor, TagToCheck) ? EBaseConfirmType::Yes : EBaseConfirmType::No;
 }
 
-// UPawnCombatComponent* UBaseFunctionLibrary::NativeGetPawnCombatComponentFromActor(AActor* InActor)
-// {
-// 	check(InActor);
-//
-// 	if (IPawnCombatInterface* PawnCombatInterface = Cast<IPawnCombatInterface>(InActor))
-// 	{
-// 		return PawnCombatInterface->GetPawnCombatComponent();
-// 	}
-// 	
-// 	return nullptr;
-// }
-//
-// UPawnCombatComponent* UBaseFunctionLibrary::BP_GetPawnCombatComponentFromActor(AActor* InActor,
-// 	EBaseValidType& OutValidType)
-// {
-// 	UPawnCombatComponent* CombatComponent = NativeGetPawnCombatComponentFromActor(InActor);
-//
-// 	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
-//
-// 	return CombatComponent;
-// }
+UBaseCombatComponent* UBaseFunctionLibrary::NativeGetBaseCombatComponentFromActor(AActor* Actor)
+{
+	//check(Actor);
+
+	if (IBaseCombatInterface* BaseCombatInterface = Cast<IBaseCombatInterface>(Actor))
+	{
+		return BaseCombatInterface->GetBaseCombatComponent();
+	}
+
+	return nullptr;
+}
+
+UBaseCombatComponent* UBaseFunctionLibrary::BP_GetBaseCombatComponentFromActor(AActor* Actor,
+	EBaseValidType& OutValidType)
+{
+	UBaseCombatComponent* CombatComponent = NativeGetBaseCombatComponentFromActor(Actor);
+
+	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
+	return CombatComponent;
+}
 
 // bool UBaseFunctionLibrary::IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn)
 // {

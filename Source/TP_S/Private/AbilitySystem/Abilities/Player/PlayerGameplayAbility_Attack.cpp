@@ -8,11 +8,11 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Character/Player/BasePlayerCharacter.h"
+#include "Components/Combat/Player/BasePlayerCombatComponent.h"
 
 UPlayerGameplayAbility_Attack::UPlayerGameplayAbility_Attack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
-	
 }
 
 void UPlayerGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -33,26 +33,23 @@ void UPlayerGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHa
 	Task->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
 	Task->OnBlendOut.AddDynamic(this, &ThisClass::OnCompleteCallback);
 	Task->ReadyForActivation();
-	
-	UAbilityTask_WaitGameplayEvent* TaskToNext = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
-		this,
-		BaseGamePlayTags::Player_Ability_Attack_Melee_Light
-		);
-	TaskToNext->EventReceived.AddDynamic(this, &UPlayerGameplayAbility_Attack::CheckComboInput);
-	TaskToNext->ReadyForActivation();
-	
-	
 }
 
 void UPlayerGameplayAbility_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	HasNextComboInput = true;
+	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
+}
+
+void UPlayerGameplayAbility_Attack::InputReleased(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
 }
 
 void UPlayerGameplayAbility_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	bool bReplicateCancelAbility)
+                                                  const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                                  bool bReplicateCancelAbility)
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 }
@@ -60,11 +57,18 @@ void UPlayerGameplayAbility_Attack::CancelAbility(const FGameplayAbilitySpecHand
 void UPlayerGameplayAbility_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	bool bReplicateEndAbility, bool bWasCancelled)
-{
+{	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
 
-	CurrentCombo = 0;
-	HasNextComboInput = false;
+void UPlayerGameplayAbility_Attack::EquipWeapon()
+{
+	return;
+}
+
+void UPlayerGameplayAbility_Attack::UnEquipWeapon(FGameplayEventData TargetData = FGameplayEventData())
+{
+	return;
 }
 
 void UPlayerGameplayAbility_Attack::OnCompleteCallback()
@@ -85,24 +89,7 @@ void UPlayerGameplayAbility_Attack::OnInterruptedCallback()
 
 FName UPlayerGameplayAbility_Attack::GetNextSection()
 {
-	CurrentCombo++;
-	if (CurrentCombo > 5)
-	{
-		CurrentCombo = 1;
-	}
-	return *FString::Printf(TEXT("%d"), CurrentCombo);
+	return *FString::Printf(TEXT("Default"));
 }
 
 
-void UPlayerGameplayAbility_Attack::CheckComboInput(FGameplayEventData TargetData)
-{
-	if (HasNextComboInput)
-	{
-		MontageJumpToSection(GetNextSection());
-		HasNextComboInput = false;
-	}
-	else
-	{
-		OnCompleteCallback();
-	}
-}

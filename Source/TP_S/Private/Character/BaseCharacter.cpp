@@ -15,8 +15,8 @@ ABaseCharacter::ABaseCharacter()
 
 	GetMesh()->bReceivesDecals = false;
 
-	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("BaseAbilitySystemComponent"));
-	BaseAttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("BaseAttributeSet"));
+	//BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("BaseAbilitySystemComponent"));
+	//BaseAttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("BaseAttributeSet"));
 }
 
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
@@ -35,4 +35,9 @@ void ABaseCharacter::PossessedBy(AController* NewController)
 		// Editor 오류로 잠시 주석
 		//ensure(CharacterStartUpData.IsNull());
 	}
+}
+
+UBaseCombatComponent* ABaseCharacter::GetBaseCombatComponent() const
+{
+	return nullptr;
 }
