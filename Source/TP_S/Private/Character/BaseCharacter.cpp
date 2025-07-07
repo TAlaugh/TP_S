@@ -36,3 +36,8 @@ void ABaseCharacter::PossessedBy(AController* NewController)
 		//ensure(CharacterStartUpData.IsNull());
 	}
 }
+
+UBaseCombatComponent* ABaseCharacter::GetBaseCombatComponent() const
+{
+	return nullptr;
+}

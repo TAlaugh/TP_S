@@ -83,7 +83,10 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_StartupBasePlayer> PlayerStartUpData;
+
+public:
 	
 	FORCEINLINE UPlayerAbilitySystemComponent* GetPlayerAbilitySystemComponent() const { return PlayerAbilitySystemComponent; }
 	FORCEINLINE UBasePlayerCombatComponent* GetPlayerCombatComponent() const { return PlayerCombatComponent; }
+	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
 };

@@ -17,11 +17,6 @@ class TP_S_API UBaseInputComponent : public UEnhancedInputComponent
 	GENERATED_BODY()
 
 public:
-	/*
-	template<class UserObject, typename CallBackFunc>
-	void BindNativeInputAction(const UDataAsset_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent, UserObject* ContextObject, CallBackFunc Func);
-	*/
-
 	template<class UserObject, typename CallbackFunc>
 	void BindNativeInputAction(const UDataAsset_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent,
 		UserObject* ContextObject, CallbackFunc Func)
