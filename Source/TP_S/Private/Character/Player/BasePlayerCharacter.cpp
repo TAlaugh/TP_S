@@ -84,15 +84,6 @@ void ABasePlayerCharacter::Landed(const FHitResult& Hit)
 	Super::Landed(Hit);
 
 	JumpCount = 0;
-	
-	/*
-	FGameplayEventData Data;
-	Data.EventTag = BaseGamePlayTags::Shared_Event_Land;
-	Data.Instigator = this;
-	Data.Target = this;
-
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Data.EventTag, Data);
-	*/
 }
 
 void ABasePlayerCharacter::BeginPlay()
@@ -189,4 +180,9 @@ void ABasePlayerCharacter::Input_AbilityInputReleased(const FGameplayTag InputTa
 	{
 		bAttackLight = false;
 	}
+}
+
+UBaseCombatComponent* ABasePlayerCharacter::GetBaseCombatComponent() const
+{
+	return PlayerCombatComponent;
 }

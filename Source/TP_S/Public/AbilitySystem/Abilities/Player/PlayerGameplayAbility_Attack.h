@@ -13,15 +13,20 @@ UCLASS()
 class TP_S_API UPlayerGameplayAbility_Attack : public UPlayerGameplayAbility
 {
 	GENERATED_BODY()
-
+public:
 	UPlayerGameplayAbility_Attack();
 
-public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 	virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+
+	UFUNCTION()
+	virtual void EquipWeapon();
+
+	UFUNCTION()
+	virtual void UnEquipWeapon(FGameplayEventData TargetData);
 
 protected:
 	UFUNCTION()
@@ -29,21 +34,14 @@ protected:
 
 	UFUNCTION()
 	void OnInterruptedCallback();
-
-	UFUNCTION(blueprintcallable)
-	FName GetNextSection();
-
-	UFUNCTION(BlueprintCallable)
-	void CheckComboInput(FGameplayEventData TargetData);
+	
+	virtual FName GetNextSection();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UPlayerGameplayAbility> Ability;
 
-	uint8 CurrentCombo = 0;
-	uint8 CachedCurrentCombo = 0;
-	FTimerHandle ComboTimerHandle;
-	bool HasNextComboInput = false;
+
 	
 	
 };

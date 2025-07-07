@@ -31,7 +31,7 @@ ABasePlayerController* UPlayerGameplayAbility::GetPlayerControllerFromActorInfo(
 
 UBasePlayerCombatComponent* UPlayerGameplayAbility::GetPlayerCombatComponentFromActorInfo()
 {
-	return GetPlayerCharacterFromActorInfo()->FindComponentByClass<UBasePlayerCombatComponent>();
+	return GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent();
 }
 
 FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerDamageGameplayEffectHandle(
