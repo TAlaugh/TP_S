@@ -21,7 +21,7 @@ ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer
 {
 	if (UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent()))
 	{
-		//Debug::Print(TEXT("ai 컨트롤러 컴포넌트 장착 완료"), FColor::Green, 5.0f);
+		// Debug::Print(TEXT("ai 컨트롤러 컴포넌트 장착 완료"), FColor::Green, 5.0f);
 	}
 
 	CurrentHealth = MaxHealth;
