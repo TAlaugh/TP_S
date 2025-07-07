@@ -31,20 +31,24 @@ public:
 	
 	// 현재 소환된 무기 등록
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void RegisterSpawnedWeapon(FGameplayTag WeaponTag, ABasePlayerWeapon* Weapon, bool bRegisterAsEquippedWeapon = false);
+	void RegisterSpawnedWeapon(FGameplayTag WeaponTag, ABasePlayerWeapon* Weapon, FGameplayTag WeaponType);
 
 	// Character's Weapon
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	ABasePlayerWeapon* GetPlayerCarriedWeaponByTag(FGameplayTag WeaponTag) const;
 
+	// 현재 장착중인 무기 인스턴스 반환
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	ABasePlayerWeapon* GetPlayerCurrentEquippedWeapon() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void EquipWeapon();
+	ABasePlayerWeapon* GetPlayerCurrentEquippedWeaponByTag(FGameplayTag WeaponType) const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void EquipWeapon(FGameplayTag WeaponType);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void UnEquipWeapon();
+	void UnEquipWeapon(FGameplayTag WeaponType);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	float GetPlayerCurrentEquippedWeaponDamageAtLevel(float Level) const;
@@ -52,6 +56,14 @@ public:
 	// 장착중인 무기의 태그
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
 	FGameplayTag CurrentEquippedWeaponTag;
+	
+	// 근거리
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	FGameplayTag CurrentEquippedMeleeWeaponTag;
+
+	// 원거리
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	FGameplayTag CurrentEquippedRangeWeaponTag;
 	
 	// HitDetection
 	virtual void OnHitTargetActor(AActor* HitActor);
@@ -61,13 +73,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void ToggleWeaponCollision(bool bUse, EPlayerToggleDamageType ToggleDamageType = EPlayerToggleDamageType::CurrentEquippedWeapon);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void ThrowWeapon();
+
 protected:
 	// 중복방지 배열
 	TArray<AActor*> OverlappedActors;
 	
 	// Character can have variety weapon
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TMap<FGameplayTag, ABasePlayerWeapon*> PlayerCarriedWeaponMap;
+	TMap<FGameplayTag, ABasePlayerWeapon*> PlayerWeaponMap;
 
 	UPROPERTY()
 	ABasePlayerCharacter* OwnerPlayer;

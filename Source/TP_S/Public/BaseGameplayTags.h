@@ -48,6 +48,13 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_SetByCaller_BaseDamage);
 
 
+	//Shared Direction
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Front)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Left)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Right)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Back)
+	
+
 	// Player Ability(Movement)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Jump);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_DoubleJump);
@@ -60,15 +67,22 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee_Heavy);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Range_Single);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Range_Stream);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Equip_Melee);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Equip_Range);
 
 	// Player Event
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_DoubleJump);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Next);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Equip);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_UnEquip);
 
 
 	// Item Tags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Consumable_HpPotion);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Consumable_ActionPotion);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equippable_Weapon);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Melee_PoleArm);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Range_MachineGun);
 
 	
 	// Enemy Tag

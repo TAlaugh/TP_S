@@ -42,6 +42,13 @@ namespace BaseGamePlayTags
 	// Shared SetByCaller(BaseDamage)
 	UE_DEFINE_GAMEPLAY_TAG(Shared_SetByCaller_BaseDamage,"Shared.SetByCaller.BaseDamage")
 
+
+	//Shared Direction
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_HitReact_Front, "Shared.Status.HitReact.Front")
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_HitReact_Left, "Shared.Status.HitReact.Left")
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_HitReact_Right, "Shared.Status.HitReact.Right")
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_HitReact_Back, "Shared.Status.HitReact.Back")
+	
 	
 	// Player Ability(Movement)
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement_Jump, "Player.Ability.Movement.Jump");
@@ -55,14 +62,20 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Heavy, "Player.Ability.Attack.Melee.Heavy");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Single, "Player.Ability.Attack.Range.Single");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Stream, "Player.Ability.Attack.Range.Stream");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Equip_Melee, "Player.Ability.Equip.Melee");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Equip_Range, "Player.Ability.Equip.Range");
 
 	// Player Event
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DoubleJump, "Player.Event.DoubleJump");
-	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Next, "Player.Event.Attack_Next");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Next, "Player.Event.Attack.Next");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip, "Player.Event.Attack.Equip");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_UnEquip, "Player.Event.Attack.UnEquip");
 
 	// Item Tags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_ActionPotion, "Item.Consumable.ActionPotion");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Melee_PoleArm, "Item.Equipable.Weapon.Melee.PoleArm");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Range_MachineGun, "Item.Equipable.Weapon.Range.MachineGun");
 
 	// Enemy Tag
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Weapon,"Enemy.Weapon")

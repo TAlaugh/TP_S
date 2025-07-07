@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "InputActionValue.h"
 #include "GameFramework/PlayerController.h"
 #include "BasePlayerController.generated.h"
@@ -17,12 +18,17 @@ class UInventoryMainWidget;
  * 
  */
 UCLASS()
-class TP_S_API ABasePlayerController : public APlayerController
+class TP_S_API ABasePlayerController : public APlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
 public:
 	ABasePlayerController();
+
+	virtual FGenericTeamId GetGenericTeamId() const override;
+
+private:
+	FGenericTeamId TeamId;
 
 protected:
 	virtual void BeginPlay() override;

@@ -16,6 +16,12 @@
 ABasePlayerController::ABasePlayerController()
 {
 	bShowMouseCursor = false;
+	TeamId = FGenericTeamId(0);
+}
+
+FGenericTeamId ABasePlayerController::GetGenericTeamId() const
+{
+	return TeamId;
 }
 
 void ABasePlayerController::BeginPlay()

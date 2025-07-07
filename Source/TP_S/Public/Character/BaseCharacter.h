@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "Components/Combat/BaseCombatComponent.h"
+#include "Interfaces/BaseCombatInterface.h"
 #include "BaseCharacter.generated.h"
 
 class UDataAsset_StartupBase;
@@ -12,7 +14,7 @@ class UBaseAttributeSet;
 class UBaseAbilitySystemComponent;
 
 UCLASS()
-class TP_S_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
+class TP_S_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface, public IBaseCombatInterface
 {
 	GENERATED_BODY()
 
@@ -34,10 +36,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_StartupBase> CharacterStartUpData;
+
+	
 	
 public:	
 	FORCEINLINE UBaseAbilitySystemComponent* GetBaseAbilitySystemComponent() const { return BaseAbilitySystemComponent; }
 
 	FORCEINLINE UBaseAttributeSet* GetBaseAttributeSet() const { return BaseAttributeSet; }
-
+	
+	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
 };
