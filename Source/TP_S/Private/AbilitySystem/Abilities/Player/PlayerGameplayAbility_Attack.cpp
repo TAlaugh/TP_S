@@ -61,14 +61,21 @@ void UPlayerGameplayAbility_Attack::EndAbility(const FGameplayAbilitySpecHandle 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-void UPlayerGameplayAbility_Attack::EquipWeapon()
+void UPlayerGameplayAbility_Attack::EquipWeapon(FName SocketName)
 {
-	return;
 }
 
 void UPlayerGameplayAbility_Attack::UnEquipWeapon(FGameplayEventData TargetData = FGameplayEventData())
 {
 	return;
+}
+
+void UPlayerGameplayAbility_Attack::EquipWeaponLeftSocket(FGameplayEventData Data)
+{
+}
+
+void UPlayerGameplayAbility_Attack::EquipWeaponRightSocket(FGameplayEventData Data)
+{
 }
 
 void UPlayerGameplayAbility_Attack::OnCompleteCallback()

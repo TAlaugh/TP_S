@@ -67,7 +67,7 @@ ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponByT
 	return GetPlayerCarriedWeaponByTag(WeaponType == BaseGamePlayTags::Player_Ability_Equip_Melee ? CurrentEquippedMeleeWeaponTag : CurrentEquippedRangeWeaponTag);
 }
 
-void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType)
+void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName SocketName)
 {
 	if (!GetPlayerCurrentEquippedWeaponByTag(WeaponType))
 	{
@@ -77,7 +77,7 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType)
 	GetPlayerCurrentEquippedWeaponByTag(WeaponType)->AttachToComponent(
 		GetOwningPawn()->FindComponentByClass<USkeletalMeshComponent>(),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
-		FName("hand_rSocket"));
+		SocketName);
 	
 	if (WeaponType == BaseGamePlayTags::Player_Ability_Equip_Melee)
 	{

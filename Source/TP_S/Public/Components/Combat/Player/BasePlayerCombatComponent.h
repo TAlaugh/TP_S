@@ -45,7 +45,7 @@ public:
 	ABasePlayerWeapon* GetPlayerCurrentEquippedWeaponByTag(FGameplayTag WeaponType) const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void EquipWeapon(FGameplayTag WeaponType);
+	void EquipWeapon(FGameplayTag WeaponType, FName SocketName = FName("hand_rSocket"));
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void UnEquipWeapon(FGameplayTag WeaponType);

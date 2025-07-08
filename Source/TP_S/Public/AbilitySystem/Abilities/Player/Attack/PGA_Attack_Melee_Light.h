@@ -25,9 +25,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void NextCombo(FGameplayEventData TargetData);
 	
-	virtual void EquipWeapon() override;
+	virtual void EquipWeapon(FName SocketName = FName("hand_rSocket")) override;
 	
 	virtual void UnEquipWeapon(FGameplayEventData TargetData) override;
+
+	UFUNCTION()
+	virtual void EquipWeaponLeftSocket(FGameplayEventData Data) override;
+
+	UFUNCTION()
+	virtual void EquipWeaponRightSocket(FGameplayEventData Data) override;
 
 	uint8 CurrentCombo = 0;
 	uint8 CachedCurrentCombo = 0;
