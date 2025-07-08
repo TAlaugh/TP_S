@@ -8,6 +8,14 @@
 
 void UDataAsset_StartupBaseEnemy::GiveToAbilitySystemComponent(UBaseAbilitySystemComponent* ASC, int32 Level)
 {
+	if (!ASC)
+	{
+		return;
+	}
+	if (!ASC->GetAvatarActor())
+	{
+		return;
+	}
 	Super::GiveToAbilitySystemComponent(ASC, Level);
 
 	if (!EnemyCombatAbilities.IsEmpty())

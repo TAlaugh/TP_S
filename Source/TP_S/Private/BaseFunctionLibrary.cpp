@@ -12,15 +12,28 @@
 
 UBaseAbilitySystemComponent* UBaseFunctionLibrary::NativeGetBaseASCFromActor(AActor* InActor)
 {
-	check(InActor);
+	if (!InActor)
+	{
+		return nullptr;
+	}
 
-	return CastChecked<UBaseAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor));
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
+	if (!ASC)
+	{
+		return nullptr;
+	}
 
+	return Cast<UBaseAbilitySystemComponent>(ASC);
 }
 
 void UBaseFunctionLibrary::AddGameplayTagToActorIfNone(AActor* InActor, FGameplayTag TagToAdd)
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
+
+	if (!ASC)
+	{
+		return;
+	}
 
 	if (!ASC->HasMatchingGameplayTag(TagToAdd))
 	{
@@ -32,6 +45,12 @@ void UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(AActor* InActor, FG
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
 
+	if (!ASC)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("RemoveGameplayTagFromActorIfFound: ASC is nullptr!"));
+		return;
+	}
+
 	if (ASC->HasMatchingGameplayTag(TagToRemove))
 	{
 		ASC->RemoveLooseGameplayTag(TagToRemove);
@@ -42,6 +61,12 @@ bool UBaseFunctionLibrary::NativeDoesActorHaveTag(AActor* InActor, FGameplayTag 
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
 
+	if (!ASC)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NativeDoesActorHaveTag: ASC is nullptr!"));
+		return false;
+	}
+	
 	return ASC->HasMatchingGameplayTag(TagToCheck);
 }
 

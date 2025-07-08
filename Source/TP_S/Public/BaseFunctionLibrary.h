@@ -24,23 +24,23 @@ class TP_S_API UBaseFunctionLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
-	static UBaseAbilitySystemComponent* NativeGetBaseASCFromActor(AActor*  InActor);
-
-	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary")
-	static void AddGameplayTagToActorIfNone(AActor* InActor,FGameplayTag TagToAdd);
-
-	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary")
-	static void RemoveGameplayTagFromActorIfFound(AActor* InActor,FGameplayTag TagToRemove);
-
-	static bool NativeDoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck);
-
-	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs = "OutConfirmType"))
-	static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, EBaseConfirmType& OutConfirmType);
-
-	static UBaseCombatComponent* NativeGetBaseCombatComponentFromActor(AActor* Actor);
+	 static UBaseAbilitySystemComponent* NativeGetBaseASCFromActor(AActor*  InActor);
 	
-	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Get Base Combat Component From Actor",  ExpandEnumAsExecs = "OutValidType"))
-	static UBaseCombatComponent* BP_GetBaseCombatComponentFromActor(AActor* Actor, EBaseValidType& OutValidType);
+	 UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary")
+	 static void AddGameplayTagToActorIfNone(AActor* InActor,FGameplayTag TagToAdd);
+	
+	 UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary")
+	 static void RemoveGameplayTagFromActorIfFound(AActor* InActor,FGameplayTag TagToRemove);
+	
+	 static bool NativeDoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck);
+	
+	 UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs = "OutConfirmType"))
+	 static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, EBaseConfirmType& OutConfirmType);
+	
+	 static UBaseCombatComponent* NativeGetBaseCombatComponentFromActor(AActor* Actor);
+	
+	 UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Get Base Combat Component From Actor",  ExpandEnumAsExecs = "OutValidType"))
+	 static UBaseCombatComponent* BP_GetBaseCombatComponentFromActor(AActor* Actor, EBaseValidType& OutValidType);
 
 	/*
 	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
