@@ -21,51 +21,11 @@
 // {
 // 	if (UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent()))
 // 	{
-// 		Debug::Print(TEXT("ai 컨트롤러 컴포넌트 장착 완료"), FColor::Green, 5.0f);
+// 		// Debug::Print(TEXT("ai 컨트롤러 컴포넌트 장착 완료"), FColor::Green, 5.0f);
 // 	}
 //
 // 	CurrentHealth = MaxHealth;
 // 	CurrentHealthState = EHealthState::Healthy;
-// 	
-// 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
-// 	
-// 	//AISenseConfig_Sight 생성자
-// 	AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISenseConfig_Sight"));
-// 	AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
-// 	AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;
-// 	AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
-// 	AISenseConfig_Sight->SightRadius = 1500;
-// 	AISenseConfig_Sight->LoseSightRadius = 2000;
-// 	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 160.0f;
-// 	AISenseConfig_Sight->SetMaxAge(5.f);
-//
-// 	//AISenseConfig_Damage 생성자
-// 	AISenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("AISenseConfig_Damage"));
-//
-// 	//AISenseConfig_Hearing 생성자
-// 	AISenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISenseConfig_Hearing"));
-// 	AISenseConfig_Hearing->HearingRange = 2000;
-// 	AISenseConfig_Hearing->SetMaxAge(10.f);
-// 	AISenseConfig_Hearing->DetectionByAffiliation.bDetectEnemies = true;
-// 		
-//
-// 	//AISenseConfig_Team 생성자
-// 	AISenseConfig_Team = CreateDefaultSubobject<UAISenseConfig_Team>(TEXT("AISenseConfig_Team"));
-// 	AISenseConfig_Team -> SetMaxAge(2.f);
-//
-//
-// 	//팀 아이디 부여
-//
-// 	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
-// 	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Damage);
-// 	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Hearing);
-// 	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Team);
-// 	AIPerceptionComponent->SetDominantSense(UAISense_Sight::StaticClass());
-//
-// 	AIPerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ABaseAIController::OnEnemyPerceptionUpdated);
-// 	SetPerceptionComponent(*AIPerceptionComponent);
-// 	
-// 	
 // }
 //
 //
@@ -74,16 +34,6 @@
 // 	Super::BeginPlay();
 // 	SetGenericTeamId(FGenericTeamId(1));
 // 	
-// 	if (BehaviorTreeAsset)
-// 	{
-// 		RunBehaviorTree(BehaviorTreeAsset);
-// 	}
-// 	
-// 	if (AIPerceptionComponent)
-// 	{
-// 		AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(
-// 			this, &ABaseAIController::OnEnemyPerceptionUpdated);
-// 	}
 //
 // 	SightSenseID = UAISense_Sight::StaticClass()->GetDefaultObject<UAISense_Sight>()->GetSenseID();
 // 	HearingSenseID = UAISense_Hearing::StaticClass()->GetDefaultObject<UAISense_Hearing>()->GetSenseID();
@@ -100,36 +50,6 @@
 // }
 //
 //
-// void ABaseAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
-// {
-// 	if (Stimulus.WasSuccessfullySensed() && Actor)
-// 	{
-// 		UE_LOG(LogTemp, Log, TEXT("Stimulus not successfully sensed for"));
-// 	}
-// 	
-// 	if (!Actor) return;
-//
-// 	// FAISenseID를 직접 비교
-// 	FAISenseID SenseID = Stimulus.Type;
-//     
-// 	if (SenseID == SightSenseID)
-// 	{
-// 		HandleSightStimulus(Actor, Stimulus);
-// 	}
-// 	else if (SenseID == HearingSenseID)
-// 	{
-// 		HandleHearingStimulus(Actor, Stimulus);
-// 	}
-// 	else if (SenseID == DamageSenseID)
-// 	{
-// 		HandleDamageStimulus(Actor, Stimulus);
-// 	}
-// 	else if (SenseID == TeamSenseID)
-// 	{
-// 		HandleTeamStimulus(Actor, Stimulus);
-// 	}
-// }
-//
 // void ABaseAIController::HandleSightStimulus(AActor* Actor, FAIStimulus Stimulus)
 // {
 // 	if (Stimulus.WasSuccessfullySensed())
@@ -138,25 +58,7 @@
 //         
 // 		// 시각적 감지 시에만 타겟 설정
 // 		GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), Actor);
-//         
-// 		// 거리별 상태 차별화
-// 		const float Distance = FVector::Dist(Actor->GetActorLocation(), GetPawn()->GetActorLocation());
-//         
-// 		if (Distance < 300.f)
-// 		{
-// 			SetAIState(EAIState::Combat);
-// 			UE_LOG(LogTemp, Warning, TEXT("COMBAT RANGE: %s at distance %.2f"), *Actor->GetName(), Distance);
-// 		}
-// 		else if (Distance < 800.f)
-// 		{
-// 			SetAIState(EAIState::Alert);
-// 			UE_LOG(LogTemp, Log, TEXT("ALERT RANGE: %s at distance %.2f"), *Actor->GetName(), Distance);
-// 		}
-// 		else
-// 		{
-// 			SetAIState(EAIState::Investigate);
-// 			UE_LOG(LogTemp, Log, TEXT("INVESTIGATE RANGE: %s at distance %.2f"), *Actor->GetName(), Distance);
-// 		}
+//        
 // 		// 시야 상실 타이머 정리
 // 		GetWorld()->GetTimerManager().ClearTimer(LoseSightTimerHandle);
 // 		}
@@ -171,29 +73,6 @@
 // 				3.0f, false);
 // 		}
 // 	}
-//
-// void ABaseAIController::HandleHearingStimulus(AActor* Actor, FAIStimulus Stimulus)
-// {
-// 	if (Stimulus.WasSuccessfullySensed())
-// 	{
-// 		UE_LOG(LogTemp, Log, TEXT("[HEARING] Heard sound from: %s at %s"),
-// 			*Actor->GetName(), *Stimulus.StimulusLocation.ToString());
-//         
-// 		// 청각 감지 시 조사 상태로 전환
-// 		GetBlackboardComponent()->SetValueAsVector(TEXT("InvestigateLocation"), Stimulus.StimulusLocation);
-//         
-// 		EAIState CurrentState = GetCurrentAIState();
-// 		if (CurrentState == EAIState::Idle || CurrentState == EAIState::Patrol)
-// 		{
-// 			SetAIState(EAIState::Investigate);
-// 		}
-//         
-// 		// 소리 방향으로 시선 조정
-// 		FVector DirectionToSound = (Stimulus.StimulusLocation - GetPawn()->GetActorLocation()).GetSafeNormal();
-// 		FRotator LookRotation = DirectionToSound.Rotation();
-// 		GetPawn()->SetActorRotation(FMath::RInterpTo(GetPawn()->GetActorRotation(), LookRotation, GetWorld()->GetDeltaSeconds(), 2.0f));
-// 	}
-// }
 //
 // void ABaseAIController::HandleDamageStimulus(AActor* Actor, FAIStimulus Stimulus)
 // {
@@ -432,7 +311,7 @@
 // 	if (OldState != CurrentHealthState)
 // 	{
 // 		OnHealthStateChanged(CurrentHealthState);
-// 		HandleLowHealthReaction();
+// 		
 // 	}
 // }
 //
@@ -456,86 +335,9 @@
 // 	OnHealthStateChangedEvent(NewState, GetHealthPercentage());
 // }
 //
-// void ABaseAIController::HandleLowHealthReaction()
-// {
-// 	if (CurrentHealthState == EHealthState::Healthy)
-// 		return;
-// 	switch (PersonalityType)
-// 	{
-// 	case EAIPersonality::Aggressive:
-// 		HandleAggressiveLowHealth();
-// 		break;
-//         
-// 	case EAIPersonality::Cowardly:
-// 		HandleCowardlyLowHealth();
-// 		break;
-//         
-// 	case EAIPersonality::Berserker:
-// 		HandleBerserkerLowHealth();
-// 		break;
-//    
-// 	}
+//
 // }
 //
-// void ABaseAIController::HandleAggressiveLowHealth()
-// {
-// 	switch (CurrentHealthState)
-// 	{
-// 	case EHealthState::Injured:
-// 		// 부상 상태: 더 공격적으로 변함
-// 		if (AISenseConfig_Sight)
-// 		{
-// 			AISenseConfig_Sight->SightRadius *= 1.2f;
-// 		}
-// 		SetAIState(EAIState::Alert);
-// 		break;
-// 		
-// 	case EHealthState::Critical:
-// 		// 위험 상태: 최후의 발악
-// 		SetAIState(EAIState::Combat);
-// 		OnPersonalityHealthReaction(TEXT("LAST_STAND"));
-// 		break;
-// 	}
-// }
-//
-// void ABaseAIController::HandleCowardlyLowHealth()
-// {
-// 	switch (CurrentHealthState)
-// 	{
-// 	case EHealthState::Injured:
-// 		// 부상 상태: 즉시 도망
-// 		SetAIState(EAIState::Flee);
-// 		break;
-// 	
-// 	case EHealthState::Critical:
-// 		// 중상/위험 상태: 패닉 상태로 도망
-// 		SetAIState(EAIState::Flee);
-// 		OnPersonalityHealthReaction(TEXT("PANIC_FLEE"));
-// 		break;
-// 	}
-// }
-//
-// void ABaseAIController::HandleBerserkerLowHealth()
-// {
-// 	switch (CurrentHealthState)
-// 	{
-// 	case EHealthState::Injured:
-// 		// 부상 상태: 계속 전투
-// 		SetAIState(EAIState::Combat);
-// 		OnPersonalityHealthReaction(TEXT("IGNORE_PAIN"));
-// 		break;
-// 	
-// 	case EHealthState::Critical:
-// 		// 중상/위험 상태: 광전사 모드
-// 		SetAIState(EAIState::Combat);
-// 		if (AISenseConfig_Sight)
-// 		{
-// 			AISenseConfig_Sight->PeripheralVisionAngleDegrees = 45.0f; // 터널 비전
-// 		}
-// 		OnPersonalityHealthReaction(TEXT("BERSERKER_RAGE"));
-// 		break;
-// 	}
-// }
 //
 // void ABaseAIController::OnHealthy()
 // {
@@ -552,56 +354,4 @@
 // 	return;
 // }
 //
-//
-// void ABaseAIController::AdjustPerceptionForState(EAIState State)
-// {
-// 	if (!AISenseConfig_Sight || !AISenseConfig_Hearing) return;
-//     
-// 	switch (State)
-// 	{
-// 	case EAIState::Alert:
-// 		AISenseConfig_Sight->SightRadius = 1800.0f;
-// 		AISenseConfig_Hearing->HearingRange = 2500.0f;
-// 		break;
-//         
-// 	case EAIState::Combat:
-// 		AISenseConfig_Sight->SightRadius = 2000.0f;
-// 		AISenseConfig_Hearing->HearingRange = 3000.0f;
-// 		break;
-//         
-// 	case EAIState::Investigate:
-// 		AISenseConfig_Sight->SightRadius = 1200.0f;
-// 		AISenseConfig_Hearing->HearingRange = 2800.0f;
-// 		break;
-//         
-// 	default:
-// 		// 기본 설정으로 복원
-// 		AISenseConfig_Sight->SightRadius = 1500.0f;
-// 		AISenseConfig_Hearing->HearingRange = 2000.0f;
-// 		break;
-// 	}
-// 	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
-// 	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Hearing);
-// }
-//
-// ETeamAttitude::Type ABaseAIController::GetTeamAttitudeTowards(const AActor& Other) const
-// {
-// 	const IGenericTeamAgentInterface* OtherTeamAgent = Cast<IGenericTeamAgentInterface>(&Other);
-// 	if (!OtherTeamAgent)
-// 	{
-// 		return ETeamAttitude::Neutral;
-// 	}
-//
-// 	const FGenericTeamId MyTeamID = GetGenericTeamId();
-// 	const FGenericTeamId OtherTeamID = OtherTeamAgent->GetGenericTeamId();
-//
-// 	if (MyTeamID == OtherTeamID)
-// 	{
-// 		return ETeamAttitude::Friendly;
-// 	}
-// 	else
-// 	{
-// 		return ETeamAttitude::Hostile;
-// 	}
-// }
 //

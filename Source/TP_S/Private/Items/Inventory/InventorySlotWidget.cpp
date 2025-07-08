@@ -13,22 +13,22 @@ void UInventorySlotWidget::SetupSlot(UItemDataAsset* InItemData, int32 InCount)
 	ItemData = InItemData;
 	Count = InCount;
 
-	// 이미지 로딩
-	if (IConImage && ItemData && !ItemData->Icon.IsNull())
+	if (!IConImage) return;
+	
+	/** 머테리얼이 있으면 머테리얼 없으면 텍스쳐 **/
+	if (ItemData && !ItemData->IconMaterial.IsNull())
 	{
-		// 간단히 직접 로드
-		UTexture2D* LoadedIcon = ItemData->Icon.LoadSynchronous();
-		if (LoadedIcon)
-		{
-			IConImage->SetBrushFromTexture(LoadedIcon);
-			IConImage->SetVisibility(ESlateVisibility::Visible);
-		}
-		else
-		{
-			IConImage->SetVisibility(ESlateVisibility::Hidden);
-		}
+		UMaterialInterface* MI = ItemData->IconMaterial.LoadSynchronous();
+		IConImage->SetBrushFromMaterial(MI);
+		IConImage->SetVisibility(ESlateVisibility::Visible);
 	}
-	else if (IConImage)
+	else if (ItemData && !ItemData->IconTexture.IsNull() && ItemData->IconMaterial.IsNull())
+	{
+		UTexture2D* Texture = ItemData->IconTexture.LoadSynchronous();
+		IConImage->SetBrushFromTexture(Texture);
+		IConImage->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
 	{
 		IConImage->SetVisibility(ESlateVisibility::Collapsed);
 	}
@@ -59,6 +59,7 @@ bool UInventorySlotWidget::Initialize()
 	if (SlotButton)
 	{
 		SlotButton->OnClicked.AddDynamic(this, &UInventorySlotWidget::HandleOnClicked);
+		SetSelected(bIsSelected);
 	}
 
 	return true;

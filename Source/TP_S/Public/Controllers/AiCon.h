@@ -1,6 +1,6 @@
-// // Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 //
-// #pragma once
+//  #pragma once
 //
 // UENUM(BlueprintType)
 // enum class EAIState : uint8
@@ -11,14 +11,6 @@
 // 	Alert       UMETA(DisplayName = "Alert"),
 // 	Combat      UMETA(DisplayName = "Combat"),
 // 	Flee        UMETA(DisplayName = "Flee")
-// };
-//
-// UENUM(BlueprintType)
-// enum class EAIPersonality : uint8
-// {
-// 	Aggressive   UMETA(DisplayName = "Aggressive"),    // 공격적
-// 	Berserker    UMETA(DisplayName = "Berserker"),     // 광전사
-// 	Cowardly     UMETA(DisplayName = "Cowardly"),	   // 겁쟁이
 // };
 //
 // UENUM(BlueprintType)
@@ -60,57 +52,20 @@
 // 	
 // 	ABaseAIController(const FObjectInitializer& ObjectInitializer) ;
 //
-// 	virtual FGenericTeamId GetGenericTeamId() const override { return TeamID; }
-// 	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override { TeamID = InTeamID; }
 //
 // protected:
-//
-//
-// 	UPROPERTY(EditDefaultsOnly, Category = "AI")
-// 	UBehaviorTree* BehaviorTreeAsset;
 // 	
-// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI|Personality")
-// 	EAIPersonality PersonalityType = EAIPersonality::Aggressive;
-// 	
-// 	//AI 컴포넌트들
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AI|Components")
-// 	UAIPerceptionComponent* AIPerceptionComponent;
-//
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AI|Components")
-// 	UAISenseConfig_Sight* AISenseConfig_Sight;
-//
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AI|Components")
-// 	UAISenseConfig_Hearing* AISenseConfig_Hearing;
-//
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AI|Components")
-// 	UAISenseConfig_Damage* AISenseConfig_Damage;
-//
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AI|Components")
-// 	UAISenseConfig_Team* AISenseConfig_Team;
-//
 // 	// 가상함수들
-//
-// 	virtual void BeginPlay() override;
 // 	
-// 	virtual void OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
-//
-// 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
-//
 // 	virtual void HandleLoseSight(AActor* LostActor);
 //
-// 	//감각별 처리 함수들
-// 	UFUNCTION(BlueprintCallable, Category="AI|Perception")
-// 	void HandleSightStimulus(AActor* Actor, FAIStimulus Stimulus);
-//     
-// 	UFUNCTION(BlueprintCallable, Category="AI|Perception")
-// 	void HandleHearingStimulus(AActor* Actor, FAIStimulus Stimulus);
-//     
-// 	UFUNCTION(BlueprintCallable, Category="AI|Perception")
-// 	void HandleDamageStimulus(AActor* Actor, FAIStimulus Stimulus);
-//     
-// 	UFUNCTION(BlueprintCallable, Category="AI|Perception")
-// 	void HandleTeamStimulus(AActor* Actor, FAIStimulus Stimulus);
-//
+	// //감각별 처리 함수들
+	// UFUNCTION(BlueprintCallable, Category="AI|Perception")
+	// void HandleSightStimulus(AActor* Actor, FAIStimulus Stimulus);
+ //    
+	// UFUNCTION(BlueprintCallable, Category="AI|Perception")
+	// void HandleDamageStimulus(AActor* Actor, FAIStimulus Stimulus);
+ //   
 // 	// //메모리 관리
 // 	UFUNCTION(BlueprintCallable, Category="AI|Memory")
 // 	void UpdateLastKnownLocation(AActor* Actor, FVector Location);
@@ -121,16 +76,6 @@
 // 	UFUNCTION(BlueprintCallable, Category="AI|Memory")
 // 	void ClearActorMemory(AActor* Actor);
 //
-// 	//블루프린트 이벤트들
-// 	UFUNCTION(BlueprintImplementableEvent, Category="AI|Events")
-// 	void OnTargetAcquired(AActor* NewTarget);
-//     
-// 	UFUNCTION(BlueprintImplementableEvent, Category="AI|Events")
-// 	void OnTargetLost(AActor* LostTarget);
-//     
-// 	UFUNCTION(BlueprintImplementableEvent, Category="AI|Events")
-// 	void OnStateChanged(EAIState OldState, EAIState NewState);
-//     
 // 	
 // 	// 상태 관리
 // 	
@@ -201,12 +146,6 @@
 // 	UFUNCTION(BlueprintCallable, Category="AI|Health")
 // 	void OnHealthStateChanged(EHealthState NewState);
 // 	
-// 	
-// 	// 성격별 체력 반응 함수들
-// 	void HandleLowHealthReaction();
-// 	void HandleAggressiveLowHealth();
-// 	void HandleCowardlyLowHealth();
-// 	void HandleBerserkerLowHealth();
 // 	
 // 	// 체력 상태별 처리 함수들
 // 	virtual void OnHealthy();

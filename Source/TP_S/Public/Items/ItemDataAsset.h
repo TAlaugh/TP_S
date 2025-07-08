@@ -25,7 +25,10 @@ public:
 
 	/** 인벤토리 아이콘 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Basic")
-	TSoftObjectPtr<UTexture2D> Icon;
+	TSoftObjectPtr<UTexture2D> IconTexture;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Basic")
+	TSoftObjectPtr<UMaterialInterface> IconMaterial;
 
 	/** 아이템 최대 갯수 **/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Basic")

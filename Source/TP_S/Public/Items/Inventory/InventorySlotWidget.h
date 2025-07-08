@@ -30,8 +30,7 @@ public:
 	/** 클릭 이벤트 **/
 	UPROPERTY(BlueprintAssignable)
 	FOnSlotClicked OnSlotClicked;
-
-protected:
+	
 	virtual bool Initialize() override;
 
 	/** BindWiget **/
@@ -68,5 +67,7 @@ protected:
 	UPROPERTY()
 	int32 Count;
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	UItemDataAsset* GetItem() const { return ItemData; }
 	
 };
