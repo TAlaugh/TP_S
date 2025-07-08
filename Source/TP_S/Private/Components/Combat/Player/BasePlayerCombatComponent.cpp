@@ -113,6 +113,7 @@ float UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel(fl
 
 void UBasePlayerCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
+	Debug::Print(HitActor->GetActorLabel());
 	if (OverlappedActors.Contains(HitActor))
 	{
 		return;
@@ -120,6 +121,7 @@ void UBasePlayerCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 	OverlappedActors.AddUnique(HitActor);
 
+	
 	FGameplayEventData Data;
 	Data.Instigator = GetOwningPawn();
 	Data.Target = HitActor;
@@ -151,21 +153,6 @@ void UBasePlayerCombatComponent::ToggleWeaponCollision(bool bUse, EPlayerToggleD
 			}
 		}
 	}
+	
 }
 
-void UBasePlayerCombatComponent::ThrowWeapon()
-{
-	if (!CurrentEquippedWeaponTag.IsValid())
-	{
-		return;
-	}
-	ABasePlayerWeapon* Weapon = GetPlayerCurrentEquippedWeapon();
-	
-	Weapon->K2_DetachFromActor();
-	Weapon->SetActorLocation(OwnerPlayer->GetActorLocation() + OwnerPlayer->GetActorForwardVector() * 1000.f);
-	FVector TargetLocation = OwnerPlayer->GetActorLocation() + OwnerPlayer->GetActorForwardVector() * 1000.f;
-	float InterpSpeed = 500.f;
-	FVector WeaponLocation = FMath::VInterpTo(OwnerPlayer->GetActorLocation(), TargetLocation, GetWorld()->GetDeltaSeconds(), InterpSpeed);
-	Weapon->SetActorLocation(WeaponLocation);
-	//Weapon->GetSkeletalMeshComponent()->GetAnimInstance()->Montage_Play(Weapon->);
-}
