@@ -42,6 +42,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Get Base Combat Component From Actor",  ExpandEnumAsExecs = "OutValidType"))
 	static UBaseCombatComponent* BP_GetBaseCombatComponentFromActor(AActor* Actor, EBaseValidType& OutValidType);
 
+	/*
 	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
 	static bool IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn);
 	
@@ -53,5 +54,6 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
 	static bool IsValidBlock(AActor* InAttacker, AActor* InDefender);
+	*/
 	
 };

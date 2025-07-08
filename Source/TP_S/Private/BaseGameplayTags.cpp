@@ -68,7 +68,11 @@ namespace BaseGamePlayTags
 	// Player Event
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DoubleJump, "Player.Event.DoubleJump");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Next, "Player.Event.Attack.Next");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Throw, "Player.Event.Attack.Throw");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip, "Player.Event.Attack.Equip");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip_Right, "Player.Event.Attack.Equip.Right");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip_Left, "Player.Event.Attack.Equip.Left");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip_Switch, "Player.Event.Attack.Equip.Switch");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_UnEquip, "Player.Event.Attack.UnEquip");
 
 	// Item Tags

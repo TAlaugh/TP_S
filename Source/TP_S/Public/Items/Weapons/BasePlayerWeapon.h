@@ -19,4 +19,7 @@ class TP_S_API ABasePlayerWeapon : public ABaseWeapon
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UWeaponItemDataAsset> ItemDataAsset;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UAnimMontage> ItemMontage;
 };

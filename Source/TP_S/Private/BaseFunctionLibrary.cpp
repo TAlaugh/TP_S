@@ -71,28 +71,30 @@ UBaseCombatComponent* UBaseFunctionLibrary::BP_GetBaseCombatComponentFromActor(A
 	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
 	return CombatComponent;
 }
+/*
+UBaseCombatComponent* UBaseFunctionLibrary::NativeGetBaseCombatComponentFromActor(AActor* InActor)
+{
+	check(InActor);
+ 
+ 	if (IBaseCombatInterface* BaseCombatInterface = Cast<IBaseCombatInterface>(InActor))
+ 	{
+ 		return BaseCombatInterface->GetBaseCombatComponent();
+ 	}
+ 	
+ 	return nullptr;
+}
 
-// UBaseCombatComponent* UBaseFunctionLibrary::NativeGetBaseCombatComponentFromActor(AActor* InActor)
-// {
-// 	check(InActor);
-//  
-//  	if (IBaseCombatInterface* BaseCombatInterface = Cast<IBaseCombatInterface>(InActor))
-//  	{
-//  		return BaseCombatInterface->GetBaseCombatComponent();
-//  	}
-//  	
-//  	return nullptr;
-// }
-//
-// UBaseCombatComponent* UBaseFunctionLibrary::BP_GetBaseCombatComponentFromActor(AActor* InActor,
-// 	EBaseValidType& OutValidType)
-// {
-// 	UBaseCombatComponent* CombatComponent = NativeGetBaseCombatComponentFromActor(InActor);
-//
-// 	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
-//
-// 	return CombatComponent;
-// }
+UBaseCombatComponent* UBaseFunctionLibrary::BP_GetBaseCombatComponentFromActor(AActor* InActor,
+	EBaseValidType& OutValidType)
+{
+	UBaseCombatComponent* CombatComponent = NativeGetBaseCombatComponentFromActor(InActor);
+
+	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
+
+	return CombatComponent;
+}
+
+
 
 bool UBaseFunctionLibrary::IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn)
 {
@@ -161,3 +163,4 @@ bool UBaseFunctionLibrary::IsValidBlock(AActor* InAttacker, AActor* InDefender)
 	
 	return DotResult < -0.1f;
 }
+*/
