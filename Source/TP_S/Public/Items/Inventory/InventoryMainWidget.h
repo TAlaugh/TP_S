@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "BaseType/Player/PlayerEnumType.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Inventory/QuickSlotComponent.h"
 #include "InventoryMainWidget.generated.h"
 
+class UQuickSlotComponent;
 class UInventorySlotWidget;
 class UScrollBox;
 class UButton;
@@ -64,9 +66,15 @@ public:
 	
 	void SetSelectedSlot(UInventorySlotWidget* NewSlot);
 
+	UFUNCTION()
+	void HandleQuickSlotChaged(const FQuickSlotData& Data);
+
 private:
 	UPROPERTY()
 	UPlayerInventoryComponent* Inventory;
+
+	UPROPERTY()
+	UQuickSlotComponent* QuickSlotComponent;
 	
 	EInventoryCategory CurrentTab = EInventoryCategory::Consumable;
 };

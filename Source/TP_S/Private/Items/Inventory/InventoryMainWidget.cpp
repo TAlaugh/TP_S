@@ -3,6 +3,7 @@
 
 #include "Items/Inventory/InventoryMainWidget.h"
 
+#include "DebugHelper.h"
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
@@ -17,6 +18,15 @@ void UInventoryMainWidget::Init(UPlayerInventoryComponent* InInventory)
 	if (Inventory)
 	{
 		Inventory->OnInventoryChanged.AddDynamic(this, &UInventoryMainWidget::Refresh);
+	}
+
+	if (APawn* P = GetOwningPlayerPawn())
+	{
+		QuickSlotComponent = P->FindComponentByClass<UQuickSlotComponent>();
+		if (QuickSlotComponent)
+		{
+			QuickSlotComponent->OnQuickSlotChanged.AddDynamic(this, &UInventoryMainWidget::HandleQuickSlotChaged);
+		}
 	}
 	
 	Refresh(); // 처음 로드
@@ -73,17 +83,25 @@ void UInventoryMainWidget::Refresh()
 	}
 
 	ScrollItems->ClearChildren();
+
+	UItemDataAsset* QuickItem = QuickSlotComponent ? QuickSlotComponent->GetData().ItemData : nullptr;
+	
 	const TArray<FItemStack>& Items = Inventory->GetStacks();
 	// UE_LOG(LogTemp,Warning,TEXT("Stacks = %d"), Items.Num());
 	
 	for (const FItemStack& Stack : Items)
 	{
-		// UE_LOG(LogTemp,Warning,TEXT("  item %s cat %d cnt %d"), *Stack.ItemData->GetName(), int32(Stack.ItemData->Category), Stack.Count);
+		// UE_LOG(LogTemp,Warning,TEXT("item %s cat %d cnt %d"), *Stack.ItemData->GetName(), int32(Stack.ItemData->Category), Stack.Count);
 		
 		if (CurrentTab != EInventoryCategory::None && Stack.ItemData->Category != CurrentTab) continue;
 
 		UInventorySlotWidget* SlotWidget = CreateWidget<UInventorySlotWidget>(this, SlotClass);
 		SlotWidget->SetupSlot(Stack.ItemData, Stack.Count);
+		
+		const bool bIsQuick = (QuickItem && Stack.ItemData == QuickItem);
+		SlotWidget->SetQuickSlotBG(bIsQuick);
+		
+		SlotWidget->OnSlotClicked.AddDynamic(this, &UInventoryMainWidget::HandleSlotClicked);
 		ScrollItems->AddChild(SlotWidget);
 	}
 }
@@ -106,6 +124,7 @@ void UInventoryMainWidget::HandleSlotClicked(UInventorySlotWidget* Clicked)
 				if (auto* Inv = P->FindComponentByClass<UPlayerInventoryComponent>())
 				{
 					QSC->RegisterItem(Cast<UConsumableItemDataAsset>(Item), Inv);
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, (TEXT("%s"), QSC->GetData().ItemData.GetName()));
 				}
 			}
 		}
@@ -129,4 +148,9 @@ void UInventoryMainWidget::SetSelectedSlot(UInventorySlotWidget* NewSlot)
 	{
 		SelectedSlot->SetSelected(true);
 	}
+}
+
+void UInventoryMainWidget::HandleQuickSlotChaged(const FQuickSlotData& Data)
+{
+	Refresh();
 }

@@ -57,6 +57,12 @@ public:
 
 	bool bIsSelected = false;
 
+	/** 퀵 슬롯 등록 시 강조 **/
+	UPROPERTY(meta = (BindWidget))
+	UImage* QuickSlot_BG;
+
+	void SetQuickSlotBG(bool bOn);
+
 	/** 클릭 시 호출 **/
 	UFUNCTION()
 	void HandleOnClicked();

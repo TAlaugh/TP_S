@@ -3,6 +3,7 @@
 
 #include "Items/Inventory/QuickSlotWidget.h"
 
+#include "DebugHelper.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"

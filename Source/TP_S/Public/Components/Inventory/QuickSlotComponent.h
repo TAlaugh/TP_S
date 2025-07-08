@@ -30,12 +30,18 @@ class TP_S_API UQuickSlotComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void HandleInventoryChanged();
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnQuickSlotChanged OnQuickSlotChanged;
 
 	bool RegisterItem(UConsumableItemDataAsset* Item, UPlayerInventoryComponent* Inventory);
 
+	UFUNCTION(BlueprintCallable)
 	bool UseSlot(UPlayerInventoryComponent* Inventory);
 
 	const FQuickSlotData& GetData() const { return QuickSlotData; }

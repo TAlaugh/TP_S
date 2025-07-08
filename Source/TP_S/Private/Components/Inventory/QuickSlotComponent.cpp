@@ -9,11 +9,50 @@
 #include "GameFramework/Character.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
 
+void UQuickSlotComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (APawn* P = Cast<APawn>(GetOwner()))
+	{
+		if (auto* Inventory = P->FindComponentByClass<UPlayerInventoryComponent>())
+		{
+			Inventory->OnInventoryChanged.AddDynamic(this, &UQuickSlotComponent::HandleInventoryChanged);
+		}
+	}
+}
+
+void UQuickSlotComponent::HandleInventoryChanged()
+{
+	if (!QuickSlotData.ItemData) return;
+
+	if (APawn* P = Cast<APawn>(GetOwner()))
+	{
+		if (auto* Inventory = P->FindComponentByClass<UPlayerInventoryComponent>())
+		{
+			const int32 NewCount = Inventory->CountItem(QuickSlotData.ItemData);
+
+			if (NewCount != QuickSlotData.Count)
+			{
+				QuickSlotData.Count = NewCount;
+
+				if (NewCount < 0)
+				{
+					QuickSlotData.ItemData = nullptr;
+				}
+
+				OnQuickSlotChanged.Broadcast(QuickSlotData);
+			}
+		}
+	}
+}
+
 bool UQuickSlotComponent::RegisterItem(UConsumableItemDataAsset* Item, UPlayerInventoryComponent* Inventory)
 {
 	if (!Item || !Inventory) return false;
 	
 	const int32 Existing = Inventory->CountItem(Item);
+	
 	if (Existing <= 0) return false;
 
 	QuickSlotData.ItemData = Item;
@@ -28,7 +67,6 @@ bool UQuickSlotComponent::UseSlot(UPlayerInventoryComponent* Inventory)
 
 	if (Inventory->RemoveOne(QuickSlotData.ItemData))
 	{
-		--QuickSlotData.Count;
 		OnQuickSlotChanged.Broadcast(QuickSlotData);
 
 		if (ACharacter* OwnerChar = Cast<ACharacter>(GetOwner()))
@@ -45,6 +83,7 @@ bool UQuickSlotComponent::UseSlot(UPlayerInventoryComponent* Inventory)
 			QuickSlotData.ItemData = nullptr;
 			OnQuickSlotChanged.Broadcast(QuickSlotData);
 		}
+		
 		return true;
 	}
 	return false;
