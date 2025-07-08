@@ -6,7 +6,6 @@
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-#include "AbilitySystem/Abilities/Tasks/Player/AT_Attack_Throw_Weapon.h"
 #include "AbilitySystem/Abilities/Tasks/Player/AT_Melee_Attack_Throw_Weapon.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Items/Weapons/BasePlayerWeapon.h"

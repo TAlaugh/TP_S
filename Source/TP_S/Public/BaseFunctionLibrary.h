@@ -42,10 +42,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Get Base Combat Component From Actor",  ExpandEnumAsExecs = "OutValidType"))
 	static UBaseCombatComponent* BP_GetBaseCombatComponentFromActor(AActor* Actor, EBaseValidType& OutValidType);
 
-	/*
+	
 	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
 	static bool IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn);
-	
+	/*
 	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary", meta = (CompactNodeTitle = "Get Value At Level"))
 	static float GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel = 1.f);
 	
