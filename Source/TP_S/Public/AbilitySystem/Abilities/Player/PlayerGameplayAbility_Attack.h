@@ -23,10 +23,13 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	UFUNCTION()
-	virtual void EquipWeapon();
+	virtual void EquipWeapon(FName SocketName = FName("hand_rSocket"));
 
 	UFUNCTION()
 	virtual void UnEquipWeapon(FGameplayEventData TargetData);
+	
+	virtual void EquipWeaponLeftSocket(FGameplayEventData Data);
+	virtual	void EquipWeaponRightSocket(FGameplayEventData Data);
 
 protected:
 	UFUNCTION()
@@ -40,7 +43,6 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UPlayerGameplayAbility> Ability;
-
 
 	
 	

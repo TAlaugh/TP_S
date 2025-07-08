@@ -11,7 +11,7 @@ void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle H
                                               const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                               const FGameplayEventData* TriggerEventData)
 {
-	EquipWeapon();
+	//EquipWeapon();
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
 	UAbilityTask_WaitGameplayEvent* TaskToNext = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
@@ -20,6 +20,18 @@ void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle H
 		);
 	TaskToNext->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::NextCombo);
 	TaskToNext->ReadyForActivation();
+
+	UAbilityTask_WaitGameplayEvent* TaskToEquip_Left = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		BaseGamePlayTags::Player_Event_Attack_Equip_Left);
+	TaskToEquip_Left->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::EquipWeaponLeftSocket);
+	TaskToEquip_Left->ReadyForActivation();
+
+	UAbilityTask_WaitGameplayEvent* TaskToEquip_Right = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		BaseGamePlayTags::Player_Event_Attack_Equip_Right);
+	TaskToEquip_Right->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::EquipWeaponRightSocket);
+	TaskToEquip_Right->ReadyForActivation();
 
 	/*
 	UAbilityTask_WaitGameplayEvent* TaskToUnEquip = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
@@ -84,12 +96,22 @@ void UPGA_Attack_Melee_Light::NextCombo(FGameplayEventData TargetData)
 	}
 }
 
-void UPGA_Attack_Melee_Light::EquipWeapon()
+void UPGA_Attack_Melee_Light::EquipWeapon(FName SocketName)
 {
-	GetPlayerCombatComponentFromActorInfo()->EquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Melee);
+	GetPlayerCombatComponentFromActorInfo()->EquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Melee, SocketName);
 }
 
 void UPGA_Attack_Melee_Light::UnEquipWeapon(FGameplayEventData TargetData)
 {
 	GetPlayerCombatComponentFromActorInfo()->UnEquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Melee);
+}
+
+void UPGA_Attack_Melee_Light::EquipWeaponLeftSocket(FGameplayEventData Data)
+{
+	EquipWeapon(FName("hand_lSocket"));
+}
+
+void UPGA_Attack_Melee_Light::EquipWeaponRightSocket(FGameplayEventData Data)
+{
+	EquipWeapon(FName("hand_rSocket"));
 }

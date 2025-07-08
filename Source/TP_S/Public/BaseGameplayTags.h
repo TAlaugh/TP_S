@@ -73,7 +73,11 @@ namespace	BaseGamePlayTags
 	// Player Event
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_DoubleJump);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Next);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Throw);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Equip);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Equip_Right);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Equip_Left);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Equip_Switch);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_UnEquip);
 
 
