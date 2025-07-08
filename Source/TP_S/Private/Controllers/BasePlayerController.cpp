@@ -143,23 +143,23 @@ void ABasePlayerController::GiveItems()
 				return Cast<UItemDataAsset>(StaticLoadObject(UItemDataAsset::StaticClass(), nullptr, Path));
 			};
 
-			if (auto* Potion = LoadItem(TEXT("/Game/Temp/DA_Item_Consumable_ActionPotion.DA_Item_Consumable_ActionPotion")))
+			if (auto* Potion = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Consumable_ActionPotion.DA_Item_Consumable_ActionPotion")))
 			{
 				bool bAdded = Inv->AddItem(Potion, 3);
 				// Debug::Print(FString::Printf(TEXT("Potion add %s"), bAdded ? TEXT("OK") : TEXT("FAIL")));
 			}
 
-			if (auto* Potion2 = LoadItem(TEXT("/Game/Temp/DA_Item_Consumable_HpPotion.DA_Item_Consumable_HpPotion")))
+			if (auto* Potion2 = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Consumable_HpPotion.DA_Item_Consumable_HpPotion")))
 			{
 				Inv->AddItem(Potion2, 5);
 			}
 
-			if (auto* WeaponMelee = LoadItem(TEXT("/Game/Temp/DA_Item_Weapon_Xiji.DA_Item_Weapon_Xiji")))
+			if (auto* WeaponMelee = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Weapon_Xiji.DA_Item_Weapon_Xiji")))
 			{
 				Inv->AddItem(WeaponMelee);
 			}
 
-			if (auto* WeaponRanged = LoadItem(TEXT("/Game/Temp/DA_Item_Weapon_Range.DA_Item_Weapon_Range")))
+			if (auto* WeaponRanged = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Weapon_Yinlang.DA_Item_Weapon_Yinlang")))
 			{
 				Inv->AddItem(WeaponRanged);
 			}
