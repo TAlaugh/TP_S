@@ -76,6 +76,14 @@ void UInventorySlotWidget::SetSelected(bool bNewSelected)
 	}
 }
 
+void UInventorySlotWidget::SetQuickSlotBG(bool bOn)
+{
+	if (QuickSlot_BG)
+	{
+		QuickSlot_BG->SetVisibility(bOn ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	}
+}
+
 void UInventorySlotWidget::HandleOnClicked()
 {
 	SetSelected(!bIsSelected);

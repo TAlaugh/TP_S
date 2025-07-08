@@ -18,6 +18,7 @@ class TP_S_API UQuickSlotWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UFUNCTION()
 	void Update(const FQuickSlotData& Data);
 
 protected:
