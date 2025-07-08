@@ -12,15 +12,28 @@
 
 UBaseAbilitySystemComponent* UBaseFunctionLibrary::NativeGetBaseASCFromActor(AActor* InActor)
 {
-	check(InActor);
+	if (!InActor)
+	{
+		return nullptr;
+	}
 
-	return CastChecked<UBaseAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor));
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
+	if (!ASC)
+	{
+		return nullptr;
+	}
 
+	return Cast<UBaseAbilitySystemComponent>(ASC);
 }
 
 void UBaseFunctionLibrary::AddGameplayTagToActorIfNone(AActor* InActor, FGameplayTag TagToAdd)
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
+
+	if (!ASC)
+	{
+		return;
+	}
 
 	if (!ASC->HasMatchingGameplayTag(TagToAdd))
 	{
@@ -32,6 +45,12 @@ void UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(AActor* InActor, FG
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
 
+	if (!ASC)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("RemoveGameplayTagFromActorIfFound: ASC is nullptr!"));
+		return;
+	}
+
 	if (ASC->HasMatchingGameplayTag(TagToRemove))
 	{
 		ASC->RemoveLooseGameplayTag(TagToRemove);
@@ -42,6 +61,12 @@ bool UBaseFunctionLibrary::NativeDoesActorHaveTag(AActor* InActor, FGameplayTag 
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
 
+	if (!ASC)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NativeDoesActorHaveTag: ASC is nullptr!"));
+		return false;
+	}
+	
 	return ASC->HasMatchingGameplayTag(TagToCheck);
 }
 
@@ -71,28 +96,7 @@ UBaseCombatComponent* UBaseFunctionLibrary::BP_GetBaseCombatComponentFromActor(A
 	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
 	return CombatComponent;
 }
-/*
-UBaseCombatComponent* UBaseFunctionLibrary::NativeGetBaseCombatComponentFromActor(AActor* InActor)
-{
-	check(InActor);
- 
- 	if (IBaseCombatInterface* BaseCombatInterface = Cast<IBaseCombatInterface>(InActor))
- 	{
- 		return BaseCombatInterface->GetBaseCombatComponent();
- 	}
- 	
- 	return nullptr;
-}
 
-UBaseCombatComponent* UBaseFunctionLibrary::BP_GetBaseCombatComponentFromActor(AActor* InActor,
-	EBaseValidType& OutValidType)
-{
-	UBaseCombatComponent* CombatComponent = NativeGetBaseCombatComponentFromActor(InActor);
-
-	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
-
-	return CombatComponent;
-}
 
 
 
@@ -109,7 +113,7 @@ bool UBaseFunctionLibrary::IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPa
 	}
 	return false;
 }
-
+/*
 float UBaseFunctionLibrary::GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel)
 {
 	return InScalableFloat.GetValueAtLevel(InLevel);

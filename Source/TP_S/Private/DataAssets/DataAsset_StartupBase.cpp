@@ -9,10 +9,19 @@
 
 void UDataAsset_StartupBase::GiveToAbilitySystemComponent(UBaseAbilitySystemComponent* ASC, int32 ApplyLevel)
 {
-	check(ASC);
+	//check(ASC);
+	if (!ASC)
+	{
+		return;
+	}
 
-	GrantAbilities(ActivateOnGivenAbilities, ASC);
-	GrantAbilities(ReactiveAbilities, ASC);
+	if (!ASC->GetAvatarActor())
+	{
+		return;
+	}
+	
+	GrantAbilities(ActivateOnGivenAbilities, ASC, ApplyLevel); // ApplyLevel 추가
+	GrantAbilities(ReactiveAbilities, ASC, ApplyLevel);        // ApplyLevel 추가
 
 	if (!StartUpGameplayEffects.IsEmpty())
 	{
@@ -29,24 +38,44 @@ void UDataAsset_StartupBase::GiveToAbilitySystemComponent(UBaseAbilitySystemComp
 void UDataAsset_StartupBase::GrantAbilities(TArray<TSubclassOf<UBaseGameplayAbility>>& InAbilitiesToGive,
 	UBaseAbilitySystemComponent* ASC, int32 ApplyLevel)
 {
-	if (InAbilitiesToGive.IsEmpty())
+	if (!ASC || InAbilitiesToGive.IsEmpty())
 	{
 		return;
 	}
 	
+	AActor* AvatarActor = ASC->GetAvatarActor();
+	if (!AvatarActor)
+	{
+		return;
+	}
+	
+	// for (const TSubclassOf<UBaseGameplayAbility>& Ability : InAbilitiesToGive)
+	// {
+	// 	if (!Ability) continue;
+	//
+	// 	const UBaseGameplayAbility* AbilityCDO = Ability.GetDefaultObject();
+	//
+	// 	
+	// 	FGameplayAbilitySpec AbilitySpec(Ability);
+	// 	AbilitySpec.SourceObject = ASC->GetAvatarActor();
+	// 	AbilitySpec.Level = ApplyLevel;
+	// 	AbilitySpec.InputID = static_cast<int32>(AbilityCDO->AbilityInputID); 
+	// 	
+	// 	ASC->GiveAbility(AbilitySpec);
+	//
+	// }
+
 	for (const TSubclassOf<UBaseGameplayAbility>& Ability : InAbilitiesToGive)
 	{
 		if (!Ability) continue;
 
 		const UBaseGameplayAbility* AbilityCDO = Ability.GetDefaultObject();
 
-		
 		FGameplayAbilitySpec AbilitySpec(Ability);
-		AbilitySpec.SourceObject = ASC->GetAvatarActor();
+		AbilitySpec.SourceObject = AvatarActor;
 		AbilitySpec.Level = ApplyLevel;
-		AbilitySpec.InputID = static_cast<int32>(AbilityCDO->AbilityInputID); 
-		
+		AbilitySpec.InputID = static_cast<int32>(AbilityCDO->AbilityInputID);
+
 		ASC->GiveAbility(AbilitySpec);
-	
 	}
 }

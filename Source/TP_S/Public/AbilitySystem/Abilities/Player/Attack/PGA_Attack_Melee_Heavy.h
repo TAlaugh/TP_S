@@ -26,9 +26,7 @@ public:
 
 	UFUNCTION()
 	virtual void ThrowWeapon(FGameplayEventData Data);
-
-	//UPROPERTY()
-	//UAT_Attack_Throw_Weapon* Task;
+	
 
 	UPROPERTY()
 	UAT_Melee_Attack_Throw_Weapon* Task;

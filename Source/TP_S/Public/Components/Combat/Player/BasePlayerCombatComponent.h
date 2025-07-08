@@ -73,9 +73,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void ToggleWeaponCollision(bool bUse, EPlayerToggleDamageType ToggleDamageType = EPlayerToggleDamageType::CurrentEquippedWeapon);
 
-	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void ThrowWeapon();
-
 protected:
 	// 중복방지 배열
 	TArray<AActor*> OverlappedActors;
