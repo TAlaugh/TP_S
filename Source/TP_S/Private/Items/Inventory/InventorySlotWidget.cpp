@@ -89,4 +89,9 @@ void UInventorySlotWidget::HandleOnClicked()
 	SetSelected(!bIsSelected);
 	
 	OnSlotClicked.Broadcast(this);
+
+	if (ItemData)
+	{
+		OnItemClicked.Broadcast(ItemData);
+	}
 }

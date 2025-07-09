@@ -81,6 +81,11 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Melee_PoleArm, "Item.Equipable.Weapon.Melee.PoleArm");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Range_MachineGun, "Item.Equipable.Weapon.Range.MachineGun");
 
+	// Item GE
+	UE_DEFINE_GAMEPLAY_TAG(Item_Effect_HpPercent, "Item.Effect.HpPercent");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Effect_HpFloat, "Item.Effect.HpFloat");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Effect_AtkFloat, "Item.Effect.AtkFloat");
+	
 	// Enemy Tag
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Weapon,"Enemy.Weapon")
 	

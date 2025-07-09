@@ -6,10 +6,12 @@
 #include "DebugHelper.h"
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
+#include "Components/SizeBox.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "Components/Inventory/QuickSlotComponent.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
 #include "Items/Inventory/InventorySlotWidget.h"
+#include "Items/Inventory/ItemInfoWidget.h"
 
 void UInventoryMainWidget::Init(UPlayerInventoryComponent* InInventory)
 {
@@ -25,7 +27,7 @@ void UInventoryMainWidget::Init(UPlayerInventoryComponent* InInventory)
 		QuickSlotComponent = P->FindComponentByClass<UQuickSlotComponent>();
 		if (QuickSlotComponent)
 		{
-			QuickSlotComponent->OnQuickSlotChanged.AddDynamic(this, &UInventoryMainWidget::HandleQuickSlotChaged);
+			QuickSlotComponent->OnQuickSlotChanged.AddDynamic(this, &UInventoryMainWidget::HandleQuickSlotChanged);
 		}
 	}
 	
@@ -84,6 +86,12 @@ void UInventoryMainWidget::Refresh()
 
 	ScrollItems->ClearChildren();
 
+	if (InfoWidgetHolder)
+	{
+		InfoWidgetHolder->ClearChildren();
+		CurrentInfoWidget = nullptr;
+	}
+	
 	UItemDataAsset* QuickItem = QuickSlotComponent ? QuickSlotComponent->GetData().ItemData : nullptr;
 	
 	const TArray<FItemStack>& Items = Inventory->GetStacks();
@@ -103,6 +111,8 @@ void UInventoryMainWidget::Refresh()
 		
 		SlotWidget->OnSlotClicked.AddDynamic(this, &UInventoryMainWidget::HandleSlotClicked);
 		ScrollItems->AddChild(SlotWidget);
+
+		SlotWidget->OnItemClicked.AddDynamic(this, &UInventoryMainWidget::ShowItemInfo);
 	}
 }
 
@@ -150,7 +160,23 @@ void UInventoryMainWidget::SetSelectedSlot(UInventorySlotWidget* NewSlot)
 	}
 }
 
-void UInventoryMainWidget::HandleQuickSlotChaged(const FQuickSlotData& Data)
+void UInventoryMainWidget::HandleQuickSlotChanged(const FQuickSlotData& Data)
 {
 	Refresh();
+}
+
+void UInventoryMainWidget::ShowItemInfo(UItemDataAsset* ItemData)
+{
+	if (!ItemData || !InfoWidgetHolder || !InfoWidgetClass) return;
+
+	if (CurrentInfoWidget)
+	{
+		CurrentInfoWidget->RemoveFromParent();
+		CurrentInfoWidget = nullptr;
+	}
+
+	CurrentInfoWidget = CreateWidget<UItemInfoWidget>(this, InfoWidgetClass);
+	CurrentInfoWidget->ItemData = ItemData;
+
+	InfoWidgetHolder->AddChild(CurrentInfoWidget);
 }
