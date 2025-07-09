@@ -10,6 +10,19 @@
 
 class UGameplayAbility;
 class UGameplayEffect;
+
+USTRUCT(BlueprintType)
+struct FItemInfoRow
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	FText Label;
+
+	UPROPERTY(BlueprintReadOnly)
+	FText Value;
+};
+
 /**
  * 
  */
@@ -40,7 +53,7 @@ public:
 
 	/** 장착 시 자동 적용할 GE (버프 등) */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="GAS")
-	TSubclassOf<UGameplayEffect> ItemEffect;
+	TArray<TSubclassOf<UGameplayEffect>> ItemEffects;
 
 	/** 공격 시 발동할 GA (콤보, 투사체 발사 등) */
 	/** 사용 시 발동할 GA (힐, 버프 등) */
@@ -50,4 +63,7 @@ public:
 	/** 태그(퀘스트 필터 / 애니 로직 분기용) */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="GAS")
 	FGameplayTagContainer ItemTags;
+
+	virtual void GatherDisplayRows(TArray<FItemInfoRow>& OutRows) const;
+	
 };

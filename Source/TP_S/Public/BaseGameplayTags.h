@@ -88,6 +88,10 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Melee_PoleArm);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Range_MachineGun);
 
+	// Item GE
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Effect_HpPercent);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Effect_HpFloat);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Effect_AtkFloat);
 	
 	// Enemy Tag
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Weapon)

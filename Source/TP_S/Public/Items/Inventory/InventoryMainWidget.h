@@ -8,6 +8,9 @@
 #include "Components/Inventory/QuickSlotComponent.h"
 #include "InventoryMainWidget.generated.h"
 
+class USizeBox;
+class UItemInfoWidget;
+class UItemDataAsset;
 class UQuickSlotComponent;
 class UInventorySlotWidget;
 class UScrollBox;
@@ -67,8 +70,21 @@ public:
 	void SetSelectedSlot(UInventorySlotWidget* NewSlot);
 
 	UFUNCTION()
-	void HandleQuickSlotChaged(const FQuickSlotData& Data);
+	void HandleQuickSlotChanged(const FQuickSlotData& Data);
 
+	/** 아이템 정보 표시 **/
+	UPROPERTY(meta = (BindWidget))
+	USizeBox* InfoWidgetHolder;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory|Class")
+	TSubclassOf<UItemInfoWidget> InfoWidgetClass;
+
+	UPROPERTY()
+	UItemInfoWidget* CurrentInfoWidget;
+
+	UFUNCTION()
+	void ShowItemInfo(UItemDataAsset* ItemData);
+	
 private:
 	UPROPERTY()
 	UPlayerInventoryComponent* Inventory;
