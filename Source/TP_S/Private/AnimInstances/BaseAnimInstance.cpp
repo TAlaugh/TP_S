@@ -5,6 +5,8 @@
 #include "KismetAnimationLibrary.h"
 #include "BaseFunctionLibrary.h"
 #include "TP_S/Public/Character/BaseCharacter.h"
+#include "GameplayTagContainer.h"
+#include "BaseFunctionLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 bool UBaseAnimInstance::DoesOwnerHaveTag(FGameplayTag TagToCheck) const

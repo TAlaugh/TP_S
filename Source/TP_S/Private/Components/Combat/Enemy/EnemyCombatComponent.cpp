@@ -78,14 +78,13 @@ void UEnemyCombatComponent::ToggleWeaponCollision(bool bUse, EToggleDamageType T
 
 void UEnemyCombatComponent::OnHitTagetActor(AActor* HitActor)
 {
-	
 	if (OverlappedActors.Contains(HitActor))
 	{
 		return;
 	}
 
 	OverlappedActors.AddUnique(HitActor);
-
+}
 // 	//TODO:: Implement Block Check
 // 	//블락 판단유무
 // 	bool bIsValidBlock = false;
@@ -108,16 +107,16 @@ void UEnemyCombatComponent::OnHitTagetActor(AActor* HitActor)
 // 	if (bIsValidBlock)
 // 	{
 // 		//피격자에게 게임플레이이벤트 전송 GA_Hero_Block
-// 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, BaseGamePlayTags::Player_Event_SuccessBlock,EventData);
+// 		//UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, BaseGamePlayTags::Player_Event_SuccessBlock,EventData);
 // 		
 // 	}
 // 	else
 // 	{
-// 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_MeleeHit, EventData);
+// 		//UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_MeleeHit, EventData);
 // 	}
-// 
-}
-
+//
+// }
+//
 void UEnemyCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
 {
 	

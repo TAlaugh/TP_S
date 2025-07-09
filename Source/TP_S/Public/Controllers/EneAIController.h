@@ -70,5 +70,6 @@ private:
 	float CollisionQueryRange = 600.0f;
 
 	
+	
 };
 

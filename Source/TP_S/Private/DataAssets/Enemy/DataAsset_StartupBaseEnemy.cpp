@@ -2,12 +2,15 @@
 
 
 #include "DataAssets/Enemy/DataAsset_StartupBaseEnemy.h"
+
+#include "DebugHelper.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/Enemy/EnemyGameplayAbility.h"
 
 
 void UDataAsset_StartupBaseEnemy::GiveToAbilitySystemComponent(UBaseAbilitySystemComponent* ASC, int32 Level)
 {
+	Debug::Print("Ability0");
 	if (!ASC)
 	{
 		return;
@@ -22,6 +25,7 @@ void UDataAsset_StartupBaseEnemy::GiveToAbilitySystemComponent(UBaseAbilitySyste
 	{
 		for (const TSubclassOf<UEnemyGameplayAbility>& AbilityClass : EnemyCombatAbilities)
 		{
+			Debug::Print("Ability");
 			if (!AbilityClass) continue;
 
 			FGameplayAbilitySpec AbilitySpec(AbilityClass);

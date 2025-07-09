@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "Chacracter/BaseCharacter.h"
 #include "TP_S/Public/Character/BaseCharacter.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/BaseAttributeSet.h"
@@ -31,10 +30,10 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 	
 
 	public:
+	ABaseEnemyCharacter();
 
 	protected:
 
-	ABaseEnemyCharacter();
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="MotionWarping")
 	UMotionWarpingComponent* MotionWarpingComponent;
@@ -54,10 +53,12 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UWidgetComponent* WidgetComponent;
 
+	
+
 
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
-	virtual UBaseCombatComponent* GetBaseCombatComponent() const;// override;
+	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
 	virtual UBaseUIComponent* GetBaseUIComponent() const; //override;
 	virtual UBaseUIComponent* GetEnemyUIComponent() const;// override;
 	
