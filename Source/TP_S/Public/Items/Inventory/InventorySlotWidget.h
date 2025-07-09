@@ -16,6 +16,7 @@ class UButton;
 class UItemDataAsset;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotClicked, class UInventorySlotWidget*, ClickedSlot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemClicked, class UItemDataAsset*, ClickedItem);
 
 UCLASS()
 class TP_S_API UInventorySlotWidget : public UUserWidget
@@ -75,5 +76,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	UItemDataAsset* GetItem() const { return ItemData; }
+
+	/** 아이템 정보 위젯 **/
+	UPROPERTY(BlueprintAssignable) FOnItemClicked OnItemClicked;
 	
 };

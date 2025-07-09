@@ -18,5 +18,15 @@ class TP_S_API UConsumableItemDataAsset : public UItemDataAsset
 
 public:
 	UConsumableItemDataAsset();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Consumable|Heal")
+	float HpPercent = 0.f;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Consumable|Heal")
+	float HpFloat = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Consumable|Heal")
+	float AtkFloat = 0.f;
+
+	virtual void GatherDisplayRows(TArray<FItemInfoRow>& OutRows) const override;
 };
