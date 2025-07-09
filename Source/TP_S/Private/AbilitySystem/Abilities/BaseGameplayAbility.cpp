@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "BaseType/BaseEnumType.h"
 #include "Components/Combat/BaseCombatComponent.h"
 
 UBaseCombatComponent* UBaseGameplayAbility::GetBaseCombatComponentFromActorInfo() const
@@ -26,6 +27,17 @@ FActiveGameplayEffectHandle UBaseGameplayAbility::NativeApplyEffectSpecHandleToT
 	check(ASC && SpecHandle.IsValid());
 	
 	return GetBaseAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, ASC);
+}
+
+FActiveGameplayEffectHandle UBaseGameplayAbility::BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor,
+	const FGameplayEffectSpecHandle& SpecHandle, EBaseSuccessType& OutSuccessType)
+{
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = NativeApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+
+	OutSuccessType = ActiveGameplayEffectHandle.WasSuccessfullyApplied() ? EBaseSuccessType::Successful : EBaseSuccessType::Failed;
+	
+	return ActiveGameplayEffectHandle;
 }
 
 void UBaseGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)

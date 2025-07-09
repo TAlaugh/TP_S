@@ -3,32 +3,31 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/Player/PlayerGameplayAbility_Attack.h"
-#include "PGA_Attack_Melee_Heavy.generated.h"
+#include "AbilitySystem/Abilities/Player/Attack/PlayerGameplayAbility_Attack.h"
+#include "PGA_Attack_Melee.generated.h"
 
-
-class UAT_Attack_Throw_Weapon;
-class UAT_Melee_Attack_Throw_Weapon;
 /**
  * 
  */
 UCLASS()
-class TP_S_API UPGA_Attack_Melee_Heavy : public UPlayerGameplayAbility_Attack
+class TP_S_API UPGA_Attack_Melee : public UPlayerGameplayAbility_Attack
 {
 	GENERATED_BODY()
-
 public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-	virtual void EquipWeapon(FName SocketName = FName("hand_rSocket")) override;
 	
+	UFUNCTION(BlueprintCallable)
+	void HandleApplyDamage(FGameplayEventData Data);
+
+	virtual void EquipWeapon(FName SocketName = FName("hand_rSocket")) override;
 	virtual void UnEquipWeapon(FGameplayEventData TargetData) override;
 
 	UFUNCTION()
-	virtual void ThrowWeapon(FGameplayEventData Data);
-	
+	virtual void EquipWeaponLeftSocket(FGameplayEventData Data) override;
 
-	UPROPERTY()
-	UAT_Melee_Attack_Throw_Weapon* Task;
-	
+	UFUNCTION()
+	virtual void EquipWeaponRightSocket(FGameplayEventData Data) override;
+
+	FTimerHandle TimerHandle;
 };

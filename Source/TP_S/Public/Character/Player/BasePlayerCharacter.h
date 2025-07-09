@@ -36,11 +36,6 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
-	UPlayerAbilitySystemComponent* PlayerAbilitySystemComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
-	UPlayerAttributeSet* PlayerAttributeSet;
 	
 #pragma region Component
 private:
@@ -90,7 +85,8 @@ protected:
 
 public:
 	
-	FORCEINLINE UPlayerAbilitySystemComponent* GetPlayerAbilitySystemComponent() const { return PlayerAbilitySystemComponent; }
+	//FORCEINLINE UPlayerAbilitySystemComponent* GetPlayerAbilitySystemComponent() const { return PlayerAbilitySystemComponent; }
 	FORCEINLINE UBasePlayerCombatComponent* GetPlayerCombatComponent() const { return PlayerCombatComponent; }
+	FORCEINLINE UCameraComponent* GetCameraComponent() const { return FollowCamera; }
 	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
 };

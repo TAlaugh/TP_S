@@ -46,6 +46,7 @@ void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds
 		if (bFalling)
 		{
 			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_InAir);
+			GroundSpeed = 0.f;
 		}
 		else
 		{
@@ -53,6 +54,7 @@ void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds
 			{
 				UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_InAir);
 			}
+			GroundSpeed = OwningCharacter->GetVelocity().Size2D();
 		}
 	
 		if (bHasAcceleration)

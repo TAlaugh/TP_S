@@ -75,3 +75,64 @@ bool UBaseAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag Tag)
 
 	return false;
 }
+
+
+void UBaseAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid())
+	{
+		return;
+	}
+	
+	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (!Spec.DynamicAbilityTags.HasTagExact(InputTag)) continue;
+
+		AbilitySpecInputPressed(Spec);
+		if (Spec.InputID == static_cast<int32>(EAbility::Attack))
+		{
+			// 공격 모션 시
+		}
+		else
+		{
+			TryActivateAbility(Spec.Handle);			
+		}
+	}
+}
+
+void UBaseAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid())
+	{
+		return;
+	}
+	//  || !InputTag.MatchesTag(BaseGamePlayTags::InputTag_Hold) 
+	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (Spec.DynamicAbilityTags.HasTagExact(InputTag) && Spec.IsActive())
+		{
+			AbilitySpecInputReleased(Spec);
+		}
+	}
+}
+
+void UBaseAbilitySystemComponent::OnAbilityInputTriggered(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid())
+	{
+		return;
+	}
+	
+	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (!Spec.DynamicAbilityTags.HasTagExact(InputTag)) continue;
+		
+		if (Spec.InputID == static_cast<int32>(EAbility::Attack))
+		{
+			// Trigger는 공격모션에만 적용
+			// 다른 모션들은 그냥 일반 Pressed & Released로 처리(Hold Trigger때문에)
+			AbilitySpecInputPressed(Spec);
+			TryActivateAbility(Spec.Handle);
+		}
+	}
+}

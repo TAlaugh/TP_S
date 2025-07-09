@@ -28,4 +28,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	bool TryActivateAbilityByTag(FGameplayTag Tag);
+
+	void OnAbilityInputPressed(const FGameplayTag& InputTag);
+	void OnAbilityInputReleased(const FGameplayTag& InputTag);
+	void OnAbilityInputTriggered(const FGameplayTag& InputTag);
 };

@@ -3,11 +3,17 @@
 
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
 
+#include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
 
+
+UPlayerGameplayAbility::UPlayerGameplayAbility()
+{
+	//GetPlayerControllerFromActorInfo();
+}
 
 ABasePlayerCharacter* UPlayerGameplayAbility::GetPlayerCharacterFromActorInfo()
 {
@@ -37,6 +43,24 @@ UBasePlayerCombatComponent* UPlayerGameplayAbility::GetPlayerCombatComponentFrom
 FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerDamageGameplayEffectHandle(
 	TSubclassOf<UGameplayEffect> Effect, float WeaponBaseDamage, FGameplayTag AttackTypeTag, int32 ComboCount)
 {
+	//check(Effect);
+	if (Effect)
+	{
+		FGameplayEffectContextHandle ContextHandle;
+		ContextHandle.SetAbility(this);
+		ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+		ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
+		FGameplayEffectSpecHandle SpecHandle = GetBaseAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(Effect, GetAbilityLevel(), ContextHandle);
+		SpecHandle.Data->SetSetByCallerMagnitude(BaseGamePlayTags::Shared_SetByCaller_BaseDamage, WeaponBaseDamage);
+
+		if (AttackTypeTag.IsValid())
+		{
+			SpecHandle.Data->SetSetByCallerMagnitude(AttackTypeTag, ComboCount);
+		}
+
+		return SpecHandle;
+	}
 	return nullptr;
 }
 

@@ -16,6 +16,7 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Light, "InputTag.Attack.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Heavy, "InputTag.Attack.Melee.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Range, "InputTag.Attack.Range");
 	
 	// Shared Status(Dead, Idle, Jump, etc)
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Idle, "Shared.Status.Idle");
@@ -28,6 +29,9 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_InAir, "Shared.Status.InAir");
 
 	// Shared Event(HitReact, Land)
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit, "Shared.Event.Hit")
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Melee, "Shared.Event.Hit.Melee")
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Range, "Shared.Event.Hit.Range")
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact, "Shared.Event.HitReact")
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Land, "Shared.Event.Land")
 	
