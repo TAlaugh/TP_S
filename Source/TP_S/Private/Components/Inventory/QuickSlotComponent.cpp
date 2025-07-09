@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "DebugHelper.h"
+#include "AbilitySystem/BaseAttributeSet.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "GameFramework/Character.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
@@ -73,8 +74,48 @@ bool UQuickSlotComponent::UseSlot(UPlayerInventoryComponent* Inventory)
 		{
 			if (auto* ASC = OwnerChar->FindComponentByClass<UAbilitySystemComponent>())
 			{
-				Debug::Print(TEXT("ASC->TryActivateAbilityByClass : QuickSlot.Item"));
-				ASC->TryActivateAbilityByClass(QuickSlotData.ItemData->PrimaryAbility);
+				// GA가 있는 경우
+				if (QuickSlotData.ItemData->PrimaryAbility)
+				{
+					Debug::Print(TEXT("ASC->TryActivateAbilityByClass : QuickSlot.Item"));
+					ASC->TryActivateAbilityByClass(QuickSlotData.ItemData->PrimaryAbility);
+				}
+				// GE가 있는 경우
+				for (auto GEClass : QuickSlotData.ItemData->ItemEffects)
+				{
+					if (!GEClass) continue;
+					
+					Debug::Print(TEXT("ASC->ApplyGameplayEffectToSelf : QuickSlot.Item"));
+					FGameplayEffectSpecHandle Spec = ASC->MakeOutgoingSpec(GEClass, 1.f, ASC->MakeEffectContext());
+
+					if (Spec.IsValid())
+					{
+						/** 아이템의 수치에 따라 Effect 부여 **/
+						if (const auto* ConsumableItem = Cast<UConsumableItemDataAsset>(QuickSlotData.ItemData))
+						{
+							// HealPercent가 0이 아니면 Tag에 접근해서 특정 수치만큼 힐을 줍니다.
+							if (ConsumableItem->HpPercent != 0)
+							{
+								static const FGameplayTag HpTag = FGameplayTag::RequestGameplayTag(TEXT("Item.Effect.HpPercent"));
+								const float MaxHp = ASC->GetNumericAttribute(UBaseAttributeSet::GetMaxHpAttribute());
+								const float HealAmt = ConsumableItem->HpPercent * MaxHp;
+								Spec.Data->SetSetByCallerMagnitude(HpTag, HealAmt);
+							}
+							if (ConsumableItem->HpFloat != 0)
+							{
+								static const FGameplayTag HpTag = FGameplayTag::RequestGameplayTag(TEXT("Item.Effect.HpFloat"));
+								Spec.Data->SetSetByCallerMagnitude(HpTag, ConsumableItem->HpFloat);
+							}
+							if (ConsumableItem->AtkFloat != 0)
+							{
+								static const FGameplayTag AtkTag = FGameplayTag::RequestGameplayTag(TEXT("Item.Effect.AtkFloat"));
+								Spec.Data->SetSetByCallerMagnitude(AtkTag, ConsumableItem->AtkFloat);
+							}
+						}
+						
+						ASC->ApplyGameplayEffectSpecToSelf(*Spec.Data);
+					}
+				}
 			}
 		}
 
