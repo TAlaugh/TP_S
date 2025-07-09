@@ -77,7 +77,7 @@ bool UQuickSlotComponent::UseSlot(UPlayerInventoryComponent* Inventory)
 				// GA가 있는 경우
 				if (QuickSlotData.ItemData->PrimaryAbility)
 				{
-					Debug::Print(TEXT("ASC->TryActivateAbilityByClass : QuickSlot.Item"));
+					// Debug::Print(TEXT("ASC->TryActivateAbilityByClass : QuickSlot.Item"));
 					ASC->TryActivateAbilityByClass(QuickSlotData.ItemData->PrimaryAbility);
 				}
 				// GE가 있는 경우
@@ -85,7 +85,7 @@ bool UQuickSlotComponent::UseSlot(UPlayerInventoryComponent* Inventory)
 				{
 					if (!GEClass) continue;
 					
-					Debug::Print(TEXT("ASC->ApplyGameplayEffectToSelf : QuickSlot.Item"));
+					// Debug::Print(TEXT("ASC->ApplyGameplayEffectToSelf : QuickSlot.Item"));
 					FGameplayEffectSpecHandle Spec = ASC->MakeOutgoingSpec(GEClass, 1.f, ASC->MakeEffectContext());
 
 					if (Spec.IsValid())
