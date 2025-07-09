@@ -36,6 +36,8 @@ public:
 	
 	 UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs = "OutConfirmType"))
 	 static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, EBaseConfirmType& OutConfirmType);
+
+	
 	
 	 static UBaseCombatComponent* NativeGetBaseCombatComponentFromActor(AActor* Actor);
 	

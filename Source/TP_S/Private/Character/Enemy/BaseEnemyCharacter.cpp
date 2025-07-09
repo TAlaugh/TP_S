@@ -1,9 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-//#include "Chacracter/Enemy/BaseEnemyCharacter.h"
+//#include "Character/Enemy/BaseEnemyCharacter.h"
 
 #include "TP_S/Public/Character/Enemy/BaseEnemyCharacter.h"
+
+#include "DebugHelper.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/BaseAttributeSet.h"
 #include "Components/WidgetComponent.h"
@@ -13,6 +15,7 @@
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "Engine/AssetManager.h"
 #include "MotionWarpingComponent.h"
+#include "DataAssets/Enemy/DataAsset_StartupBaseEnemy.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Widget/WidgetBase.h"
 
@@ -27,7 +30,7 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 180.0f, 0.0f);
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 270.0f, 0.0f);
 	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 1000.0f;
 
@@ -36,6 +39,7 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
 	WidgetComponent->SetupAttachment(GetMesh());
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
+	
 
 }
 
@@ -54,6 +58,18 @@ void ABaseEnemyCharacter::BeginPlay()
 void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+	
+	if (BaseAbilitySystemComponent)
+	{
+		//BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
+		//UE_LOG(LogTemp, Error, TEXT("BaseAbilitySystemComponent is Exist on %s"), *GetName());
+		
+	}
+	else
+	{
+		Debug::Print("e");
+	}
+
 	InitEnemyStartUpData();
 }
 
@@ -85,6 +101,7 @@ void ABaseEnemyCharacter::InitEnemyStartUpData()
 			{
 				if (UDataAsset_StartupBase* LoadedData = StartupData.Get())
 				{
+					UDataAsset_StartupBaseEnemy* LoadedDataEnemy = Cast<UDataAsset_StartupBaseEnemy>(LoadedData);
 					LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
 				}
 			}

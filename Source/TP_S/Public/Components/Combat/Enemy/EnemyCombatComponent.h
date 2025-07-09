@@ -45,13 +45,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Hero")
 	ABaseWeapon* GetCharacterCurrentEquippedWeapon() const;
 
+	//무기 콜리전 
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void ToggleWeaponCollision(bool bUse, EToggleDamageType ToggleDamageType = EToggleDamageType::CurrentEquippedWeapon);
 
 	//HitDetection
 	virtual void OnHitTagetActor(AActor* HitActor) ;
 	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor);
-
+	
 protected:
 	//중복방지를 위한 배열
 	TArray<AActor*> OverlappedActors;

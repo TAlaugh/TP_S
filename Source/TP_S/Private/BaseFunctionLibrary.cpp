@@ -47,7 +47,7 @@ void UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(AActor* InActor, FG
 
 	if (!ASC)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("RemoveGameplayTagFromActorIfFound: ASC is nullptr!"));
+		//UE_LOG(LogTemp, Warning, TEXT("RemoveGameplayTagFromActorIfFound: ASC is nullptr!"));
 		return;
 	}
 
@@ -63,7 +63,7 @@ bool UBaseFunctionLibrary::NativeDoesActorHaveTag(AActor* InActor, FGameplayTag 
 
 	if (!ASC)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NativeDoesActorHaveTag: ASC is nullptr!"));
+		//UE_LOG(LogTemp, Warning, TEXT("NativeDoesActorHaveTag: ASC is nullptr!"));
 		return false;
 	}
 	

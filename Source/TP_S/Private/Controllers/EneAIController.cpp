@@ -14,7 +14,9 @@ AEneAIController::AEneAIController(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>("PathFollowingComponent"))
 {
 	
-
+//팀 아이디 부여
+	AAIController::SetGenericTeamId(FGenericTeamId(1));
+	
 	//AISenseConfig_Sight 생성자
 	AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISenseConfig_Sight"));
 	
@@ -44,8 +46,7 @@ AEneAIController::AEneAIController(const FObjectInitializer& ObjectInitializer)
 	AIPerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &AEneAIController::OnEnemyPerceptionUpdated);
 	AISenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("AISenseConfig_Damage"));
 	
-	//팀 아이디 부여
-	AAIController::SetGenericTeamId(FGenericTeamId(1));
+	
 	
 }
 
@@ -135,6 +136,11 @@ void AEneAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimu
 	//Update
 	//Debug::Print(Actor->GetActorLabel() + TEXT(" Was Sensed"), FColor::Green);
 
+	ETeamAttitude::Type Attitude = GetTeamAttitudeTowards(*Actor);
+	if (Attitude != ETeamAttitude::Hostile)
+	{
+		return; // 아군이나 중립이면 무시
+	}
 	//인지
 	 if (Stimulus.WasSuccessfullySensed() && Actor)
 	 {
@@ -161,7 +167,7 @@ ETeamAttitude::Type AEneAIController::GetTeamAttitudeTowards(const AActor& Other
 	const IGenericTeamAgentInterface* OtherTeamAgent = Cast<IGenericTeamAgentInterface>(OtherController);
 	if (!OtherTeamAgent) return ETeamAttitude::Neutral;
 
-	if (OtherTeamAgent->GetGenericTeamId() < GetGenericTeamId())
+	if (OtherTeamAgent->GetGenericTeamId() != GetGenericTeamId())
 	{
 		return ETeamAttitude::Hostile;
 	}
