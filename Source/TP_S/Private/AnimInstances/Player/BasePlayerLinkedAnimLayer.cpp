@@ -3,3 +3,9 @@
 
 #include "AnimInstances/Player/BasePlayerLinkedAnimLayer.h"
 
+#include "AnimInstances/Player/BasePlayerAnimInstance.h"
+
+UBasePlayerAnimInstance* UBasePlayerLinkedAnimLayer::GetPlayerAnimInstance() const
+{
+	return Cast<UBasePlayerAnimInstance>(GetOwningComponent()->GetAnimInstance());
+}

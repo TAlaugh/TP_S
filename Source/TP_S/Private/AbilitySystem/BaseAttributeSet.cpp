@@ -17,7 +17,7 @@ UBaseAttributeSet::UBaseAttributeSet()
 	// InitCurrentMp(1.f);
 	// InitMaxMp(1.f);
 	InitAttack(1.f);
-	InitDefence(1.f);
+	InitDefense(1.f);
 	InitDamageTaken(1.f);
 }
 

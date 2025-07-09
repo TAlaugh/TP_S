@@ -17,6 +17,7 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Hold);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Melee_Light);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Melee_Heavy);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Range);
 
 
 	// Shared Status(Dead, Idle, Jump, etc)
@@ -31,6 +32,9 @@ namespace	BaseGamePlayTags
 
 	
 	// Shared Event(HitReact, Land)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Hit);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Hit_Melee);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Hit_Range);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Land);
 

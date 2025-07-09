@@ -54,8 +54,8 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	PlayerQuickSlotComponent = CreateDefaultSubobject<UQuickSlotComponent>(TEXT("QuickSlotComponent"));
 	PlayerCombatComponent = CreateDefaultSubobject<UBasePlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 
-	PlayerAbilitySystemComponent = CreateDefaultSubobject<UPlayerAbilitySystemComponent>(TEXT("PlayerAbilitySystemComponent"));
-	PlayerAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("PlayerAttributeSet"));
+	//PlayerAbilitySystemComponent = CreateDefaultSubobject<UPlayerAbilitySystemComponent>(TEXT("PlayerAbilitySystemComponent"));
+	//PlayerAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("PlayerAttributeSet"));
 }
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -75,7 +75,7 @@ void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	BaseInputComponent->BindNativeInputAction(InputConfigDataAsset, BaseGamePlayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
 	BaseInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ABasePlayerCharacter::Input_AbilityInputPressed, &ABasePlayerCharacter::Input_AbilityInputTriggered, &ABasePlayerCharacter::Input_AbilityInputReleased);
 	
-	PlayerAbilitySystemComponent->BindAbilityActivationToInputComponent(BaseInputComponent,
+	BaseAbilitySystemComponent->BindAbilityActivationToInputComponent(BaseInputComponent,
 		FGameplayAbilityInputBinds("Confirm", "Cancel", FTopLevelAssetPath(TEXT("/Script/TP_S.EAbility")),
 			static_cast<int32>(EAbility::Confirm), static_cast<int32>(EAbility::Cancel)));
 
@@ -99,9 +99,9 @@ void ABasePlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if (PlayerAbilitySystemComponent)
+	if (BaseAbilitySystemComponent)
 	{
-		PlayerAbilitySystemComponent->InitAbilityActorInfo(this, this);
+		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
 	}
 	
 	if (!CharacterStartUpData.IsNull())
@@ -109,7 +109,7 @@ void ABasePlayerCharacter::PossessedBy(AController* NewController)
 		if (UDataAsset_StartupBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 		{
 			PlayerStartUpData = Cast<UDataAsset_StartupBasePlayer>(LoadedData);
-			PlayerStartUpData->GiveToAbilitySystemComponent(PlayerAbilitySystemComponent);
+			PlayerStartUpData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
 		}
 	}
 
@@ -118,7 +118,7 @@ void ABasePlayerCharacter::PossessedBy(AController* NewController)
 
 UAbilitySystemComponent* ABasePlayerCharacter::GetAbilitySystemComponent() const
 {
-	return GetPlayerAbilitySystemComponent();
+	return GetBaseAbilitySystemComponent();
 }
 
 void ABasePlayerCharacter::Input_Move(const FInputActionValue& InputActionValue)
@@ -159,7 +159,7 @@ void ABasePlayerCharacter::Input_Look(const FInputActionValue& InputActionValue)
 
 void ABasePlayerCharacter::Input_AbilityInputPressed(const FGameplayTag InputTag)
 {
-	PlayerAbilitySystemComponent->OnAbilityInputPressed(InputTag);
+	BaseAbilitySystemComponent->OnAbilityInputPressed(InputTag);
 	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
 	{
 		bAttackLight = true;
@@ -168,7 +168,7 @@ void ABasePlayerCharacter::Input_AbilityInputPressed(const FGameplayTag InputTag
 
 void ABasePlayerCharacter::Input_AbilityInputTriggered(const FGameplayTag InputTag)
 {
-	PlayerAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
+	BaseAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
 	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
 	{
 		bAttackLight = false;
@@ -177,7 +177,7 @@ void ABasePlayerCharacter::Input_AbilityInputTriggered(const FGameplayTag InputT
 
 void ABasePlayerCharacter::Input_AbilityInputReleased(const FGameplayTag InputTag)
 {
-	PlayerAbilitySystemComponent->OnAbilityInputReleased(InputTag);
+	BaseAbilitySystemComponent->OnAbilityInputReleased(InputTag);
 	if (InputTag == BaseGamePlayTags::InputTag_Attack_Melee_Light)
 	{
 		bAttackLight = false;

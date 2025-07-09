@@ -113,20 +113,19 @@ float UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel(fl
 
 void UBasePlayerCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
-	Debug::Print(HitActor->GetActorLabel());
 	if (OverlappedActors.Contains(HitActor))
 	{
 		return;
 	}
 
 	OverlappedActors.AddUnique(HitActor);
-
 	
 	FGameplayEventData Data;
 	Data.Instigator = GetOwningPawn();
 	Data.Target = HitActor;
 
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_HitReact, Data);
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit, Data);
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_HitReact, FGameplayEventData());
 }
 
 void UBasePlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)

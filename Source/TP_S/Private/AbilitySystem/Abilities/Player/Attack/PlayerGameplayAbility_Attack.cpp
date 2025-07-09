@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/Abilities/Player/PlayerGameplayAbility_Attack.h"
+#include "AbilitySystem/Abilities/Player/Attack/PlayerGameplayAbility_Attack.h"
 
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
-#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UPlayerGameplayAbility_Attack::UPlayerGameplayAbility_Attack()
 {
@@ -19,20 +19,12 @@ void UPlayerGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHa
                                                     const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                                     const FGameplayEventData* TriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
-	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-		this,
-		TEXT("Attack"),
-		MontageToPlay,
-		1.f,
-		GetNextSection(),
-		false);
-	Task->OnCancelled.AddDynamic(this, &ThisClass::OnInterruptedCallback);
-	Task->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptedCallback);
-	Task->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
-	Task->OnBlendOut.AddDynamic(this, &ThisClass::OnCompleteCallback);
-	Task->ReadyForActivation();
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	if (GetPlayerCharacterFromActorInfo() && GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->CurrentEquippedWeaponTag.IsValid())
+	{
+		//Debug::Print(GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->CurrentEquippedWeaponTag.ToString());		
+	}
 }
 
 void UPlayerGameplayAbility_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle,
@@ -67,7 +59,6 @@ void UPlayerGameplayAbility_Attack::EquipWeapon(FName SocketName)
 
 void UPlayerGameplayAbility_Attack::UnEquipWeapon(FGameplayEventData TargetData = FGameplayEventData())
 {
-	return;
 }
 
 void UPlayerGameplayAbility_Attack::EquipWeaponLeftSocket(FGameplayEventData Data)

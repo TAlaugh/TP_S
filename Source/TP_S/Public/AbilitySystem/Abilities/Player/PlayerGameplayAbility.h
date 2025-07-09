@@ -19,6 +19,8 @@ class TP_S_API UPlayerGameplayAbility : public UBaseGameplayAbility
 	GENERATED_BODY()
 
 public:
+	UPlayerGameplayAbility();
+	
 	UFUNCTION(BlueprintPure, Category = "Ability")
 	ABasePlayerCharacter* GetPlayerCharacterFromActorInfo();
 

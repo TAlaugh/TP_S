@@ -31,7 +31,9 @@ public:
 	UBaseAbilitySystemComponent* GetBaseAbilitySystemComponentFromActorInfo() const;
 	
 	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "Ability", meta = (DisplayName = "Apply GameplayEffect Spec Handle To TargetActor", ExpandEnumAsExecs = "OutSuccessType"))
+	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle, EBaseSuccessType& OutSuccessType);
 protected:
 	
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;

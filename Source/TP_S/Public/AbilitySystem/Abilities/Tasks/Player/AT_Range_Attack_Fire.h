@@ -6,6 +6,8 @@
 #include "Abilities/Tasks/AbilityTask.h"
 #include "AT_Range_Attack_Fire.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAbilityTaskDelegate);
+
 /**
  * 
  */
@@ -13,5 +15,23 @@ UCLASS()
 class TP_S_API UAT_Range_Attack_Fire : public UAbilityTask
 {
 	GENERATED_BODY()
-	
+public:
+	UPROPERTY(BlueprintAssignable)
+	FAbilityTaskDelegate OnStartedTask;
+
+	UPROPERTY(BlueprintAssignable)
+	FAbilityTaskDelegate OnFinishedTask;
+
+	static UAT_Range_Attack_Fire* Action(UGameplayAbility* OwningAbility, float Interval);
+
+	virtual void Activate() override;
+	virtual void OnDestroy(bool bInOwnerFinished) override;
+
+	void StopFire();
+
+protected:
+	FTimerHandle Timer;
+	float ActionInterval;
+
+	void StartFire();
 };

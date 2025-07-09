@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/Abilities/Player/Attack/PGA_Attack_Melee_Heavy.h"
+#include "AbilitySystem/Abilities/Player/Attack/Melee/PGA_Attack_Melee_Heavy.h"
 
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
@@ -15,29 +15,12 @@ void UPGA_Attack_Melee_Heavy::ActivateAbility(const FGameplayAbilitySpecHandle H
                                               const FGameplayEventData* TriggerEventData)
 {
 	EquipWeapon();
-	
+	Debug::Print("Equip");
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	ThrowWeapon(FGameplayEventData());	
 }
 
-void UPGA_Attack_Melee_Heavy::EndAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	bool bReplicateEndAbility, bool bWasCancelled)
-{
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	UnEquipWeapon(FGameplayEventData());
-}
-
-void UPGA_Attack_Melee_Heavy::EquipWeapon(FName SocketName)
-{
-	GetPlayerCombatComponentFromActorInfo()->EquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Melee);
-}
-
-void UPGA_Attack_Melee_Heavy::UnEquipWeapon(FGameplayEventData TargetData)
-{
-	GetPlayerCombatComponentFromActorInfo()->UnEquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Melee);
-}
 
 void UPGA_Attack_Melee_Heavy::ThrowWeapon(FGameplayEventData Data)
 {

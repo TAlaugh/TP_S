@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/Player/PlayerGameplayAbility_Attack.h"
+#include "AbilitySystem/Abilities/Player/Attack/PlayerGameplayAbility_Attack.h"
 #include "PGA_Attack_Range.generated.h"
 
+class UAT_Range_Attack_Fire;
 /**
  * 
  */
@@ -19,9 +20,24 @@ public:
 	virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+
+	virtual void EquipWeapon(FName SocketName = FName("hand_rSocket")) override;
+	virtual void UnEquipWeapon(FGameplayEventData TargetData) override;
+	
+	UPROPERTY()
+	UAT_Range_Attack_Fire* FireTask;
 	
 	TWeakObjectPtr<AActor>* Bullet;
 	
 	float BulletCount;
 	float MaxBulletCount;
+
+	UFUNCTION()
+	void HandleFire();
+
+	UFUNCTION()
+	void StopFire();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UAnimInstance> AnimLayer;
 };

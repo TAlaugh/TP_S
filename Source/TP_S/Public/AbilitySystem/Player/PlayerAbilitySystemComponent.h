@@ -14,8 +14,4 @@ class TP_S_API UPlayerAbilitySystemComponent : public UBaseAbilitySystemComponen
 {
 	GENERATED_BODY()
 
-public:
-	void OnAbilityInputPressed(const FGameplayTag& InputTag);
-	void OnAbilityInputReleased(const FGameplayTag& InputTag);
-	void OnAbilityInputTriggered(const FGameplayTag& InputTag);
 };

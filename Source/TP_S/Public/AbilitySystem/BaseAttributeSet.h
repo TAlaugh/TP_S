@@ -47,8 +47,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, Attack)
 
 	UPROPERTY(BlueprintReadOnly, Category="Status")
-	FGameplayAttributeData Defence;
-	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, Defence)
+	FGameplayAttributeData Defense;
+	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, Defense)
 
 	UPROPERTY(BlueprintReadOnly, Category="Damage")
 	FGameplayAttributeData DamageTaken;

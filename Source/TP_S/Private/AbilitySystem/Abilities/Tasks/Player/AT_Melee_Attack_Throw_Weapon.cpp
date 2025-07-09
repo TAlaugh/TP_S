@@ -125,7 +125,6 @@ void UAT_Melee_Attack_Throw_Weapon::TickTask(float DeltaTime)
 			if (float Distance = FVector::Dist(CurrentLocation, TargetLocation) <= 300.f)
 			{
 				Player->GetPlayerCombatComponent()->EquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Melee);
-				//UAnimMontage* WeaponAnim = Weapon->GetSkeletalMeshComponent()->GetAnimInstance()->GetCurrentActiveMontage();
 				Weapon->GetSkeletalMeshComponent()->GetAnimInstance()->Montage_Stop(0.f);
 				EndTask();
 				return;
