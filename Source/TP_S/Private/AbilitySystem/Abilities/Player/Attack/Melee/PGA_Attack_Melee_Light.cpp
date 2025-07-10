@@ -33,6 +33,13 @@ void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle H
 		BaseGamePlayTags::Player_Event_Attack_Equip_Right);
 	TaskToEquip_Right->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::EquipWeaponRightSocket);
 	TaskToEquip_Right->ReadyForActivation();
+
+	UAbilityTask_WaitGameplayEvent* TaskToFinish = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		BaseGamePlayTags::Player_Event_Attack_Finish
+		);
+	TaskToFinish->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::StopAttack);
+	TaskToFinish->ReadyForActivation();
 	
 }
 
@@ -41,12 +48,29 @@ void UPGA_Attack_Melee_Light::InputPressed(const FGameplayAbilitySpecHandle Hand
 {
 	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
 	HasNextComboInput = true;
+	bIsAttacking = true;
 }
 
 void UPGA_Attack_Melee_Light::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {
+	if (!bWasCancelled)
+	{
+		GetWorld()->GetTimerManager().SetTimer(
+			TimerHandle,
+			FTimerDelegate::CreateLambda([this]()
+			{
+				UnEquipWeapon(FGameplayEventData());
+			}),
+			1.f,
+			false);
+	}
+	else
+	{
+		TimerHandle.Invalidate();
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	}
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 	CurrentCombo = 0;
@@ -70,11 +94,13 @@ void UPGA_Attack_Melee_Light::NextCombo(FGameplayEventData TargetData)
 	{
 		MontageJumpToSection(GetNextSection());
 		HasNextComboInput = false;
-		bIsAttacking = true;
 	}
 }
 
 void UPGA_Attack_Melee_Light::StopAttack(FGameplayEventData Data)
 {
-	bIsAttacking = false;
+	if (!bIsAttacking)
+	{
+		K2_CancelAbility();
+	}
 }

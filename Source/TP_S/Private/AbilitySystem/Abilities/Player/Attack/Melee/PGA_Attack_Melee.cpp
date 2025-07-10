@@ -14,6 +14,7 @@ void UPGA_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                         const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                         const FGameplayEventData* TriggerEventData)
 {
+	
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	EquipWeapon();
 	
@@ -24,7 +25,7 @@ void UPGA_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 			1.f,
 			GetNextSection(),
 			false);
-	//Task->OnCancelled.AddDynamic(this, &ThisClass::OnInterruptedCallback);
+	Task->OnCancelled.AddDynamic(this, &ThisClass::OnInterruptedCallback);
 	Task->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptedCallback);
 	Task->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
 	Task->OnBlendOut.AddDynamic(this, &ThisClass::OnCompleteCallback);
@@ -40,21 +41,7 @@ void UPGA_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 void UPGA_Attack_Melee::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	//UnEquipWeapon(FGameplayEventData());
-	TimerHandle.Invalidate();
-	if (!bWasCancelled)
-	{
-		GetWorld()->GetTimerManager().SetTimer(
-			TimerHandle,
-			FTimerDelegate::CreateLambda([this]()
-			{
-				UnEquipWeapon(FGameplayEventData());
-				Debug::Print("Timer");
-				//OnCompleteCallback();
-			}),
-			1.f,
-			false);
-	}
+	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 

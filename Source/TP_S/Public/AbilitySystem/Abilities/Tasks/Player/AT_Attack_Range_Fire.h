@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/Tasks/AbilityTask.h"
-#include "AT_Range_Attack_Fire.generated.h"
+#include "AT_Attack_Range_Fire.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAbilityTaskDelegate);
 
@@ -12,7 +12,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAbilityTaskDelegate);
  * 
  */
 UCLASS()
-class TP_S_API UAT_Range_Attack_Fire : public UAbilityTask
+class TP_S_API UAT_Attack_Range_Fire : public UAbilityTask
 {
 	GENERATED_BODY()
 public:
@@ -22,7 +22,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FAbilityTaskDelegate OnFinishedTask;
 
-	static UAT_Range_Attack_Fire* Action(UGameplayAbility* OwningAbility, float Interval);
+	static UAT_Attack_Range_Fire* Action(UGameplayAbility* OwningAbility, float Interval);
 
 	virtual void Activate() override;
 	virtual void OnDestroy(bool bInOwnerFinished) override;
