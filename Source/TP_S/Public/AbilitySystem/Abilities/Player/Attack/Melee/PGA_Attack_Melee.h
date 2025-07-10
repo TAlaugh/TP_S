@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/Player/Attack/PlayerGameplayAbility_Attack.h"
+#include "AbilitySystem/Abilities/Player/Attack/PGA_Attack.h"
 #include "PGA_Attack_Melee.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TP_S_API UPGA_Attack_Melee : public UPlayerGameplayAbility_Attack
+class TP_S_API UPGA_Attack_Melee : public UPGA_Attack
 {
 	GENERATED_BODY()
 public:

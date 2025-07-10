@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-#include "AT_Melee_Attack_Throw_Weapon.generated.h"
+#include "AT_Attack_Melee_ThrowWeapon.generated.h"
 
 class ABasePlayerCharacter;
 class ABasePlayerWeapon;
@@ -12,12 +12,12 @@ class ABasePlayerWeapon;
  * 
  */
 UCLASS()
-class TP_S_API UAT_Melee_Attack_Throw_Weapon : public UAbilityTask_WaitGameplayEvent
+class TP_S_API UAT_Attack_Melee_ThrowWeapon : public UAbilityTask_WaitGameplayEvent
 {
 	GENERATED_BODY()
 public:
 
-	static UAT_Melee_Attack_Throw_Weapon* Init(UGameplayAbility* OwningAbility, FGameplayTag EventTag, bool OnlyTriggerOnce = true, bool OnlyMatchExact = true);
+	static UAT_Attack_Melee_ThrowWeapon* Init(UGameplayAbility* OwningAbility, FGameplayTag EventTag, bool OnlyTriggerOnce = true, bool OnlyMatchExact = true);
 
 	virtual void Activate() override;
 	virtual void GameplayEventContainerCallback(FGameplayTag MatchingTag, const FGameplayEventData* Payload) override;

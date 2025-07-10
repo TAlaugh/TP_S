@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
-#include "PlayerGameplayAbility_Attack.generated.h"
+#include "PGA_Attack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TP_S_API UPlayerGameplayAbility_Attack : public UPlayerGameplayAbility
+class TP_S_API UPGA_Attack : public UPlayerGameplayAbility
 {
 	GENERATED_BODY()
 public:
-	UPlayerGameplayAbility_Attack();
+	UPGA_Attack();
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;

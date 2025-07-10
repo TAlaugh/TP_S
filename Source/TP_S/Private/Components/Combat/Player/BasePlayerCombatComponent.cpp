@@ -86,6 +86,7 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName Sock
 	else
 	{
 		CurrentEquippedWeaponTag = CurrentEquippedRangeWeaponTag;
+		GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->SetVisibility(true);
 	}
 }
 
@@ -96,13 +97,22 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 		return;
 	}
 	
+	FName SocketName;
+	if (WeaponType == BaseGamePlayTags::Player_Ability_Equip_Melee)
+	{
+		SocketName = MeleeSocketName;
+	} else
+	{
+		GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->SetVisibility(false);
+		SocketName = RangeSocketName;
+	}
+	
 	GetPlayerCurrentEquippedWeaponByTag(WeaponType)->AttachToComponent(
 		GetOwningPawn()->FindComponentByClass<USkeletalMeshComponent>(),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
-		FName("hook_1_back_weapon"));
+		SocketName);
 	
 	CurrentEquippedWeaponTag = FGameplayTag();
-	//FGameplayTag::RequestGameplayTag(NAME_None);
 }
 
 float UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel(float Level) const

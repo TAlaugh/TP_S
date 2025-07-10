@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/Abilities/Player/Attack/PlayerGameplayAbility_Attack.h"
+#include "AbilitySystem/Abilities/Player/Attack/PGA_Attack.h"
 
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
@@ -10,12 +10,12 @@
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-UPlayerGameplayAbility_Attack::UPlayerGameplayAbility_Attack()
+UPGA_Attack::UPGA_Attack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
-void UPlayerGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+void UPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                     const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                                     const FGameplayEventData* TriggerEventData)
 {
@@ -27,49 +27,49 @@ void UPlayerGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHa
 	}
 }
 
-void UPlayerGameplayAbility_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle,
+void UPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
 	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
 }
 
-void UPlayerGameplayAbility_Attack::InputReleased(const FGameplayAbilitySpecHandle Handle,
+void UPGA_Attack::InputReleased(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
 	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
 }
 
-void UPlayerGameplayAbility_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle,
+void UPGA_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle,
                                                   const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                                   bool bReplicateCancelAbility)
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 }
 
-void UPlayerGameplayAbility_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle,
+void UPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-void UPlayerGameplayAbility_Attack::EquipWeapon(FName SocketName)
+void UPGA_Attack::EquipWeapon(FName SocketName)
 {
 }
 
-void UPlayerGameplayAbility_Attack::UnEquipWeapon(FGameplayEventData TargetData = FGameplayEventData())
+void UPGA_Attack::UnEquipWeapon(FGameplayEventData TargetData = FGameplayEventData())
 {
 }
 
-void UPlayerGameplayAbility_Attack::EquipWeaponLeftSocket(FGameplayEventData Data)
+void UPGA_Attack::EquipWeaponLeftSocket(FGameplayEventData Data)
 {
 }
 
-void UPlayerGameplayAbility_Attack::EquipWeaponRightSocket(FGameplayEventData Data)
+void UPGA_Attack::EquipWeaponRightSocket(FGameplayEventData Data)
 {
 }
 
-void UPlayerGameplayAbility_Attack::OnCompleteCallback()
+void UPGA_Attack::OnCompleteCallback()
 {
 	bool bReplicateEndAbility = false;
 	bool bWasCancelled = false;
@@ -77,7 +77,7 @@ void UPlayerGameplayAbility_Attack::OnCompleteCallback()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-void UPlayerGameplayAbility_Attack::OnInterruptedCallback()
+void UPGA_Attack::OnInterruptedCallback()
 {
 	bool bReplicateEndAbility = false;
 	bool bWasCancelled = true;
@@ -85,7 +85,7 @@ void UPlayerGameplayAbility_Attack::OnInterruptedCallback()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-FName UPlayerGameplayAbility_Attack::GetNextSection()
+FName UPGA_Attack::GetNextSection()
 {
 	return *FString::Printf(TEXT("Default"));
 }
