@@ -7,6 +7,7 @@
 #include "DebugHelper.h"
 #include "GenericTeamAgentInterface.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "Components/Combat/Enemy/EnemyCombatComponent.h"
 #include "Interfaces/BaseCombatInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -97,7 +98,14 @@ UBaseCombatComponent* UBaseFunctionLibrary::BP_GetBaseCombatComponentFromActor(A
 	return CombatComponent;
 }
 
+UEnemyCombatComponent* UBaseFunctionLibrary::BP_GetEnemyCombatComponentFromActor(AActor* Actor,
+	EBaseValidType& OutValidType)
+{
+	UEnemyCombatComponent* CombatComponent = Cast<UEnemyCombatComponent>(NativeGetBaseCombatComponentFromActor(Actor));
 
+	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
+	return CombatComponent;
+}
 
 
 bool UBaseFunctionLibrary::IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn)

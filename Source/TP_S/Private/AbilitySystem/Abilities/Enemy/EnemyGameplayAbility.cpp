@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/Enemy/EnemyGameplayAbility.h"
 #include "BaseGamePlayTags.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "Components/Combat/Enemy/EnemyCombatComponent.h"
 #include "TP_S/Public/Character/Enemy/BaseEnemyCharacter.h"
 
 
@@ -17,9 +18,9 @@ ABaseEnemyCharacter* UEnemyGameplayAbility::GetEnemyCharacterFromActorInfo()
 }
 
 
-UEnemyCombatComponent* UEnemyGameplayAbility::GetEnemyCombatComponentFromActorInfo()
+UEnemyCombatComponent* UEnemyGameplayAbility::GetEnemyCombatComponentFromActorInfo() const
 {
-	return GetEnemyCharacterFromActorInfo()->GetEnemyCombatComponent();
+	return GetAvatarActorFromActorInfo()->FindComponentByClass<UEnemyCombatComponent>();
 }
 
 FGameplayEffectSpecHandle UEnemyGameplayAbility::MakeEnemyDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect,
