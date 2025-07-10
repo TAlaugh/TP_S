@@ -6,7 +6,7 @@
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
-#include "AbilitySystem/Abilities/Tasks/Player/AT_Range_Attack_Fire.h"
+#include "AbilitySystem/Abilities/Tasks/Player/AT_Attack_Range_Fire.h"
 #include "Camera/CameraComponent.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
@@ -14,17 +14,25 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+UPGA_Attack_Range::UPGA_Attack_Range()
+{
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_Light);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_Heavy);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_ReceiveWeapon);
+	
+}
+
 void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                         const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                         const FGameplayEventData* TriggerEventData)
 {
-	EquipWeapon();
-	FireTask = UAT_Range_Attack_Fire::Action(this, 0.2f);
+	EquipWeapon(FName("hand_rRangeSocket"));
+	FireTask = UAT_Attack_Range_Fire::Action(this, 0.2f);
 	FireTask->OnStartedTask.AddDynamic(this, &ThisClass::HandleFire);
 	FireTask->OnFinishedTask.AddDynamic(this, &ThisClass::StopFire);
 	FireTask->ReadyForActivation();
 
-	/*
+	
 	if (UAnimInstance* Anim = GetOwningComponentFromActorInfo()->GetAnimInstance())
 	{
 		if (AnimLayer)
@@ -32,7 +40,7 @@ void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 			Anim->LinkAnimClassLayers(AnimLayer);
 		}
 	}
-	*/
+	/*
 	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 			this,
 			TEXT("Attack"),
@@ -45,11 +53,14 @@ void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	Task->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
 	Task->OnBlendOut.AddDynamic(this, &ThisClass::OnCompleteCallback);
 	Task->ReadyForActivation();
+	*/
 	
 	if (GetPlayerCharacterFromActorInfo())
 	{
 		GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = false;
+		//GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->MaxWalkSpeed = 200.f;
 		GetPlayerCharacterFromActorInfo()->bUseControllerRotationYaw = true;
+		
 	}
 }
 
@@ -86,8 +97,10 @@ void UPGA_Attack_Range::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 	{
 		GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = true;
 		GetPlayerCharacterFromActorInfo()->bUseControllerRotationYaw = false;
+		//GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->MaxWalkSpeed = 400.f;
 	}
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	UnEquipWeapon(FGameplayEventData());
 }
 
 void UPGA_Attack_Range::EquipWeapon(FName SocketName)

@@ -7,8 +7,9 @@
 #include "PGA_Attack_Melee_Heavy.generated.h"
 
 
+class ABasePlayerWeapon;
 class UAT_Attack_Throw_Weapon;
-class UAT_Melee_Attack_Throw_Weapon;
+class UAT_Attack_Melee_ThrowWeapon;
 /**
  * 
  */
@@ -22,9 +23,18 @@ public:
 
 	UFUNCTION()
 	virtual void ThrowWeapon(FGameplayEventData Data);
+
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
 
 	UPROPERTY()
-	UAT_Melee_Attack_Throw_Weapon* Task;
+	UAT_Attack_Melee_ThrowWeapon* Task;
+
+	UPROPERTY()
+	ABasePlayerWeapon* Weapon;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
+	UAnimMontage* ReceiveMontage;
+
+	FTimerHandle ReceiveTimer;
 };
