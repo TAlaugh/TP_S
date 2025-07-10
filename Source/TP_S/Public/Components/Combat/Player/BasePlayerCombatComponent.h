@@ -83,6 +83,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void ToggleWeaponCollision(bool bUse, EPlayerToggleDamageType ToggleDamageType = EPlayerToggleDamageType::CurrentEquippedWeapon);
 
+	// 인벤토리에서 무기 호출
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void EquipWeaponFromInventory(FGameplayTag WeaponTag);
+
+	// Debug용도 // 지워도 무방함
+	virtual void BeginPlay() override;
 protected:
 	// 중복방지 배열
 	TArray<AActor*> OverlappedActors;

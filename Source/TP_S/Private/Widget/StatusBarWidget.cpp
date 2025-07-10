@@ -6,7 +6,7 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 
-void UStatusBarWidget::UpdateHealth(float Current, float Max)
+void UStatusBarWidget::UpdateHp(float Current, float Max)
 {
 	CurrentHp = Current;
 	MaxHp = Max;

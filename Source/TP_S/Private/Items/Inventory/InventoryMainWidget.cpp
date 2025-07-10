@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "Components/SizeBox.h"
+#include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "Components/Inventory/QuickSlotComponent.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
@@ -141,7 +142,16 @@ void UInventoryMainWidget::HandleSlotClicked(UInventorySlotWidget* Clicked)
 	}
 	else if (Item->Category == EInventoryCategory::Melee || Item->Category == EInventoryCategory::Ranged)
 	{
-		// TODO : 무기 장착 / 해제 로직 구현
+		FGameplayTag WeaponTag = Item->GetWeaponGameplayTag();
+
+		if (APawn* PlayerPawn = GetOwningPlayerPawn())
+		{
+			UBasePlayerCombatComponent* CombatComponent = PlayerPawn->FindComponentByClass<UBasePlayerCombatComponent>();
+			if (CombatComponent)
+			{
+				CombatComponent->EquipWeaponFromInventory(WeaponTag);
+			}
+		}
 	}
 }
 

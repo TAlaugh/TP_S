@@ -4,6 +4,7 @@
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "AbilitySystem/Player/PlayerAbilitySystemComponent.h"
@@ -163,5 +164,63 @@ void UBasePlayerCombatComponent::ToggleWeaponCollision(bool bUse, EPlayerToggleD
 		}
 	}
 	
+}
+
+void UBasePlayerCombatComponent::EquipWeaponFromInventory(FGameplayTag WeaponTag)
+{
+	if (!OwnerPlayer)
+	{
+		OwnerPlayer = Cast<ABasePlayerCharacter>(GetOwner());
+		if (!OwnerPlayer) return;
+	}
+
+	UBaseAbilitySystemComponent* ASC = UBaseFunctionLibrary::NativeGetBaseASCFromActor(OwnerPlayer);
+	if (!ASC) return;
+
+	FGameplayTag MeleeWeaponTag = FGameplayTag::RequestGameplayTag(FName("Item.Equipable.Weapon.Melee"));
+	FGameplayTag RangeWeaponTag = FGameplayTag::RequestGameplayTag(FName("Item.Equipable.Weapon.Range"));
+
+	bool bIsMeleeWeapon = WeaponTag.MatchesTag(MeleeWeaponTag);
+	bool bIsRangeWeapon = WeaponTag.MatchesTag(RangeWeaponTag);
+	
+	if (!bIsMeleeWeapon && !bIsRangeWeapon)
+	{
+		Debug::Print(TEXT("Unknown Weapon Type"));
+		return;
+	}
+
+	FGameplayTag OldTag = bIsMeleeWeapon ? CurrentEquippedMeleeWeaponTag : CurrentEquippedRangeWeaponTag;
+	if (ASC->HasMatchingGameplayTag(OldTag))
+	{
+		ASC->RemoveLooseGameplayTag(OldTag);
+		UnEquipWeapon(bIsMeleeWeapon ? MeleeWeaponTag : RangeWeaponTag);
+	}
+
+	ASC->AddLooseGameplayTag(WeaponTag);
+	if (bIsMeleeWeapon)
+	{
+		CurrentEquippedMeleeWeaponTag = WeaponTag;
+		EquipWeapon(MeleeWeaponTag, FName("hook_1_back_weaponSocket"));
+	}
+	else
+	{
+		CurrentEquippedRangeWeaponTag = WeaponTag;
+		EquipWeapon(RangeWeaponTag, FName("hook_2_back_weaponSocket"));
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("Selected Weapon Tag: %s"), *WeaponTag.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Current Melee Tag: %s"), *CurrentEquippedMeleeWeaponTag.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Current Range Tag: %s"), *CurrentEquippedRangeWeaponTag.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("ASC has Melee Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedMeleeWeaponTag) ? TEXT("Yes") : TEXT("No"));
+	UE_LOG(LogTemp, Warning, TEXT("ASC has Range Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedRangeWeaponTag) ? TEXT("Yes") : TEXT("No"));
+}
+
+// Debug용 입니다. 지워도 무방
+void UBasePlayerCombatComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UE_LOG(LogTemp, Warning, TEXT("Current Melee Tag: %s"), *CurrentEquippedMeleeWeaponTag.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Current Range Tag: %s"), *CurrentEquippedRangeWeaponTag.ToString());
 }
 
