@@ -30,7 +30,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Ability")
 	UBaseAbilitySystemComponent* GetBaseAbilitySystemComponentFromActorInfo() const;
 	
-	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle);
+	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Ability", meta = (DisplayName = "Apply GameplayEffect Spec Handle To TargetActor", ExpandEnumAsExecs = "OutSuccessType"))
 	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle, EBaseSuccessType& OutSuccessType);
