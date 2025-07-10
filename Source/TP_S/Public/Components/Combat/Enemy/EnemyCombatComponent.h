@@ -30,19 +30,19 @@ class TP_S_API UEnemyCombatComponent : public UBaseCombatComponent
 public:
 
 	//생성된 무기 등록
-	UFUNCTION(BlueprintCallable, Category="Hero")
+	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void RegisterSpawnedWeapon(FGameplayTag WeaponTag, ABaseWeapon* Weapon, bool bRegisterAsEquippedWeapon = false);
 
 	//캐릭터가 휴대하는 무기
-	UFUNCTION(BlueprintCallable, Category="Hero")
+	UFUNCTION(BlueprintCallable, Category="Enemy")
 	ABaseWeapon* GetCharacterCarriedWeaponByTag(FGameplayTag WeaponTag) const;
 
 	//캐릭터가 장착중인 무기의 태그
-	UPROPERTY(BlueprintReadWrite, Category="Hero")
+	UPROPERTY(BlueprintReadWrite, Category="Enemy")
 	FGameplayTag CurrentEquippedWeaponTag;
 
 	//캐릭터가 장착한 무기
-	UFUNCTION(BlueprintCallable, Category="Hero")
+	UFUNCTION(BlueprintCallable, Category="Enemy")
 	ABaseWeapon* GetCharacterCurrentEquippedWeapon() const;
 
 	//무기 콜리전 
