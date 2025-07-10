@@ -16,7 +16,8 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Light, "InputTag.Attack.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Heavy, "InputTag.Attack.Melee.Heavy");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Range, "InputTag.Attack.Range");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_ReceiveWeapon, "InputTag.Attack.Melee.ReceiveWeapon");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Range, "InputTag.Attack.Range");
 	
 	// Shared Status(Dead, Idle, Jump, etc)
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Idle, "Shared.Status.Idle");
@@ -64,6 +65,7 @@ namespace BaseGamePlayTags
 	// Player Ability(Attack)
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Light, "Player.Ability.Attack.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Heavy, "Player.Ability.Attack.Melee.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_ReceiveWeapon, "Player.Ability.Attack.Melee.ReceiveWeapon");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Single, "Player.Ability.Attack.Range.Single");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Stream, "Player.Ability.Attack.Range.Stream");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Equip_Melee, "Player.Ability.Equip.Melee");
@@ -72,12 +74,16 @@ namespace BaseGamePlayTags
 	// Player Event
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DoubleJump, "Player.Event.DoubleJump");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Next, "Player.Event.Attack.Next");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Finish, "Player.Event.Attack.Finish");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Throw, "Player.Event.Attack.Throw");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip, "Player.Event.Attack.Equip");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip_Right, "Player.Event.Attack.Equip.Right");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip_Left, "Player.Event.Attack.Equip.Left");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip_Switch, "Player.Event.Attack.Equip.Switch");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_UnEquip, "Player.Event.Attack.UnEquip");
+
+	// Player Status
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_WeaponThrown, "Player.Status.WeaponThrown");
 
 	// Item Tags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");
@@ -96,7 +102,8 @@ namespace BaseGamePlayTags
 	// Enemy Ability
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Melee,"Enemy.Ability.Melee")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Ranged,"Enemy.Ability.Ranged")
-
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill,"Enemy.Ability.Skill")
+	
 	// Enemy Status
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_Strafing,"Enemy.Status.Strafing")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_UnderAttack,"Enemy.Status.UnderAttack")

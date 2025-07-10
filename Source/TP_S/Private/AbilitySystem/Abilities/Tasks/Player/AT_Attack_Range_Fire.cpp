@@ -1,19 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/Abilities/Tasks/Player/AT_Range_Attack_Fire.h"
+#include "AbilitySystem/Abilities/Tasks/Player/AT_Attack_Range_Fire.h"
 
 #include "DebugHelper.h"
 
-UAT_Range_Attack_Fire* UAT_Range_Attack_Fire::Action(UGameplayAbility* OwningAbility, float Interval)
+UAT_Attack_Range_Fire* UAT_Attack_Range_Fire::Action(UGameplayAbility* OwningAbility, float Interval)
 {
-	UAT_Range_Attack_Fire* Task = NewAbilityTask<UAT_Range_Attack_Fire>(OwningAbility);
+	UAT_Attack_Range_Fire* Task = NewAbilityTask<UAT_Attack_Range_Fire>(OwningAbility);
 	Task->ActionInterval = Interval;
 	
 	return Task;
 }
 
-void UAT_Range_Attack_Fire::Activate()
+void UAT_Attack_Range_Fire::Activate()
 {
 	Super::Activate();
 
@@ -24,13 +24,13 @@ void UAT_Range_Attack_Fire::Activate()
 
 }
 
-void UAT_Range_Attack_Fire::OnDestroy(bool bInOwnerFinished)
+void UAT_Attack_Range_Fire::OnDestroy(bool bInOwnerFinished)
 {
 	StopFire();
 	Super::OnDestroy(bInOwnerFinished);
 }
 
-void UAT_Range_Attack_Fire::StopFire()
+void UAT_Attack_Range_Fire::StopFire()
 {
 	if (Timer.IsValid())
 	{
@@ -40,7 +40,7 @@ void UAT_Range_Attack_Fire::StopFire()
 	}
 }
 
-void UAT_Range_Attack_Fire::StartFire()
+void UAT_Attack_Range_Fire::StartFire()
 {
 	OnStartedTask.Broadcast();
 }

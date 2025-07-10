@@ -64,6 +64,16 @@ public:
 	// 원거리
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
 	FGameplayTag CurrentEquippedRangeWeaponTag;
+
+	// 근거리 무기를 던진 위치 저장
+	UPROPERTY()
+	FVector WeaponThrownLocation;
+
+	UPROPERTY()
+	FGameplayTag CurrentThrownWeaponTag;
+
+	FName MeleeSocketName = FName("hook_1_back_weaponSocket");
+	FName RangeSocketName = FName("hook_2_back_weaponSocket");
 	
 	// HitDetection
 	virtual void OnHitTargetActor(AActor* HitActor);

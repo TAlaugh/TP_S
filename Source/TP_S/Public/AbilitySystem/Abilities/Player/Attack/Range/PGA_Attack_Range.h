@@ -3,18 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/Player/Attack/PlayerGameplayAbility_Attack.h"
+#include "AbilitySystem/Abilities/Player/Attack/PGA_Attack.h"
 #include "PGA_Attack_Range.generated.h"
 
-class UAT_Range_Attack_Fire;
+class UAT_Attack_Range_Fire;
 /**
  * 
  */
 UCLASS()
-class TP_S_API UPGA_Attack_Range : public UPlayerGameplayAbility_Attack
+class TP_S_API UPGA_Attack_Range : public UPGA_Attack
 {
 	GENERATED_BODY()
 public:
+	UPGA_Attack_Range();
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 	virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
@@ -25,7 +26,7 @@ public:
 	virtual void UnEquipWeapon(FGameplayEventData TargetData) override;
 	
 	UPROPERTY()
-	UAT_Range_Attack_Fire* FireTask;
+	UAT_Attack_Range_Fire* FireTask;
 	
 	TWeakObjectPtr<AActor>* Bullet;
 	
