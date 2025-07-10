@@ -13,7 +13,6 @@
 #include "BaseEnemyCharacter.generated.h"
 
 
-
 class UEnemyCombatComponent;
 class UBaseCombatComponent;
 class UMotionWarpingComponent;
@@ -53,6 +52,7 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UWidgetComponent* WidgetComponent;
 
+	
 	
 
 

@@ -110,6 +110,7 @@ namespace	BaseGamePlayTags
 	// Enemy Ability
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Melee)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Ranged)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Skill)
 
 	
 	// Enemy Status
