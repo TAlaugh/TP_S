@@ -20,19 +20,26 @@ UBaseAbilitySystemComponent* UBaseGameplayAbility::GetBaseAbilitySystemComponent
 }
 
 FActiveGameplayEffectHandle UBaseGameplayAbility::NativeApplyEffectSpecHandleToTarget(AActor* TargetActor,
-	const FGameplayEffectSpecHandle& SpecHandle)
+	const FGameplayEffectSpecHandle& SpecHandle) const
 {
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
-	
-	check(ASC && SpecHandle.IsValid());
-	
-	return GetBaseAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, ASC);
-}
+	if (!ASC)
+	{
+		UE_LOG(LogTemp, Error, TEXT("NativeApplyEffectSpecHandleToTarget: ASC is nullptr! TargetActor: %s"), *GetNameSafe(TargetActor));
+		return FActiveGameplayEffectHandle();
+	}
+	if (!SpecHandle.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("NativeApplyEffectSpecHandleToTarget: SpecHandle is invalid!"));
+		return FActiveGameplayEffectHandle();
+	}
+
+	return GetBaseAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, ASC);}
 
 FActiveGameplayEffectHandle UBaseGameplayAbility::BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor,
 	const FGameplayEffectSpecHandle& SpecHandle, EBaseSuccessType& OutSuccessType)
 {
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	//UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = NativeApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
 
 	OutSuccessType = ActiveGameplayEffectHandle.WasSuccessfullyApplied() ? EBaseSuccessType::Successful : EBaseSuccessType::Failed;
