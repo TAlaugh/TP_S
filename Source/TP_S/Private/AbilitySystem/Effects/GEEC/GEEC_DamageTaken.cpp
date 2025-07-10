@@ -4,6 +4,7 @@
 #include "AbilitySystem/Effects/GEEC/GEEC_DamageTaken.h"
 
 #include "BaseGameplayTags.h"
+#include "DebugHelper.h"
 #include "AbilitySystem/BaseAttributeSet.h"
 
 struct FDamageCapture
@@ -77,6 +78,7 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 	}
 
 	const float FinalDamage = BaseDamage * SourceAttack / TargetDefense;
+	Debug::Print(TEXT("FinalDamage: "), FinalDamage);
 
 	if (FinalDamage > 0.f)
 	{
