@@ -7,11 +7,13 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
+#include "Character/Player/BasePlayerCharacter.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
 #include "Items/Inventory/InventoryMainWidget.h"
 #include "Items/Inventory/QuickSlotWidget.h"
 #include "Items/Weapons/WeaponItemDataAsset.h"
+#include "Widget/HUDWidget.h"
 
 ABasePlayerController::ABasePlayerController()
 {
@@ -28,6 +30,11 @@ void ABasePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ABasePlayerCharacter* PlayerCharacter = Cast<ABasePlayerCharacter>(GetPawn());
+	
+	UAbilitySystemComponent* ASC = PlayerCharacter->GetBaseAbilitySystemComponent();
+	UBaseAttributeSet* AttributeSet = PlayerCharacter->GetBaseAttributeSet();
+	
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		if (IMC_Default)
@@ -50,18 +57,28 @@ void ABasePlayerController::BeginPlay()
 		}
 	}
 
-	QuickSlotWidget = CreateWidget<UQuickSlotWidget>(this, QuickSlotWidgetClass);
-	if (QuickSlotWidget)
+	if (QuickSlotWidgetClass)
 	{
-		QuickSlotWidget->AddToViewport();
+		QuickSlotWidget = CreateWidget<UQuickSlotWidget>(this, QuickSlotWidgetClass);
+		if (QuickSlotWidget)
+		{
+			QuickSlotWidget->AddToViewport();
+			
+			if (auto* QSC = GetPawn()->FindComponentByClass<UQuickSlotComponent>())
+			{
+				QSC->OnQuickSlotChanged.AddDynamic(QuickSlotWidget, &UQuickSlotWidget::Update);
+				QuickSlotWidget->Update(QSC->GetData());
+			}
+		}
 	}
 
-	if (QuickSlotWidget && GetPawn())
+	if (PlayerHUDClass)
 	{
-		if (auto* QSC = GetPawn()->FindComponentByClass<UQuickSlotComponent>())
+		UHUDWidget* HUD = CreateWidget<UHUDWidget>(GetWorld(), PlayerHUDClass);
+		if (HUD)
 		{
-			QSC->OnQuickSlotChanged.AddDynamic(QuickSlotWidget, &UQuickSlotWidget::Update);
-			QuickSlotWidget->Update(QSC->GetData());
+			HUD->AddToViewport();
+			HUD->BindToAttribute(ASC, AttributeSet);
 		}
 	}
 }

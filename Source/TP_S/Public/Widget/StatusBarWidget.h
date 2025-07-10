@@ -17,7 +17,7 @@ class TP_S_API UStatusBarWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void UpdateHealth(float Current, float Max);
+	void UpdateHp(float Current, float Max);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
