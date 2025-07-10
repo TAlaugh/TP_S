@@ -134,7 +134,7 @@ void UInventoryMainWidget::HandleSlotClicked(UInventorySlotWidget* Clicked)
 				if (auto* Inv = P->FindComponentByClass<UPlayerInventoryComponent>())
 				{
 					QSC->RegisterItem(Cast<UConsumableItemDataAsset>(Item), Inv);
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, (TEXT("%s"), QSC->GetData().ItemData.GetName()));
+					// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, (TEXT("%s"), QSC->GetData().ItemData.GetName()));
 				}
 			}
 		}

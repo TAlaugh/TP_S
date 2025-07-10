@@ -24,4 +24,6 @@ public:
 	/** 기본 공격력 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Weapon")
 	float BaseDamage = 20.f;
+
+	virtual void GatherDisplayRows(TArray<FItemInfoRow>& OutRows) const override;
 };
