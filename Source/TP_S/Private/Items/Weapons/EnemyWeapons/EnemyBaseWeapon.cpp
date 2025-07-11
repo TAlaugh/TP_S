@@ -11,8 +11,9 @@ void AEnemyBaseWeapon::OnCollisionBoxBeginOverlap(UPrimitiveComponent* Overlappe
 	
 
 	ABaseEnemyCharacter* EnemyCharacter = Cast<ABaseEnemyCharacter>(OtherActor);
-	if (EnemyCharacter)
+	if (EnemyCharacter && WeaponMesh->GetAttachParent() != EnemyCharacter->GetMesh())
 	{
+		WeaponCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision); 
 		FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
 		WeaponMesh->AttachToComponent(EnemyCharacter->GetMesh(), TransformRules, FName("WeaponSocket"));
 	}
