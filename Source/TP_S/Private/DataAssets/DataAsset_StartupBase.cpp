@@ -10,15 +10,17 @@
 void UDataAsset_StartupBase::GiveToAbilitySystemComponent(UBaseAbilitySystemComponent* ASC, int32 ApplyLevel)
 {
 	//check(ASC);
-	if (!ASC)
-	{
-		return;
-	}
-
-	if (!ASC->GetAvatarActor())
-	{
-		return;
-	}
+	// if (!ASC)
+	// {
+	// 	return;
+	// }
+	//
+	// if (!ASC->GetAvatarActor())
+	// {
+	// 	return;
+	// }
+	
+	check(ASC);
 	
 	GrantAbilities(ActivateOnGivenAbilities, ASC, ApplyLevel); // ApplyLevel 추가
 	GrantAbilities(ReactiveAbilities, ASC, ApplyLevel);        // ApplyLevel 추가

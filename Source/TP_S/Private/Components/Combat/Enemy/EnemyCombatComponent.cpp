@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
+#include "DebugHelper.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include  "Items/Weapons/BaseWeapon.h"
 
@@ -17,7 +18,7 @@ void UEnemyCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, ABaseW
 
 	CharacterCarriedWeaponMap.Emplace(WeaponTag, Weapon);
 
-	Weapon->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTagetActor);
+	Weapon->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
 	Weapon->OnWeaponPulledFromTarget.BindUObject(this,&ThisClass::OnWeaponPulledFromTargetActor);
 
 	//장착한 무기로 등록이 되면 현재 장착무기를 변경
@@ -76,7 +77,7 @@ void UEnemyCombatComponent::ToggleWeaponCollision(bool bUse, EToggleDamageType T
 	
 }
 
-void UEnemyCombatComponent::OnHitTagetActor(AActor* HitActor)
+void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
 	if (OverlappedActors.Contains(HitActor))
 	{
@@ -84,39 +85,40 @@ void UEnemyCombatComponent::OnHitTagetActor(AActor* HitActor)
 	}
 	
 	OverlappedActors.AddUnique(HitActor);
+	
+ 	////TODO:: Implement Block Check
+	////블락 판단유무
+	//bool bIsValidBlock = false;
+	
+	//플레이어 블락중인지
+	//const bool bIsPlayerBlocking = UBaseFunctionLibrary::NativeActorHasTag(HitActor, BaseGamePlayTags::Player_Status_Blocking);
+
+	//블락이 불가능한 상태인지 (무적기)
+	// const bool bIsAttackUnBlockable = false;
+	//
+	// if (bIsPlayerBlocking && !bIsAttackUnBlockable)
+	// {
+	// 	bIsValidBlock = UBaseFunctionLibrary::IsValidBlock(GetOwningPawn(), HitActor);
+	// }
+
+	FGameplayEventData EventData;
+	EventData.Instigator = GetOwningPawn();
+	EventData.Target = HitActor;
+
+	// if (bIsValidBlock)
+	// {
+	// 	//피격자에게 게임플레이이벤트 전송 GA_Hero_Block
+	// 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, BaseGamePlayTags::Player_Event_SuccessBlock,EventData);
+	// 	
+	// }
+	// else
+	// {
+	// 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_MeleeHit, EventData);
+	// }
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit_Melee, EventData);
+
 }
-// 	//TODO:: Implement Block Check
-// 	//블락 판단유무
-// 	bool bIsValidBlock = false;
-// 	
-// 	//플레이어 블락중인지
-// 	const bool bIsPlayerBlocking = UBaseFunctionLibrary::NativeActorHasTag(HitActor, BaseGamePlayTags::Player_Status_Blocking);
-//
-// 	//블락이 불가능한 상태인지 (무적기)
-// 	const bool bIsAttackUnBlockable = false;
-//
-// 	if (bIsPlayerBlocking && !bIsAttackUnBlockable)
-// 	{
-// 		bIsValidBlock = UBaseFunctionLibrary::IsValidBlock(GetOwningPawn(), HitActor);
-// 	}
-//
-// 	FGameplayEventData EventData;
-// 	EventData.Instigator = GetOwningPawn();
-// 	EventData.Target = HitActor;
-//
-// 	if (bIsValidBlock)
-// 	{
-// 		//피격자에게 게임플레이이벤트 전송 GA_Hero_Block
-// 		//UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, BaseGamePlayTags::Player_Event_SuccessBlock,EventData);
-// 		
-// 	}
-// 	else
-// 	{
-// 		//UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_MeleeHit, EventData);
-// 	}
-//
-// }
-//
+
 void UEnemyCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
 {
 	
