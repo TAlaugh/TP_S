@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "BasePlayerController.generated.h"
 
+class UBasePlayerCombatComponent;
 class UHUDWidget;
 class UQuickSlotComponent;
 class UQuickSlotWidget;
@@ -28,6 +29,9 @@ public:
 
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
+	UFUNCTION(BlueprintCallable)
+	UHUDWidget* GetPlayerHUDWidget() const { return PlayerHUDWidget; }
+	
 private:
 	FGenericTeamId TeamId;
 
@@ -66,8 +70,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> PlayerHUDClass;
-
-	UHUDWidget* GetPlayerHUDWidget() const { return PlayerHUDWidget; }
 	
 private:
 	UPROPERTY()
@@ -81,6 +83,9 @@ private:
 
 	UPROPERTY()
 	UQuickSlotComponent* QuickSlotComponent;
+
+	UPROPERTY()
+	UBasePlayerCombatComponent* BasePlayerCombatComponent;
 
 	bool bInventoryOpen = false;
 };

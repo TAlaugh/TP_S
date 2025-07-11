@@ -94,6 +94,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void EquipWeaponFromInventory(TSubclassOf<ABasePlayerWeapon> WeaponClass, FGameplayTag WeaponTag);
 
+	// WeaponUI
+	UFUNCTION()
+	UMaterialInterface* GetCurrentWeaponMat();
+
+	UFUNCTION()
+	void UpdateWeaponHUD();
+	
 	// Debug용도 // 지워도 무방함
 	virtual void BeginPlay() override;
 

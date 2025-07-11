@@ -17,7 +17,8 @@ class TP_S_API UWeaponHUDWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void UpdateWeaponDisplay(UWeaponItemDataAsset* WeaponItemData);
+	UFUNCTION()
+	void UpdateWeaponDisplay(UMaterialInterface* NewMaterial);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
