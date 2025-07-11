@@ -10,22 +10,20 @@
 
 void UDataAsset_StartupBaseEnemy::GiveToAbilitySystemComponent(UBaseAbilitySystemComponent* ASC, int32 Level)
 {
-	Debug::Print("Ability0");
-	if (!ASC)
-	{
-		return;
-	}
-	if (!ASC->GetAvatarActor())
-	{
-		return;
-	}
+	// if (!ASC)
+	// {
+	// 	return;
+	// }
+	// if (!ASC->GetAvatarActor())
+	// {
+	// 	return;
+	// }
 	Super::GiveToAbilitySystemComponent(ASC, Level);
 
 	if (!EnemyCombatAbilities.IsEmpty())
 	{
 		for (const TSubclassOf<UEnemyGameplayAbility>& AbilityClass : EnemyCombatAbilities)
 		{
-			Debug::Print("Ability");
 			if (!AbilityClass) continue;
 
 			FGameplayAbilitySpec AbilitySpec(AbilityClass);

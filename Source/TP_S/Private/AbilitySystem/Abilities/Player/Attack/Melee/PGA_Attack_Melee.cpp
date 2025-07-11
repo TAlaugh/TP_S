@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Abilities/Player/Attack/Melee/PGA_Attack_Melee.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
@@ -60,6 +61,7 @@ void UPGA_Attack_Melee::HandleApplyDamage(FGameplayEventData Data)
 			BaseGamePlayTags::Player_Ability_Attack_Melee_Light,
 			ComboCount);
 		NativeApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, BaseGamePlayTags::Shared_Event_HitReact, Data);
 	}
 }
 

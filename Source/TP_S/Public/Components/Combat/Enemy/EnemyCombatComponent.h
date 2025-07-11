@@ -50,7 +50,7 @@ public:
 	void ToggleWeaponCollision(bool bUse, EToggleDamageType ToggleDamageType = EToggleDamageType::CurrentEquippedWeapon);
 
 	//HitDetection
-	virtual void OnHitTagetActor(AActor* HitActor) ;
+	virtual void OnHitTargetActor(AActor* HitActor) ;
 	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor);
 	
 protected:
