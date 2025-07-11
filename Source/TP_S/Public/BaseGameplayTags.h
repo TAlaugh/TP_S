@@ -75,9 +75,11 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Range_Stream);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Equip_Melee);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Equip_Range);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_SpawnWeapon);
 
 	// Player Event
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_DoubleJump);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Next);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Finish);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Throw);
@@ -86,6 +88,11 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Equip_Left);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Equip_Switch);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_UnEquip);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Equip);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Equip_Melee);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Equip_Melee_PoleArm);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Equip_Range);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Equip_Range_MachineGun);
 
 	// Player Status
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_WeaponThrown);
@@ -94,8 +101,10 @@ namespace	BaseGamePlayTags
 	// Item Tags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Consumable_HpPotion);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Consumable_ActionPotion);
-	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equippable_Weapon);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Melee);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Melee_PoleArm);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Range);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Range_MachineGun);
 
 	// Item GE

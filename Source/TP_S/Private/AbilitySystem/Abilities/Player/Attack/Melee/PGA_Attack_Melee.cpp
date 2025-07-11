@@ -65,12 +65,12 @@ void UPGA_Attack_Melee::HandleApplyDamage(FGameplayEventData Data)
 
 void UPGA_Attack_Melee::EquipWeapon(FName SocketName)
 {
-	GetPlayerCombatComponentFromActorInfo()->EquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Melee, SocketName);
+	GetPlayerCombatComponentFromActorInfo()->EquipWeapon(BaseGamePlayTags::Item_Equipable_Weapon_Melee, SocketName);
 }
 
 void UPGA_Attack_Melee::UnEquipWeapon(FGameplayEventData TargetData)
 {
-	GetPlayerCombatComponentFromActorInfo()->UnEquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Melee);
+	GetPlayerCombatComponentFromActorInfo()->UnEquipWeapon(BaseGamePlayTags::Item_Equipable_Weapon_Melee);
 }
 
 void UPGA_Attack_Melee::EquipWeaponLeftSocket(FGameplayEventData Data)
