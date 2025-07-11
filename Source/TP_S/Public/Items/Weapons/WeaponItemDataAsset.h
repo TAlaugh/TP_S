@@ -34,4 +34,7 @@ public:
 	TSubclassOf<ABasePlayerWeapon> WeaponClass;
 
 	virtual void GatherDisplayRows(TArray<FItemInfoRow>& OutRows) const override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Basic")
+	UMaterialInterface* EquipWeaponMaterial;
 };

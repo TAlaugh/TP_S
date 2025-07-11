@@ -46,7 +46,7 @@ protected:
 	// 퀵슬롯 사용
 	void OnUseQuickSlot(const FInputActionValue& Value);
 
-	// Debug
+	// Debug 용 인벤토리에 아이템 넣기
 	UFUNCTION(BlueprintCallable)
 	void GiveItems();
 
@@ -63,23 +63,19 @@ protected:
 	// 위젯 클래스 BP지정 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> InventoryWidgetClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUserWidget> QuickSlotWidgetClass;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> PlayerHUDClass;
+
+	UHUDWidget* GetPlayerHUDWidget() const { return PlayerHUDWidget; }
 	
 private:
 	UPROPERTY()
 	UInventoryMainWidget* InventoryWidget;
-
-	UPROPERTY()
-	UQuickSlotWidget* QuickSlotWidget;
-
+	
 	UPROPERTY()
 	UHUDWidget* PlayerHUDWidget;
-	
+
 	UPROPERTY()
 	UPlayerInventoryComponent* InventoryComponent;
 

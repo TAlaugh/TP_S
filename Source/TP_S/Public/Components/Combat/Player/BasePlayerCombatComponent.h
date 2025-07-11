@@ -96,6 +96,7 @@ public:
 
 	// Debug용도 // 지워도 무방함
 	virtual void BeginPlay() override;
+
 protected:
 	// 중복방지 배열
 	TArray<AActor*> OverlappedActors;
