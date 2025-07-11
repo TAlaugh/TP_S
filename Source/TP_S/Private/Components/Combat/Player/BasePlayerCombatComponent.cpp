@@ -10,7 +10,11 @@
 #include "AbilitySystem/Player/PlayerAbilitySystemComponent.h"
 #include "AnimNodes/AnimNode_RandomPlayer.h"
 #include "Character/Player/BasePlayerCharacter.h"
+#include "Controllers/BasePlayerController.h"
 #include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/WeaponItemDataAsset.h"
+#include "Widget/HUDWidget.h"
+#include "Widget/WeaponHUDWidget.h"
 
 void UBasePlayerCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, ABasePlayerWeapon* Weapon, FGameplayTag WeaponType)
 {
@@ -89,6 +93,8 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName Sock
 		CurrentEquippedWeaponTag = CurrentEquippedRangeWeaponTag;
 		GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->SetVisibility(true);
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("[CombatComponent] Equipped Weapon Tag: %s"), *CurrentEquippedWeaponTag.ToString());
 }
 
 void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)

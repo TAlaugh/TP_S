@@ -7,6 +7,10 @@
 #include "Blueprint/UserWidget.h"
 #include "HUDWidget.generated.h"
 
+class UWeaponHUDWidget;
+class UWeaponItemDataAsset;
+class UQuickSlotComponent;
+class UQuickSlotWidget;
 class UStatusBarWidget;
 class UBaseAttributeSet;
 class UAbilitySystemComponent;
@@ -20,14 +24,29 @@ class TP_S_API UHUDWidget : public UUserWidget
 
 public:
 	void BindToAttribute(UAbilitySystemComponent* ASC, UBaseAttributeSet* AttributeSet);
-
+	
+	void BindToQuickSlot(UQuickSlotComponent* QSC);
+	
 	void OnCurrentHpChanged(const FOnAttributeChangeData& Data);
 	void OnMaxHpChanged(const FOnAttributeChangeData& Data);
+
+	UWeaponHUDWidget* GetWeaponHUDWidget() const { return WeaponHUDWidget; }
+	UQuickSlotWidget* GetQuickSlotWidget() const { return QuickSlotWidget; }
 	
 protected:
 	UPROPERTY(meta = (BindWidget))
 	UStatusBarWidget* StatusBarWidget;
 
+	UPROPERTY(meta = (BindWidget))
+	UQuickSlotWidget* QuickSlotWidget;
+
+	UPROPERTY(meta = (BindWidget))
+	UWeaponHUDWidget* WeaponHUDWidget;
+
+	UPROPERTY()
+	UBasePlayerCombatComponent* BoundCombatComponent;
+
 	float CachedCurrentHp = 0.f;
 	float CachedMaxHp = 0.f;
+	
 };
