@@ -3,41 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
-#include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
+#include "PGA_Movement.h"
 #include "PlayerGameplayAbility_Jump.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TP_S_API UPlayerGameplayAbility_Jump : public UPlayerGameplayAbility
+class TP_S_API UPlayerGameplayAbility_Jump : public UPGA_Movement
 {
 	GENERATED_BODY()
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	
+	UFUNCTION()
+	void Jump();
 
 	UFUNCTION()
-	virtual void OnLandedEvent(FGameplayEventData Payload);
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
-	TMap<FGameplayTag, UAnimMontage*> MontageByTag;
-	
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
-	//UAnimMontage* JumpEndMontage;
-
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montage")
-	//UAnimMontage* JumpLoopMontage;
-
-	//UPROPERTY()
-	//UAbilityTask_WaitGameplayEvent* WaitLand;
-
-	
-	UPROPERTY()
-	UAbilityTask_PlayMontageAndWait* PlayMontageAndWait;
-	
+	void SecondJump();
 
 	UPROPERTY(EditAnywhere, Category = "Data")
 	float JumpX;

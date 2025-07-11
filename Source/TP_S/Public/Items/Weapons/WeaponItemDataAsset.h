@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Items/ItemDataAsset.h"
+#include "BaseType/Player/PlayerStructType.h"
 #include "WeaponItemDataAsset.generated.h"
 
+class ABasePlayerWeapon;
 class UGameplayAbility;
 class UAnimMontage;
 
@@ -24,6 +26,12 @@ public:
 	/** 기본 공격력 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Weapon")
 	float BaseDamage = 20.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	FPlayerWeaponData PlayerWeaponData;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	TSubclassOf<ABasePlayerWeapon> WeaponClass;
 
 	virtual void GatherDisplayRows(TArray<FItemInfoRow>& OutRows) const override;
 };

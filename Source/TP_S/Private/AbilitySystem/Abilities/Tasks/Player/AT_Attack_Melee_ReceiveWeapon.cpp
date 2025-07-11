@@ -44,7 +44,7 @@ void UAT_Attack_Melee_ReceiveWeapon::TickTask(float DeltaTime)
 		// 플레이어에게 가까이 왔을 때 잡기처리
 		if (FVector::Dist(CurrentLocation, PlayerLocation) <= 300.f)
 		{
-			Player->GetPlayerCombatComponent()->EquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Melee);
+			Player->GetPlayerCombatComponent()->EquipWeapon(BaseGamePlayTags::Item_Equipable_Weapon_Melee);
 			Player->GetPlayerCombatComponent()->ToggleWeaponCollision(false);
 			Player->GetPlayerCombatComponent()->WeaponThrownLocation = FVector();
 			Player->GetPlayerCombatComponent()->CurrentThrownWeaponTag = FGameplayTag();

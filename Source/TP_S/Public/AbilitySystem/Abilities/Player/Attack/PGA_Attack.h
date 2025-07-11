@@ -31,13 +31,7 @@ public:
 	virtual void EquipWeaponLeftSocket(FGameplayEventData Data);
 	virtual	void EquipWeaponRightSocket(FGameplayEventData Data);
 
-protected:
-	UFUNCTION()
-	void OnCompleteCallback();
-
-	UFUNCTION()
-	void OnInterruptedCallback();
-	
+protected:	
 	virtual FName GetNextSection();
 
 protected:

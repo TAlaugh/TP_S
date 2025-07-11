@@ -8,7 +8,6 @@
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "AbilitySystem/Player/PlayerAbilitySystemComponent.h"
-#include "AnimNodes/AnimNode_RandomPlayer.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Items/Weapons/BasePlayerWeapon.h"
 
@@ -22,12 +21,35 @@ void UBasePlayerCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, A
 	Weapon->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
 	Weapon->OnWeaponPulledFromTarget.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
 
-	if (WeaponType == BaseGamePlayTags::Player_Ability_Equip_Melee){
+	if (WeaponType == BaseWeaponTypeMelee){
 		CurrentEquippedMeleeWeaponTag = WeaponTag;
 	} else
 	{
 		CurrentEquippedRangeWeaponTag = WeaponTag;
+		Weapon->GetSkeletalMeshComponent()->SetVisibility(false);
 	}
+	Debug::Print(WeaponTag.ToString());
+}
+
+void UBasePlayerCombatComponent::RemoveSpawnedWeapon(FGameplayTag WeaponTag, ABasePlayerWeapon* Weapon, FGameplayTag WeaponType)
+{
+	checkf(PlayerWeaponMap.Contains(WeaponTag), TEXT("Alreay Removed"), *WeaponTag.ToString());
+
+	check(Weapon);
+	
+	PlayerWeaponMap.Remove(WeaponTag);
+	Weapon->OnWeaponHitTarget.Unbind();
+	Weapon->OnWeaponPulledFromTarget.Unbind();
+
+	if (WeaponType == BaseWeaponTypeMelee)
+	{
+		CurrentEquippedMeleeWeaponTag = FGameplayTag();
+	}
+	else
+	{
+		CurrentEquippedRangeWeaponTag = FGameplayTag();
+	}
+	Weapon->Destroy();
 }
 
 ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCarriedWeaponByTag(FGameplayTag WeaponTag) const
@@ -55,17 +77,17 @@ ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeapon() 
 
 ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponByTag(FGameplayTag WeaponType) const
 {
-	if (WeaponType == BaseGamePlayTags::Player_Ability_Equip_Melee && !CurrentEquippedMeleeWeaponTag.IsValid())
+	if (WeaponType == BaseWeaponTypeMelee && !CurrentEquippedMeleeWeaponTag.IsValid())
 	{
 		return nullptr;
 	}
 
-	if (WeaponType == BaseGamePlayTags::Player_Ability_Equip_Range && !CurrentEquippedRangeWeaponTag.IsValid())
+	if (WeaponType == BaseWeaponTypeRange && !CurrentEquippedRangeWeaponTag.IsValid())
 	{
 		return nullptr;
 	}
 	
-	return GetPlayerCarriedWeaponByTag(WeaponType == BaseGamePlayTags::Player_Ability_Equip_Melee ? CurrentEquippedMeleeWeaponTag : CurrentEquippedRangeWeaponTag);
+	return GetPlayerCarriedWeaponByTag(WeaponType == BaseWeaponTypeMelee ? CurrentEquippedMeleeWeaponTag : CurrentEquippedRangeWeaponTag);
 }
 
 void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName SocketName)
@@ -80,7 +102,7 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName Sock
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
 		SocketName);
 	
-	if (WeaponType == BaseGamePlayTags::Player_Ability_Equip_Melee)
+	if (WeaponType == BaseWeaponTypeMelee)
 	{
 		CurrentEquippedWeaponTag = CurrentEquippedMeleeWeaponTag;
 	}
@@ -99,7 +121,7 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 	}
 	
 	FName SocketName;
-	if (WeaponType == BaseGamePlayTags::Player_Ability_Equip_Melee)
+	if (WeaponType == BaseWeaponTypeMelee)
 	{
 		SocketName = MeleeSocketName;
 	} else
@@ -166,17 +188,21 @@ void UBasePlayerCombatComponent::ToggleWeaponCollision(bool bUse, EPlayerToggleD
 	
 }
 
-void UBasePlayerCombatComponent::EquipWeaponFromInventory(FGameplayTag WeaponTag)
+void UBasePlayerCombatComponent::EquipWeaponFromInventory(TSubclassOf<ABasePlayerWeapon> WeaponClass, FGameplayTag WeaponTag)
 {
 	if (!OwnerPlayer)
 	{
 		OwnerPlayer = Cast<ABasePlayerCharacter>(GetOwner());
 		if (!OwnerPlayer) return;
 	}
+	FGameplayEventData Data;
+	Data.OptionalObject = WeaponClass;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerPlayer, BaseGamePlayTags::Player_Event_Equip, Data);
 
+	return;
 	UBaseAbilitySystemComponent* ASC = UBaseFunctionLibrary::NativeGetBaseASCFromActor(OwnerPlayer);
 	if (!ASC) return;
-
+	
 	FGameplayTag MeleeWeaponTag = FGameplayTag::RequestGameplayTag(FName("Item.Equipable.Weapon.Melee"));
 	FGameplayTag RangeWeaponTag = FGameplayTag::RequestGameplayTag(FName("Item.Equipable.Weapon.Range"));
 
@@ -185,7 +211,7 @@ void UBasePlayerCombatComponent::EquipWeaponFromInventory(FGameplayTag WeaponTag
 	
 	if (!bIsMeleeWeapon && !bIsRangeWeapon)
 	{
-		Debug::Print(TEXT("Unknown Weapon Type"));
+		//Debug::Print(TEXT("Unknown Weapon Type"));
 		return;
 	}
 
@@ -208,11 +234,11 @@ void UBasePlayerCombatComponent::EquipWeaponFromInventory(FGameplayTag WeaponTag
 		EquipWeapon(RangeWeaponTag, FName("hook_2_back_weaponSocket"));
 	}
 	
-	UE_LOG(LogTemp, Warning, TEXT("Selected Weapon Tag: %s"), *WeaponTag.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Current Melee Tag: %s"), *CurrentEquippedMeleeWeaponTag.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Current Range Tag: %s"), *CurrentEquippedRangeWeaponTag.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("ASC has Melee Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedMeleeWeaponTag) ? TEXT("Yes") : TEXT("No"));
-	UE_LOG(LogTemp, Warning, TEXT("ASC has Range Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedRangeWeaponTag) ? TEXT("Yes") : TEXT("No"));
+	//UE_LOG(LogTemp, Warning, TEXT("Selected Weapon Tag: %s"), *WeaponTag.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Current Melee Tag: %s"), *CurrentEquippedMeleeWeaponTag.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Current Range Tag: %s"), *CurrentEquippedRangeWeaponTag.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("ASC has Melee Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedMeleeWeaponTag) ? TEXT("Yes") : TEXT("No"));
+	//UE_LOG(LogTemp, Warning, TEXT("ASC has Range Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedRangeWeaponTag) ? TEXT("Yes") : TEXT("No"));
 }
 
 // Debug용 입니다. 지워도 무방
