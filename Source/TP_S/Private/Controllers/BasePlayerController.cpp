@@ -17,6 +17,7 @@
 #include "Items/Weapons/BasePlayerWeapon.h"
 #include "Items/Weapons/WeaponItemDataAsset.h"
 #include "Widget/HUDWidget.h"
+#include "Widget/WeaponHUDWidget.h"
 
 ABasePlayerController::ABasePlayerController()
 {

@@ -6,16 +6,10 @@
 #include "Components/Image.h"
 #include "Items/Weapons/WeaponItemDataAsset.h"
 
-void UWeaponHUDWidget::UpdateWeaponDisplay(UWeaponItemDataAsset* WeaponItemData)
+void UWeaponHUDWidget::UpdateWeaponDisplay(UMaterialInterface* NewMaterial)
 {
-	if (!WeaponImage) return;
-	
-	if (WeaponItemData && WeaponItemData->EquipWeaponMaterial)
+	if (WeaponImage && NewMaterial)
 	{
-		WeaponImage->SetBrushFromMaterial(WeaponItemData->EquipWeaponMaterial);
-	}
-	else
-	{
-		WeaponImage->SetBrushFromMaterial(DefaultMaterial);
+		WeaponImage->SetBrushFromMaterial(NewMaterial);
 	}
 }

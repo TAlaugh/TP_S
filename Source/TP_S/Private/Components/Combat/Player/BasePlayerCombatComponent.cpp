@@ -117,6 +117,8 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName Sock
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("[CombatComponent] Equipped Weapon Tag: %s"), *CurrentEquippedWeaponTag.ToString());
+
+	UpdateWeaponHUD();
 }
 
 void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
@@ -245,6 +247,36 @@ void UBasePlayerCombatComponent::EquipWeaponFromInventory(TSubclassOf<ABasePlaye
 	//UE_LOG(LogTemp, Warning, TEXT("Current Range Tag: %s"), *CurrentEquippedRangeWeaponTag.ToString());
 	//UE_LOG(LogTemp, Warning, TEXT("ASC has Melee Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedMeleeWeaponTag) ? TEXT("Yes") : TEXT("No"));
 	//UE_LOG(LogTemp, Warning, TEXT("ASC has Range Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedRangeWeaponTag) ? TEXT("Yes") : TEXT("No"));
+}
+
+UMaterialInterface* UBasePlayerCombatComponent::GetCurrentWeaponMat()
+{
+	if (PlayerWeaponMap.Contains(CurrentEquippedWeaponTag))
+	{
+		ABasePlayerWeapon* Weapon = PlayerWeaponMap[CurrentEquippedWeaponTag];
+		return Weapon ? Weapon->ItemDataAsset->EquipWeaponMaterial : nullptr;
+	}
+	return nullptr;
+}
+
+void UBasePlayerCombatComponent::UpdateWeaponHUD()
+{
+	ABasePlayerCharacter* OwnerChar = Cast<ABasePlayerCharacter>(GetOwner());
+	if (!OwnerChar) return;
+
+	ABasePlayerController* PC = Cast<ABasePlayerController>(OwnerChar->GetController());
+	if (!PC) return;
+
+	UHUDWidget* PlayerHUDWidget = PC->GetPlayerHUDWidget();
+	if (!PlayerHUDWidget) return;
+
+	UWeaponHUDWidget* WeaponHUDWidget = PlayerHUDWidget->GetWeaponHUDWidget();
+
+	if (WeaponHUDWidget)
+	{
+		UMaterialInterface* Mat = GetCurrentWeaponMat();
+		WeaponHUDWidget->UpdateWeaponDisplay(Mat);
+	}
 }
 
 // Debug용 입니다. 지워도 무방
