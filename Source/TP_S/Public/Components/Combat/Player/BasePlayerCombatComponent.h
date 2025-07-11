@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseGameplayTags.h"
 #include "Components/Combat/BaseCombatComponent.h"
 
 #include "GameplayTagContainer.h"
@@ -32,6 +33,10 @@ public:
 	// 현재 소환된 무기 등록
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void RegisterSpawnedWeapon(FGameplayTag WeaponTag, ABasePlayerWeapon* Weapon, FGameplayTag WeaponType);
+
+	// 무기소환 해제
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void RemoveSpawnedWeapon(FGameplayTag WeaponTag, ABasePlayerWeapon* Weapon, FGameplayTag WeaponType);
 
 	// Character's Weapon
 	UFUNCTION(BlueprintCallable, Category = "Combat")
@@ -68,27 +73,30 @@ public:
 	// 근거리 무기를 던진 위치 저장
 	UPROPERTY()
 	FVector WeaponThrownLocation;
-
+	// 던진 무기의 태그 저장
 	UPROPERTY()
 	FGameplayTag CurrentThrownWeaponTag;
 
+	FGameplayTag BaseWeaponTypeMelee = BaseGamePlayTags::Item_Equipable_Weapon_Melee;
+	FGameplayTag BaseWeaponTypeRange = BaseGamePlayTags::Item_Equipable_Weapon_Range;
 	FName MeleeSocketName = FName("hook_1_back_weaponSocket");
 	FName RangeSocketName = FName("hook_2_back_weaponSocket");
 	
 	// HitDetection
 	virtual void OnHitTargetActor(AActor* HitActor);
-
 	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor);
 
+	// 무기 콜리전 변경(타격)
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void ToggleWeaponCollision(bool bUse, EPlayerToggleDamageType ToggleDamageType = EPlayerToggleDamageType::CurrentEquippedWeapon);
 
 	// 인벤토리에서 무기 호출
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void EquipWeaponFromInventory(FGameplayTag WeaponTag);
+	void EquipWeaponFromInventory(TSubclassOf<ABasePlayerWeapon> WeaponClass, FGameplayTag WeaponTag);
 
 	// Debug용도 // 지워도 무방함
 	virtual void BeginPlay() override;
+
 protected:
 	// 중복방지 배열
 	TArray<AActor*> OverlappedActors;

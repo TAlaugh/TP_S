@@ -43,18 +43,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
 	UAnimMontage* MontageToPlay;
 
-	// 디버깅용
-	/*
+	// End, Cancel 콜백
 	UFUNCTION()
-	virtual	void OnCanceled() const;
+	void OnCompleteCallback();
 
 	UFUNCTION()
-	virtual void OnCompleted() const;
-
-	UFUNCTION()
-	virtual void OnInterrupted() const;
-
-	UFUNCTION()
-	virtual void OnBlendOut() const;
-	*/
+	void OnInterruptedCallback();
 };

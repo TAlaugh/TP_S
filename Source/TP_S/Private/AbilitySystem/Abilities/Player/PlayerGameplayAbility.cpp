@@ -75,3 +75,19 @@ void UPlayerGameplayAbility::InputReleased(const FGameplayAbilitySpecHandle Hand
 {
 	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
 }
+
+void UPlayerGameplayAbility::OnCompleteCallback()
+{
+	bool bReplicateEndAbility = false;
+	bool bWasCancelled = false;
+	
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
+void UPlayerGameplayAbility::OnInterruptedCallback()
+{
+	bool bReplicateEndAbility = false;
+	bool bWasCancelled = true;
+	
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
+}

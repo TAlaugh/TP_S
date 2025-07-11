@@ -105,12 +105,18 @@ void UPGA_Attack_Range::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 
 void UPGA_Attack_Range::EquipWeapon(FName SocketName)
 {
-	GetPlayerCombatComponentFromActorInfo()->EquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Range, SocketName);
+	if (GetPlayerCombatComponentFromActorInfo())
+	{
+		GetPlayerCombatComponentFromActorInfo()->EquipWeapon(BaseGamePlayTags::Item_Equipable_Weapon_Range, SocketName);
+	}
 }
 
 void UPGA_Attack_Range::UnEquipWeapon(FGameplayEventData TargetData)
 {
-	GetPlayerCombatComponentFromActorInfo()->UnEquipWeapon(BaseGamePlayTags::Player_Ability_Equip_Range);
+	if (GetPlayerCombatComponentFromActorInfo())
+	{
+		GetPlayerCombatComponentFromActorInfo()->UnEquipWeapon(BaseGamePlayTags::Item_Equipable_Weapon_Range);
+	}
 }
 
 void UPGA_Attack_Range::HandleFire()

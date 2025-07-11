@@ -26,7 +26,7 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	Super::PostGameplayEffectExecute(Data);
 	if (!CachedUIInterface.IsValid())
 	{
-		Debug::Print(TEXT("!CachedUIInterface.IsValid()"));
+		// Debug::Print(TEXT("!CachedUIInterface.IsValid()"));
 		CachedUIInterface = TWeakInterfacePtr<IBaseUIInterface>(Data.Target.GetAvatarActor());
 	}
 

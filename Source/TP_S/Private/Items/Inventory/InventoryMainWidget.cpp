@@ -13,6 +13,7 @@
 #include "Items/Consumables/ConsumableItemDataAsset.h"
 #include "Items/Inventory/InventorySlotWidget.h"
 #include "Items/Inventory/ItemInfoWidget.h"
+#include "Items/Weapons/WeaponItemDataAsset.h"
 
 void UInventoryMainWidget::Init(UPlayerInventoryComponent* InInventory)
 {
@@ -149,7 +150,8 @@ void UInventoryMainWidget::HandleSlotClicked(UInventorySlotWidget* Clicked)
 			UBasePlayerCombatComponent* CombatComponent = PlayerPawn->FindComponentByClass<UBasePlayerCombatComponent>();
 			if (CombatComponent)
 			{
-				CombatComponent->EquipWeaponFromInventory(WeaponTag);
+				UWeaponItemDataAsset* Weapon = Cast<UWeaponItemDataAsset>(Item);
+				CombatComponent->EquipWeaponFromInventory(Weapon->WeaponClass, WeaponTag);
 			}
 		}
 	}

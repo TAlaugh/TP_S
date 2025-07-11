@@ -3,15 +3,18 @@
 
 #include "Controllers/BasePlayerController.h"
 
+#include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/Player/BasePlayerCharacter.h"
+#include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
 #include "Items/Inventory/InventoryMainWidget.h"
 #include "Items/Inventory/QuickSlotWidget.h"
+#include "Items/Weapons/BasePlayerWeapon.h"
 #include "Items/Weapons/WeaponItemDataAsset.h"
 #include "Widget/HUDWidget.h"
 
@@ -56,29 +59,20 @@ void ABasePlayerController::BeginPlay()
 			InventoryWidget->Init(InventoryComponent);
 		}
 	}
-
-	if (QuickSlotWidgetClass)
-	{
-		QuickSlotWidget = CreateWidget<UQuickSlotWidget>(this, QuickSlotWidgetClass);
-		if (QuickSlotWidget)
-		{
-			QuickSlotWidget->AddToViewport();
-			
-			if (auto* QSC = GetPawn()->FindComponentByClass<UQuickSlotComponent>())
-			{
-				QSC->OnQuickSlotChanged.AddDynamic(QuickSlotWidget, &UQuickSlotWidget::Update);
-				QuickSlotWidget->Update(QSC->GetData());
-			}
-		}
-	}
-
+	
 	if (PlayerHUDClass)
 	{
 		UHUDWidget* HUD = CreateWidget<UHUDWidget>(GetWorld(), PlayerHUDClass);
 		if (HUD)
 		{
+			PlayerHUDWidget = HUD;
 			HUD->AddToViewport();
 			HUD->BindToAttribute(ASC, AttributeSet);
+
+			if (auto* QSC = GetPawn()->FindComponentByClass<UQuickSlotComponent>())
+			{
+				HUD->BindToQuickSlot(QSC);
+			}
 		}
 	}
 }
