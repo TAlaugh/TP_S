@@ -69,22 +69,6 @@ void UPGA_Attack::EquipWeaponRightSocket(FGameplayEventData Data)
 {
 }
 
-void UPGA_Attack::OnCompleteCallback()
-{
-	bool bReplicateEndAbility = false;
-	bool bWasCancelled = false;
-	
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
-}
-
-void UPGA_Attack::OnInterruptedCallback()
-{
-	bool bReplicateEndAbility = false;
-	bool bWasCancelled = true;
-	
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
-}
-
 FName UPGA_Attack::GetNextSection()
 {
 	return *FString::Printf(TEXT("Default"));

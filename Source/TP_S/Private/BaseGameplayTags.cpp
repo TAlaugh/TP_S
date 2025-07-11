@@ -70,9 +70,11 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Stream, "Player.Ability.Attack.Range.Stream");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Equip_Melee, "Player.Ability.Equip.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Equip_Range, "Player.Ability.Equip.Range");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_SpawnWeapon, "Player.Ability.SpawnWeapon");
 
 	// Player Event
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DoubleJump, "Player.Event.DoubleJump");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack, "Player.Event.Attack");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Next, "Player.Event.Attack.Next");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Finish, "Player.Event.Attack.Finish");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Throw, "Player.Event.Attack.Throw");
@@ -81,6 +83,11 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip_Left, "Player.Event.Attack.Equip.Left");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_Equip_Switch, "Player.Event.Attack.Equip.Switch");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Attack_UnEquip, "Player.Event.Attack.UnEquip");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Equip, "Player.Event.Equip");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Equip_Melee, "Player.Event.Equip.Melee");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Equip_Melee_PoleArm, "Player.Event.Equip.Melee.PoleArm");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Equip_Range, "Player.Event.Equip.Range.MachineGun");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Equip_Range_MachineGun, "Player.Event.Equip.Range.MachineGun");
 
 	// Player Status
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_WeaponThrown, "Player.Status.WeaponThrown");
@@ -88,7 +95,9 @@ namespace BaseGamePlayTags
 	// Item Tags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_ActionPotion, "Item.Consumable.ActionPotion");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Melee, "Item.Equipable.Weapon.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Melee_PoleArm, "Item.Equipable.Weapon.Melee.PoleArm");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Range, "Item.Equipable.Weapon.Range");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Range_MachineGun, "Item.Equipable.Weapon.Range.MachineGun");
 
 	// Item GE
