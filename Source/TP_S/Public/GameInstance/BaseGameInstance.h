@@ -20,7 +20,13 @@ public:
 	int32 CurrentStageCount = 0;
 
 	UPROPERTY(BlueprintReadWrite)
+	int32 CurrentFloorCount = 0;
+
+	UPROPERTY(BlueprintReadWrite)
 	bool bBossStage = false;
 
 	void AdvanceStage();
+
+	void AdvancedFloor();
+
 };

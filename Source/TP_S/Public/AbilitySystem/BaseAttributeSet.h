@@ -54,12 +54,6 @@ public:
 	FGameplayAttributeData DamageTaken;
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, DamageTaken)
 
-	// UFUNCTION()
-	// void SetCHp(float NewValue) { CurrentHp.SetBaseValue(NewValue); CurrentHp.SetCurrentValue(NewValue); }
-	//
-	// UFUNCTION()
-	// void SetMHp(float NewValue) { MaxHp.SetBaseValue(NewValue); MaxHp.SetCurrentValue(NewValue); }
-
 private:
 	TWeakInterfacePtr<IBaseUIInterface> CachedUIInterface;
 

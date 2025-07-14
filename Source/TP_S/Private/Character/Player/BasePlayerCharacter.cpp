@@ -21,6 +21,7 @@
 #include "DataAssets/Player/DataAsset_StartupBasePlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "PlayerState/BasePlayerState.h"
 
 ABasePlayerCharacter::ABasePlayerCharacter()
 {
@@ -95,7 +96,20 @@ void ABasePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	// --------------------------------------------------------------------------
+	if (ABasePlayerState* PS = GetPlayerState<ABasePlayerState>())
+	{
+		if (PS->bShouldRestoreData)
+		{
+			PS->RestoreToComponents(this);
+			PS->bShouldRestoreData = false;
+			UE_LOG(LogTemp, Warning, TEXT("[Restore] PlayerState에서 데이터 복원 완료"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[Restore] 저장된 데이터 없음 → 초기 상태 유지"));
+		}
+	}
 }
 
 void ABasePlayerCharacter::PossessedBy(AController* NewController)

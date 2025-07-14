@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerState.h"
 #include "BasePlayerState.generated.h"
 
+class ABasePlayerCharacter;
 struct FGameplayTag;
 class UItemDataAsset;
 
@@ -66,6 +67,8 @@ class TP_S_API ABasePlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
+	ABasePlayerState();
+	
 public:
 	UPROPERTY()
 	TArray<FStoredItem> StoredInventory;
@@ -78,8 +81,13 @@ public:
 
 	UPROPERTY()
 	FStoredAttributeDate StoredAttributes;
+
+	UPROPERTY()
+	bool bShouldRestoreData = false;
 	
-	void CaptureFromComponents(ACharacter* PlayerChar);
-	void RestoreToComponents(ACharacter* PlayerChar);
+	void CaptureFromComponents(ABasePlayerCharacter* PlayerChar);
+	void RestoreToComponents(ABasePlayerCharacter* PlayerChar);
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
 };
