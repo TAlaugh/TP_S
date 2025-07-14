@@ -48,7 +48,9 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 	UBaseUIComponent* EnemyUIComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
-	UWidgetComponent* WidgetComponent;
+	UWidgetComponent* EnemyHealthWidgetComponent;
+
+	
 	
 
 

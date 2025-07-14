@@ -31,5 +31,5 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void InitEnemyCreateWidget(AActor* EnemyActor);
+	void InitEnemyCreateWidget(AActor* OwningEnemyActor);
 };
