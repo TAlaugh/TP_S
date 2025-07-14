@@ -11,5 +11,6 @@ void UWeaponHUDWidget::UpdateWeaponDisplay(UMaterialInterface* NewMaterial)
 	if (WeaponImage && NewMaterial)
 	{
 		WeaponImage->SetBrushFromMaterial(NewMaterial);
+		WeaponImage->SetRenderOpacity(1.f);
 	}
 }

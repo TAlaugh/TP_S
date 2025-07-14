@@ -100,6 +100,11 @@ public:
 
 	UFUNCTION()
 	void UpdateWeaponHUD();
+
+	// 저장용도 함수
+	FGameplayTag GetEquippedMeleeTag() const;
+	
+	FGameplayTag GetEquippedRangeTag() const;
 	
 	// Debug용도 // 지워도 무방함
 	virtual void BeginPlay() override;

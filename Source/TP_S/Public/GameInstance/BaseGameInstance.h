@@ -15,4 +15,12 @@ class TP_S_API UBaseGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(BlueprintReadWrite)
+	int32 CurrentStageCount = 0;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bBossStage = false;
+
+	void AdvanceStage();
 };

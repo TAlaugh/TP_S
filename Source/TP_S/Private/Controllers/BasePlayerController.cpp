@@ -16,6 +16,7 @@
 #include "Items/Inventory/QuickSlotWidget.h"
 #include "Items/Weapons/BasePlayerWeapon.h"
 #include "Items/Weapons/WeaponItemDataAsset.h"
+#include "Kismet/GameplayStatics.h"
 #include "Widget/HUDWidget.h"
 #include "Widget/WeaponHUDWidget.h"
 
@@ -74,6 +75,25 @@ void ABasePlayerController::BeginPlay()
 			{
 				HUD->BindToQuickSlot(QSC);
 			}
+		}
+	}
+
+	// 시작할 때 무기 지급
+	if (InventoryComponent)
+	{
+		auto LoadItem = [](const TCHAR* Path)
+		{
+			return Cast<UItemDataAsset>(StaticLoadObject(UItemDataAsset::StaticClass(), nullptr, Path));
+		};
+		
+		if (auto* WeaponMelee = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Weapon_Xiji.DA_Item_Weapon_Xiji")))
+		{
+			InventoryComponent->AddItem(WeaponMelee);
+		}
+
+		if (auto* WeaponRanged = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Weapon_Yinlang.DA_Item_Weapon_Yinlang")))
+		{
+			InventoryComponent->AddItem(WeaponRanged);
 		}
 	}
 }
@@ -150,7 +170,7 @@ void ABasePlayerController::GiveItems()
 		{
 			// Debug::Print(TEXT("Call GiveItems"));
 			
-			auto LoadItem = [](const TCHAR* Path) -> UItemDataAsset*
+			auto LoadItem = [](const TCHAR* Path)
 			{
 				return Cast<UItemDataAsset>(StaticLoadObject(UItemDataAsset::StaticClass(), nullptr, Path));
 			};
@@ -164,16 +184,6 @@ void ABasePlayerController::GiveItems()
 			if (auto* Potion2 = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Consumable_HpPotion.DA_Item_Consumable_HpPotion")))
 			{
 				Inv->AddItem(Potion2, 5);
-			}
-
-			if (auto* WeaponMelee = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Weapon_Xiji.DA_Item_Weapon_Xiji")))
-			{
-				Inv->AddItem(WeaponMelee);
-			}
-
-			if (auto* WeaponRanged = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Weapon_Yinlang.DA_Item_Weapon_Yinlang")))
-			{
-				Inv->AddItem(WeaponRanged);
 			}
 		}
 	}

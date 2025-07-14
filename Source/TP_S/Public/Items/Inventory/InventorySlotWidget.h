@@ -24,17 +24,17 @@ class TP_S_API UInventorySlotWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	/** 슬롯에 아이템과 수량을 세팅 **/
+	// 슬롯에 아이템과 수량을 세팅
 	UFUNCTION(BlueprintCallable)
 	void SetupSlot(UItemDataAsset* InItemData, int32 InCount);
 
-	/** 클릭 이벤트 **/
+	// 클릭 이벤트
 	UPROPERTY(BlueprintAssignable)
 	FOnSlotClicked OnSlotClicked;
 	
 	virtual bool Initialize() override;
 
-	/** BindWiget **/
+	// BindWiget
 	UPROPERTY(meta = (BindWidget))
 	UButton* SlotButton;
 
@@ -50,7 +50,7 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UImage* Circle_Selected_BG;
 
-	/** 슬롯 선택 시 강조 부분 **/
+	// 슬롯 선택 시 강조 부분
 	UFUNCTION(BlueprintCallable)
 	void SetSelected(bool bNewSelected);
 
@@ -58,13 +58,13 @@ public:
 
 	bool bIsSelected = false;
 
-	/** 퀵 슬롯 등록 시 강조 **/
+	// 퀵 슬롯 등록 시 강조
 	UPROPERTY(meta = (BindWidget))
 	UImage* QuickSlot_BG;
 
 	void SetQuickSlotBG(bool bOn);
 
-	/** 클릭 시 호출 **/
+	// 클릭 시 호출
 	UFUNCTION()
 	void HandleOnClicked();
 
@@ -77,7 +77,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	UItemDataAsset* GetItem() const { return ItemData; }
 
-	/** 아이템 정보 위젯 **/
+	// 아이템 정보 위젯
 	UPROPERTY(BlueprintAssignable) FOnItemClicked OnItemClicked;
 	
 };

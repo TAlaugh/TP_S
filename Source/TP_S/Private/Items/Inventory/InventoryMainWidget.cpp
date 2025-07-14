@@ -33,7 +33,7 @@ void UInventoryMainWidget::Init(UPlayerInventoryComponent* InInventory)
 		}
 	}
 	
-	Refresh(); // 처음 로드
+	Refresh();
 }
 
 bool UInventoryMainWidget::Initialize()
@@ -111,9 +111,11 @@ void UInventoryMainWidget::Refresh()
 		const bool bIsQuick = (QuickItem && Stack.ItemData == QuickItem);
 		SlotWidget->SetQuickSlotBG(bIsQuick);
 		
+		SlotWidget->OnSlotClicked.RemoveDynamic(this, &UInventoryMainWidget::HandleSlotClicked);
 		SlotWidget->OnSlotClicked.AddDynamic(this, &UInventoryMainWidget::HandleSlotClicked);
 		ScrollItems->AddChild(SlotWidget);
-
+		
+		SlotWidget->OnItemClicked.RemoveDynamic(this, &UInventoryMainWidget::ShowItemInfo);
 		SlotWidget->OnItemClicked.AddDynamic(this, &UInventoryMainWidget::ShowItemInfo);
 	}
 }

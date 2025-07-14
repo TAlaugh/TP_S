@@ -13,5 +13,10 @@ UCLASS()
 class TP_S_API ABaseGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+	virtual void BeginPlay() override;
 	
+	void SpawnMonster();
+	void SpawnBoss();
 };

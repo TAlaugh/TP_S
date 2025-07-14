@@ -23,7 +23,7 @@ bool UPlayerInventoryComponent::AddItem(UItemDataAsset* Item, int32 Qty)
 
 	const int32 MaxPerStack = FMath::Max(1, Item->MaxAmount);
 
-	/** 기존 스택 찾기 **/
+	// 기존 스택 찾기
 	for (FItemStack& Stack : Items)
 	{
 		if (Stack.ItemData == Item && Stack.Count < MaxPerStack)
@@ -40,7 +40,7 @@ bool UPlayerInventoryComponent::AddItem(UItemDataAsset* Item, int32 Qty)
 		}
 	}
 
-	/** 남은 Qty만큼 새 스택 **/
+	// 남은 Qty만큼 새 스택
 	while (Qty > 0)
 	{
 		const int32 Add = FMath::Min(MaxPerStack, Qty);
@@ -109,6 +109,17 @@ int32 UPlayerInventoryComponent::CountItem(UItemDataAsset* Item) const
 	}
 	
 	return Total;
+}
+
+const TArray<FItemStack>& UPlayerInventoryComponent::GetAllItemStacks() const
+{
+	return Items;
+}
+
+void UPlayerInventoryComponent::ClearItems()
+{
+	Items.Empty();
+	OnInventoryChanged.Broadcast();
 }
 
 int32 UPlayerInventoryComponent::FindStackIndex(UItemDataAsset* Item) const
