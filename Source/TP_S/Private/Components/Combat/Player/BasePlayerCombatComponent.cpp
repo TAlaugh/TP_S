@@ -7,11 +7,10 @@
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
-#include "AbilitySystem/Player/PlayerAbilitySystemComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
 #include "Items/Weapons/BasePlayerWeapon.h"
-#include "Items/Weapons/WeaponItemDataAsset.h"
 #include "Widget/HUDWidget.h"
 #include "Widget/WeaponHUDWidget.h"
 
@@ -32,7 +31,25 @@ void UBasePlayerCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, A
 		CurrentEquippedRangeWeaponTag = WeaponTag;
 		Weapon->GetSkeletalMeshComponent()->SetVisibility(false);
 	}
-	Debug::Print(WeaponTag.ToString());
+	
+	if (ULocalPlayer* LocalPlayer = GetOwningPawn()->GetController<ABasePlayerController>()->GetLocalPlayer())
+	{
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+		if (Subsystem)
+		{
+			Subsystem->AddMappingContext(Weapon->PlayerWeaponData.WeaponInputMappingContext, 1);
+			UBaseAbilitySystemComponent* ASC = UBaseFunctionLibrary::NativeGetBaseASCFromActor(GetOwningPawn());
+			ASC->GrantPlayerWeaponAbilities(Weapon->PlayerWeaponData.WeaponAbilities, 1, Weapon);
+		}
+		else
+		{
+			Debug::Print("Subsystem not found");
+		}
+	}
+	else
+	{
+		Debug::Print("Local player not found");
+	}
 }
 
 void UBasePlayerCombatComponent::RemoveSpawnedWeapon(FGameplayTag WeaponTag, ABasePlayerWeapon* Weapon, FGameplayTag WeaponType)
@@ -53,6 +70,20 @@ void UBasePlayerCombatComponent::RemoveSpawnedWeapon(FGameplayTag WeaponTag, ABa
 	{
 		CurrentEquippedRangeWeaponTag = FGameplayTag();
 	}
+	if (ULocalPlayer* LocalPlayer = GetOwningPawn()->GetController<ABasePlayerController>()->GetLocalPlayer())
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
+		{
+			Subsystem->AddMappingContext(Weapon->PlayerWeaponData.WeaponInputMappingContext, 1);
+			UBaseAbilitySystemComponent* ASC = UBaseFunctionLibrary::NativeGetBaseASCFromActor(GetOwningPawn());
+			//ASC->RemoveGrantedPlayerWeaponAbilities(Weapon->GetGrantedAbilitySpecHandles());
+		}
+		else
+		{
+			Debug::Print("Subsystem not found");
+		}
+	}
+	
 	Weapon->Destroy();
 }
 
@@ -100,7 +131,6 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName Sock
 	{
 		return;
 	}
-	
 	GetPlayerCurrentEquippedWeaponByTag(WeaponType)->AttachToComponent(
 		GetOwningPawn()->FindComponentByClass<USkeletalMeshComponent>(),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
@@ -113,10 +143,10 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName Sock
 	else
 	{
 		CurrentEquippedWeaponTag = CurrentEquippedRangeWeaponTag;
-		GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->SetVisibility(true);
+		
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("[CombatComponent] Equipped Weapon Tag: %s"), *CurrentEquippedWeaponTag.ToString());
+	GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->SetVisibility(true);
+	//UE_LOG(LogTemp, Warning, TEXT("[CombatComponent] Equipped Weapon Tag: %s"), *CurrentEquippedWeaponTag.ToString());
 }
 
 void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)

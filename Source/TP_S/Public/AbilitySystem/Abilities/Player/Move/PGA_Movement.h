@@ -19,6 +19,9 @@ class TP_S_API UPGA_Movement : public UPlayerGameplayAbility
 	GENERATED_BODY()
 
 protected:
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	
 	UPROPERTY()
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWait;
 

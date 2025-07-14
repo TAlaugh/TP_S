@@ -12,25 +12,22 @@
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Items/Weapons/BasePlayerWeapon.h"
 
+UPGA_Attack_Melee_Heavy::UPGA_Attack_Melee_Heavy()
+{
+	AbilityTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_Heavy);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement);
+	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Status_WeaponThrown);
+	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Movement);
+	ActivationBlockedTags.AddTag(BaseGamePlayTags::Shared_Status_InAir);
+}
+
 void UPGA_Attack_Melee_Heavy::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                               const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                               const FGameplayEventData* TriggerEventData)
 {
-	EquipWeapon();
-	
+	MovementFix(true);
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	/*
-	UAbilityTask_PlayMontageAndWait* Task1 = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-			this,
-			TEXT("Attack"),
-			MontageToPlay,
-			1.f,
-			GetNextSection(),
-			false);
-	Task1->ReadyForActivation();
-
-	GetWorld()->GetTimerManager().ClearTimer(ReceiveTimer);
-	*/
 	UBaseFunctionLibrary::AddGameplayTagToActorIfNone(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Player_Status_WeaponThrown);
 	ThrowWeapon(FGameplayEventData());
 }
@@ -43,20 +40,7 @@ void UPGA_Attack_Melee_Heavy::ThrowWeapon(FGameplayEventData Data)
 	{
 		Task = UAT_Attack_Melee_ThrowWeapon::Init(this, BaseGamePlayTags::Player_Event_Attack_Throw);
 		Task->ReadyForActivation();
-	
-		if (ReceiveMontage && false)
-		{
-			GetWorld()->GetTimerManager().SetTimer(
-				ReceiveTimer,
-				FTimerDelegate::CreateLambda([this]()
-					{
-						CachedPlayerCharacter->GetMesh()->GetAnimInstance()->Montage_Play(ReceiveMontage);
-						Weapon->GetSkeletalMeshComponent()->GetAnimInstance()->Montage_Stop(0.f);
-						K2_EndAbility();
-					}),
-					3.f,
-					false);
-		}
+		bUnEquipWhenEnd = false;
 	}
 }
 
@@ -64,7 +48,7 @@ void UPGA_Attack_Melee_Heavy::EndAbility(const FGameplayAbilitySpecHandle Handle
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {
+	MovementFix(false);
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	//UnEquipWeapon(FGameplayEventData());
 }
 

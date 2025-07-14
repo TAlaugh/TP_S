@@ -6,9 +6,10 @@
 #include "BaseGamePlayTags.h"
 #include "DebugHelper.h"
 #include "BaseType/Player/PlayerStructType.h"
+#include "Items/Weapons/BasePlayerWeapon.h"
 
 void UBaseAbilitySystemComponent::GrantPlayerWeaponAbilities(const TArray<FPlayerAbilitiySet>& WeaponAbilities,
-	int32 Level, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles)
+                                                             int32 Level, ABasePlayerWeapon* Weapon)
 {
 	if (WeaponAbilities.IsEmpty())
 	{
@@ -18,6 +19,7 @@ void UBaseAbilitySystemComponent::GrantPlayerWeaponAbilities(const TArray<FPlaye
 	// 이 배열에 Spec(어빌리티 내용)을 추가 -> .AddUnique
 	// GiveAbility(Spec) : Spec을 추가하고 Spec을 제어할 Handle 반환
 	// GiveAbilityAndActivateOnce(Spec) : Spec은 반드시 인스턴스(실행)되어야 하며, 인스턴스화 성공했을 시 Handle 반환, 실패했을 시는 Spec자체가 부여되지 않음.
+	TArray<FGameplayAbilitySpecHandle> GrantedAbilitySpecHandles;
 	for (const FPlayerAbilitiySet& WeaponAbilitySet : WeaponAbilities)
 	{
 		if (!WeaponAbilitySet.IsValid()) continue;
@@ -26,8 +28,10 @@ void UBaseAbilitySystemComponent::GrantPlayerWeaponAbilities(const TArray<FPlaye
 		Spec.SourceObject = GetAvatarActor();
 		Spec.Level = Level;
 		Spec.DynamicAbilityTags.AddTag(WeaponAbilitySet.InputTag);
-		OutGrantedAbilitySpecHandles.AddUnique(GiveAbility(Spec));
+		Spec.InputID = static_cast<int32>(WeaponAbilitySet.InputId);
+		GrantedAbilitySpecHandles.AddUnique(GiveAbility(Spec));
 	}
+	Weapon->AssignGrantedAbilitySpecHandles(GrantedAbilitySpecHandles);
 }
 
 void UBaseAbilitySystemComponent::RemoveGrantedPlayerWeaponAbilities(

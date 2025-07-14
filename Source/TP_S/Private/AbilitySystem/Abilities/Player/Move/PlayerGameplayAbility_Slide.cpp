@@ -8,6 +8,5 @@ void UPlayerGameplayAbility_Slide::ActivateAbility(const FGameplayAbilitySpecHan
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
 	Action();
 }

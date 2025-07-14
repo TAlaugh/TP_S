@@ -28,14 +28,11 @@ void UPGA_Spawn_Weapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	{
 		WeaponClass = const_cast<UClass*>(EventClass);
 	}
-	
 	if (WeaponClass == nullptr)
 	{
-		Debug::Print("Invalid");
 		K2_CancelAbility();
 		return;
 	}
-	Debug::Print(WeaponClass->GetName());
 	
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.Owner = GetAvatarActorFromActorInfo();
@@ -54,30 +51,22 @@ void UPGA_Spawn_Weapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 			EAttachmentRule::KeepWorld,
 			true);
 		
-		
 		// 태그를 매치해서 근접무기인지 원거리 무기인지 판별하여 Register
 		if (Weapon->ItemDataAsset)
 		{
 			FGameplayTag WeaponType = Weapon->ItemDataAsset->GetWeaponGameplayTag().MatchesTag(BaseGamePlayTags::Item_Equipable_Weapon_Melee) ? BaseGamePlayTags::Item_Equipable_Weapon_Melee : BaseGamePlayTags::Item_Equipable_Weapon_Range;
-
 			SocketNameToAttachment = WeaponType == BaseGamePlayTags::Item_Equipable_Weapon_Melee ? FName("hook_1_back_weaponSocket") : FName("hook_2_back_weaponSocket");
-			
 			Weapon->AttachToComponent(GetPlayerCharacterFromActorInfo()->GetMesh(), Attachment, SocketNameToAttachment);
-			
+
+			// 기존 무기 해제
 			if (ABasePlayerWeapon* CurrentPlayerWeapon = GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->GetPlayerCurrentEquippedWeaponByTag(WeaponType))
 			{
 				FGameplayTag CurrentPlayerWeaponTag = CurrentPlayerWeapon->ItemDataAsset->GetWeaponGameplayTag();
-				
-				// 기존 무기 해제
 				GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->RemoveSpawnedWeapon(CurrentPlayerWeaponTag, CurrentPlayerWeapon, WeaponType);
 			}
 			// 새로운 무기 장착
 			GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->RegisterSpawnedWeapon(Weapon->ItemDataAsset->GetWeaponGameplayTag(), Weapon, WeaponType);
 		}
-	}
-	else
-	{
-		Debug::Print("WeaponSpawn Failed");
 	}
 	K2_EndAbility();
 }

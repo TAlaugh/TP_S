@@ -3,10 +3,12 @@
 
 #include "AbilitySystem/Abilities/Player/Attack/Range/PGA_Attack_Range.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "AbilitySystem/Abilities/Tasks/Player/AT_Attack_Range_Fire.h"
+#include "AbilitySystem/Effects/GE/GE_DealDamage.h"
 #include "Camera/CameraComponent.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
@@ -16,22 +18,23 @@
 
 UPGA_Attack_Range::UPGA_Attack_Range()
 {
-	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_Light);
-	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_Heavy);
-	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_ReceiveWeapon);
-	
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
 }
 
 void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                         const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                         const FGameplayEventData* TriggerEventData)
 {
-	EquipWeapon(FName("hand_rRangeSocket"));
+	DirectionFix(true);
+	PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();
+	WeaponType = BaseGamePlayTags::Item_Equipable_Weapon_Range;
+	WeaponSocketName = FName("hand_rRangeSocket");
+	EquipWeapon();
+	
 	FireTask = UAT_Attack_Range_Fire::Action(this, 0.2f);
 	FireTask->OnStartedTask.AddDynamic(this, &ThisClass::HandleFire);
 	FireTask->OnFinishedTask.AddDynamic(this, &ThisClass::StopFire);
 	FireTask->ReadyForActivation();
-
 	
 	if (UAnimInstance* Anim = GetOwningComponentFromActorInfo()->GetAnimInstance())
 	{
@@ -40,27 +43,12 @@ void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 			Anim->LinkAnimClassLayers(AnimLayer);
 		}
 	}
-	/*
-	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-			this,
-			TEXT("Attack"),
-			MontageToPlay,
-			1.f,
-			GetNextSection(),
-			false);
-	//Task->OnCancelled.AddDynamic(this, &ThisClass::OnInterruptedCallback);
-	Task->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptedCallback);
-	Task->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
-	Task->OnBlendOut.AddDynamic(this, &ThisClass::OnCompleteCallback);
-	Task->ReadyForActivation();
-	*/
 	
 	if (GetPlayerCharacterFromActorInfo())
 	{
 		GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = false;
 		//GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->MaxWalkSpeed = 200.f;
 		GetPlayerCharacterFromActorInfo()->bUseControllerRotationYaw = true;
-		
 	}
 }
 
@@ -99,23 +87,26 @@ void UPGA_Attack_Range::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 		GetPlayerCharacterFromActorInfo()->bUseControllerRotationYaw = false;
 		//GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->MaxWalkSpeed = 400.f;
 	}
+	DirectionFix(true);
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	UnEquipWeapon(FGameplayEventData());
 }
 
-void UPGA_Attack_Range::EquipWeapon(FName SocketName)
+void UPGA_Attack_Range::HandleApplyDamage(FGameplayEventData Data)
 {
-	if (GetPlayerCombatComponentFromActorInfo())
+	Super::HandleApplyDamage(Data);
+	AActor* TargetActor = const_cast<AActor*>(Data.Target.Get());
+	if (IsValid(TargetActor))
 	{
-		GetPlayerCombatComponentFromActorInfo()->EquipWeapon(BaseGamePlayTags::Item_Equipable_Weapon_Range, SocketName);
-	}
-}
-
-void UPGA_Attack_Range::UnEquipWeapon(FGameplayEventData TargetData)
-{
-	if (GetPlayerCombatComponentFromActorInfo())
-	{
-		GetPlayerCombatComponentFromActorInfo()->UnEquipWeapon(BaseGamePlayTags::Item_Equipable_Weapon_Range);
+		TSubclassOf<UGameplayEffect> Effect = UGE_DealDamage::StaticClass();
+		float BaseDamage = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeaponDamageAtLevel(GetAbilityLevel());
+		int ComboCount = 0;
+		FGameplayEffectSpecHandle SpecHandle = MakePlayerDamageGameplayEffectHandle(
+			Effect,
+			BaseDamage,
+			BaseGamePlayTags::Player_Ability_Attack_Range,
+			ComboCount);
+		NativeApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, BaseGamePlayTags::Shared_Event_HitReact, Data);
 	}
 }
 
@@ -131,7 +122,9 @@ void UPGA_Attack_Range::HandleFire()
 
 		for (const FHitResult& Hit : Hits)
 		{
-			//Debug::Print(Hit.GetActor()->GetActorLabel());
+			FGameplayEventData Data = FGameplayEventData();
+			Data.Target = Hit.GetActor();
+			HandleApplyDamage(Data);
 		}
 	}
 }
