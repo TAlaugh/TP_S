@@ -33,18 +33,18 @@ class TP_S_API UPlayerInventoryComponent : public UBaseInventoryComponent
 	GENERATED_BODY()
 
 public:
-	/** 델리게이트 **/
+	// 델리게이트 
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnInventoryChanged OnInventoryChanged;
 
-	/** 슬롯 배열 접근 **/
+	// 슬롯 배열 접근
 	const TArray<FItemStack>& GetStacks() const { return Items; }
 
-	/** 카테고리 필터 **/
+	// 카테고리 필터
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void GetItemsByCategory(EInventoryCategory Category, TArray<FItemStack>& OutStacks) const;
 
-	/** 아이템 추가 | 삭제 **/
+	// 아이템 추가 | 삭제
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	bool AddItem(UItemDataAsset* Item, int32 Qty = 1);
 
@@ -56,13 +56,20 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	int32 CountItem(UItemDataAsset* Item) const;
+
+	// 저장하기 위한 함수
+	UFUNCTION()
+	const TArray<FItemStack>& GetAllItemStacks() const;
+
+	UFUNCTION()
+	void ClearItems();
 	
 private:
-	/** 실제 저장소 **/
+	// 실제 저장소
 	UPROPERTY()
 	TArray<FItemStack> Items;
 
-	/** 내부 유틸 **/
+	// 내부 유틸
 	int32 FindStackIndex(UItemDataAsset* Item) const;
 	
 };

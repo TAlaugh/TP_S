@@ -15,7 +15,7 @@ void UInventorySlotWidget::SetupSlot(UItemDataAsset* InItemData, int32 InCount)
 
 	if (!IConImage) return;
 	
-	/** 머테리얼이 있으면 머테리얼 없으면 텍스쳐 **/
+	// 머테리얼이 있으면 머테리얼 없으면 텍스쳐
 	if (ItemData && !ItemData->IconMaterial.IsNull())
 	{
 		UMaterialInterface* MI = ItemData->IconMaterial.LoadSynchronous();

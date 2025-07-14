@@ -116,7 +116,7 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName Sock
 		GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->SetVisibility(true);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("[CombatComponent] Equipped Weapon Tag: %s"), *CurrentEquippedWeaponTag.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("[CombatComponent] Equipped Weapon Tag: %s"), *CurrentEquippedWeaponTag.ToString());
 
 	UpdateWeaponHUD();
 }
@@ -277,6 +277,16 @@ void UBasePlayerCombatComponent::UpdateWeaponHUD()
 		UMaterialInterface* Mat = GetCurrentWeaponMat();
 		WeaponHUDWidget->UpdateWeaponDisplay(Mat);
 	}
+}
+
+FGameplayTag UBasePlayerCombatComponent::GetEquippedMeleeTag() const
+{
+	return CurrentEquippedMeleeWeaponTag;
+}
+
+FGameplayTag UBasePlayerCombatComponent::GetEquippedRangeTag() const
+{
+	return CurrentEquippedRangeWeaponTag;
 }
 
 // Debug용 입니다. 지워도 무방

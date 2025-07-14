@@ -26,12 +26,12 @@ class TP_S_API UInventoryMainWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	/** 플레이어 인벤토리 컴포넌트를 넘겨 초기화 **/
+	// 플레이어 인벤토리 컴포넌트를 넘겨 초기화
 	void Init(UPlayerInventoryComponent* InInventory);
 
 	virtual bool Initialize() override;
 
-	/** 탭 버튼 콜백 **/
+	// 탭 버튼 콜백
 	UFUNCTION()
 	void OnConsumableTab();
 
@@ -41,11 +41,11 @@ public:
 	UFUNCTION()
 	void OnRangedTab();
 
-	/** 인벤토리 변경 시 호출, 델리게이트 연결 **/
+	// 인벤토리 변경 시 호출, 델리게이트 연결
 	UFUNCTION()
 	void Refresh();
 
-	/** BindWidget **/
+	// BindWidget
 	UPROPERTY(meta = (BindWidget))
 	UButton* BtnConsumable;
 
@@ -72,7 +72,7 @@ public:
 	UFUNCTION()
 	void HandleQuickSlotChanged(const FQuickSlotData& Data);
 
-	/** 아이템 정보 표시 **/
+	// 아이템 정보 표시
 	UPROPERTY(meta = (BindWidget))
 	USizeBox* InfoWidgetHolder;
 

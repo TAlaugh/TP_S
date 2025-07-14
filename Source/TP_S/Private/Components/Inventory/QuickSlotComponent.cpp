@@ -129,3 +129,8 @@ bool UQuickSlotComponent::UseSlot(UPlayerInventoryComponent* Inventory)
 	}
 	return false;
 }
+
+const FQuickSlotData& UQuickSlotComponent::GetQuickSlotData() const
+{
+	return QuickSlotData;
+}
