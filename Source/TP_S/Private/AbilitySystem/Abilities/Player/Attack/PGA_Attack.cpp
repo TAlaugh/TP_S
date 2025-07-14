@@ -19,13 +19,13 @@ void UPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                     const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                                     const FGameplayEventData* TriggerEventData)
 {
-	
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	if (GetPlayerCharacterFromActorInfo())
 	{
 		PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();
-		EquipWeapon();
 	}
+	EquipWeapon();
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
 }
 
 void UPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle,
@@ -52,7 +52,10 @@ void UPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	UnEquipWeapon();
+	if (bUnEquipWhenEnd)
+	{
+		UnEquipWeapon();
+	}
 }
 
 void UPGA_Attack::HandleApplyDamage(FGameplayEventData Data)
@@ -69,8 +72,9 @@ void UPGA_Attack::EquipWeapon()
 
 void UPGA_Attack::UnEquipWeapon()
 {
-	if (PlayerCombatComponent && bUnEquipWhenEnd)
+	if (PlayerCombatComponent)
 	{
+		Debug::Print("UNEQUIP");
 		PlayerCombatComponent->UnEquipWeapon(WeaponType);
 	}
 }

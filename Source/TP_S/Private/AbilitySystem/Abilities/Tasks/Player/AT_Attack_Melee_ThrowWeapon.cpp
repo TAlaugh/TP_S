@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/Tasks/Player/AT_Attack_Melee_ThrowWeapon.h"
 
 #include "AbilitySystemComponent.h"
+#include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "Character/Player/BasePlayerCharacter.h"
@@ -24,7 +25,6 @@ UAT_Attack_Melee_ThrowWeapon* UAT_Attack_Melee_ThrowWeapon::Init(UGameplayAbilit
 void UAT_Attack_Melee_ThrowWeapon::Activate()
 {
 	GetWorld()->GetTimerManager().ClearTimer(Timer);
-	Timer.Invalidate();
 	Player = Cast<ABasePlayerCharacter>(GetAvatarActor());
 	if (Player)
 	{
@@ -69,6 +69,7 @@ void UAT_Attack_Melee_ThrowWeapon::TickTask(float DeltaTime)
 		
 		if (float Distance = FVector::Dist(CurrentLocation, WeaponLocation) <= 10.f)
 		{
+			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(Player, BaseGamePlayTags::Player_Status_WeaponThrown);
 			if (!Timer.IsValid())
 			{
 				GetWorld()->GetTimerManager().SetTimer(

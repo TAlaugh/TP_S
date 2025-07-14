@@ -28,7 +28,7 @@ void UPGA_Attack_Melee_Heavy::ActivateAbility(const FGameplayAbilitySpecHandle H
 {
 	MovementFix(true);
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	UBaseFunctionLibrary::AddGameplayTagToActorIfNone(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Player_Status_WeaponThrown);
+	EquipWeapon();
 	ThrowWeapon(FGameplayEventData());
 }
 
