@@ -9,14 +9,13 @@
 void UWidgetBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	
 }
 
 
-void UWidgetBase::InitEnemyCreateWidget(AActor* EnemyActor)
+void UWidgetBase::InitEnemyCreateWidget(AActor* OwningEnemyActor)
 {
 	
-	if (IBaseUIInterface* PawnUIInterface = Cast<IBaseUIInterface>(EnemyActor))
+	if (IBaseUIInterface* PawnUIInterface = Cast<IBaseUIInterface>(OwningEnemyActor))
 	{
 		if (UEnemyUIComponent* EnemyUIComponent = PawnUIInterface->GetEnemyUIComponent())
 		{
