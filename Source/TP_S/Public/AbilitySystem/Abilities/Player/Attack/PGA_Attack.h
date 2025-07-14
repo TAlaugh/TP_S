@@ -56,5 +56,5 @@ protected:
 	ABasePlayerWeapon* Weapon;
 
 	UPROPERTY()
-	bool bUnEquipWhenEnd;
+	bool bUnEquipWhenEnd = true;
 };

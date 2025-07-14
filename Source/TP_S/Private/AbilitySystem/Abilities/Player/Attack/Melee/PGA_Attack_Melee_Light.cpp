@@ -50,7 +50,7 @@ void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle H
 		// 충돌체 판별(지형지물만)
 		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 		ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldStatic));
-		UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, ObjectTypes, false, Ignores, EDrawDebugTrace::ForDuration, Hit, true);
+		UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, ObjectTypes, false, Ignores, EDrawDebugTrace::None, Hit, true);
 
 		// 방향 계산
 		FVector Direction = Hit.Location - Start;

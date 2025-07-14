@@ -61,8 +61,6 @@ void UPlayerGameplayAbility_Jump::Jump()
 		GetPlayerCharacterFromActorInfo()->LaunchCharacter(FVector(JumpX, JumpY, JumpZ), false, true);
 	}
 	
-	
-	//GetPlayerCharacterFromActorInfo()->Jump();
 	GetPlayerCharacterFromActorInfo()->JumpCount++;
 }
 

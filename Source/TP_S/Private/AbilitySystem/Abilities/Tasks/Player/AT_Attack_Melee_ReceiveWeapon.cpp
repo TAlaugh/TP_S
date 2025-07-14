@@ -36,7 +36,7 @@ void UAT_Attack_Melee_ReceiveWeapon::Activate()
 void UAT_Attack_Melee_ReceiveWeapon::TickTask(float DeltaTime)
 {
 	Super::TickTask(DeltaTime);
-	if (Weapon)
+	if (Weapon && Player->GetPlayerCombatComponent()->CurrentThrownWeaponTag.IsValid())
 	{
 		FVector CurrentLocation = Weapon->GetActorLocation();
 		WeaponLocation = FMath::VInterpTo(CurrentLocation, PlayerLocation, DeltaTime, InterpSpeed);
@@ -53,9 +53,18 @@ void UAT_Attack_Melee_ReceiveWeapon::TickTask(float DeltaTime)
 				Weapon->GetSkeletalMeshComponent()->GetAnimInstance()->Montage_Stop(0.f);
 			}
 			UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(Player, BaseGamePlayTags::Player_Status_WeaponThrown);
-			OnReceivedDelegate.Broadcast();
-			EndTask();
-			return;
+			FTimerHandle Timer;
+			if (!Timer.IsValid())
+			{
+				GetWorld()->GetTimerManager().SetTimer(
+					Timer,
+					FTimerDelegate::CreateLambda([this]()
+					{
+						OnReceivedDelegate.Broadcast();					
+					}),
+					1.f,
+					false);
+			}
 		}
 	}
 }
