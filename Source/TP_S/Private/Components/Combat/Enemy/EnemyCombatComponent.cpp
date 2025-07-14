@@ -61,14 +61,18 @@ void UEnemyCombatComponent::ToggleWeaponCollision(bool bUse, EToggleDamageType T
 		
 		if (bUse)
 		{
-			Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			OverlappedActors.Empty();
+
 			
+			Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			UE_LOG(LogTemp, Warning, TEXT("Collision Enabled"));
 		}
+		
 		else
 		{
 			Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			UE_LOG(LogTemp, Warning, TEXT(" Collision Disabled"));
 			
-			OverlappedActors.Empty();
 		}
 
 		
@@ -79,10 +83,19 @@ void UEnemyCombatComponent::ToggleWeaponCollision(bool bUse, EToggleDamageType T
 
 void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
+	
+	if (!HitActor)
+    	{
+    		UE_LOG(LogTemp, Error, TEXT("HitActor is null in OnHitTargetActor!"));
+    		return;
+    	}
+
 	if (OverlappedActors.Contains(HitActor))
 	{
+		
 		return;
 	}
+
 	
 	OverlappedActors.AddUnique(HitActor);
 	
@@ -115,11 +128,16 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	// {
 	// 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_MeleeHit, EventData);
 	// }
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit_Melee, EventData);
 
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit_Melee, EventData);
+	
 }
 
 void UEnemyCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
 {
 	
+	if (InteractedActor)
+	{
+		OverlappedActors.Remove(InteractedActor);  // 겹침 해제되면 리스트에서 제거
+	}
 }
