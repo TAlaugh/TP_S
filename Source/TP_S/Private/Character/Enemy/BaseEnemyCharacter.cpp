@@ -57,7 +57,7 @@ void ABaseEnemyCharacter::BeginPlay()
 	}
 
 	
-	if (UWidgetBase* HealthWidget = Cast<UWidgetBase>(WidgetComponent->GetUserWidgetObject()))
+	if (UWidgetBase* HealthWidget = Cast<UWidgetBase>(EnemyHealthWidgetComponent->GetUserWidgetObject()))
 	{
 		HealthWidget->InitEnemyCreateWidget(this);
 	}

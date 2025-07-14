@@ -9,8 +9,14 @@
 #include "Components/Inventory/QuickSlotComponent.h"
 #include "GameFramework/Character.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
+#include "Net/UnrealNetwork.h"
 
-void ABasePlayerState::CaptureFromComponents(ACharacter* PlayerChar)
+ABasePlayerState::ABasePlayerState()
+{
+	bReplicates = true;
+}
+
+void ABasePlayerState::CaptureFromComponents(ABasePlayerCharacter* PlayerChar)
 {
 	if (auto* Inv = PlayerChar->FindComponentByClass<UPlayerInventoryComponent>())
 	{
@@ -44,7 +50,7 @@ void ABasePlayerState::CaptureFromComponents(ACharacter* PlayerChar)
 	}
 }
 
-void ABasePlayerState::RestoreToComponents(ACharacter* PlayerChar)
+void ABasePlayerState::RestoreToComponents(ABasePlayerCharacter* PlayerChar)
 {
 	if (auto* Inv = PlayerChar->FindComponentByClass<UPlayerInventoryComponent>())
 	{
@@ -79,7 +85,19 @@ void ABasePlayerState::RestoreToComponents(ACharacter* PlayerChar)
 	{
 		if (const UBaseAttributeSet* AS = ASC->GetSet<UBaseAttributeSet>())
 		{
-			// AS->
+			ASC->SetNumericAttributeBase(UBaseAttributeSet::GetCurrentHpAttribute(), StoredAttributes.CurrentHp);
+			ASC->SetNumericAttributeBase(UBaseAttributeSet::GetMaxHpAttribute(), StoredAttributes.MaxHp);
 		}
 	}
+}
+
+void ABasePlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ABasePlayerState, StoredInventory);
+	DOREPLIFETIME(ABasePlayerState, StoredQuickSlot);
+	DOREPLIFETIME(ABasePlayerState, StoredCombatInfo);
+	DOREPLIFETIME(ABasePlayerState, StoredAttributes);
+	DOREPLIFETIME(ABasePlayerState, bShouldRestoreData);
 }

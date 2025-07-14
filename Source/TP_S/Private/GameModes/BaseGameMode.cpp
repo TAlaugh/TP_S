@@ -5,6 +5,11 @@
 
 #include "GameInstance/BaseGameInstance.h"
 
+ABaseGameMode::ABaseGameMode()
+{
+	bUseSeamlessTravel = true;
+}
+
 void ABaseGameMode::BeginPlay()
 {
 	Super::BeginPlay();

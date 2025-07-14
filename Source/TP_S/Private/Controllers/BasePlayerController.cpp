@@ -3,22 +3,15 @@
 
 #include "Controllers/BasePlayerController.h"
 
-#include "BaseGameplayTags.h"
-#include "DebugHelper.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/Player/BasePlayerCharacter.h"
-#include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
 #include "Items/Inventory/InventoryMainWidget.h"
 #include "Items/Inventory/QuickSlotWidget.h"
-#include "Items/Weapons/BasePlayerWeapon.h"
-#include "Items/Weapons/WeaponItemDataAsset.h"
-#include "Kismet/GameplayStatics.h"
 #include "Widget/HUDWidget.h"
-#include "Widget/WeaponHUDWidget.h"
 
 ABasePlayerController::ABasePlayerController()
 {
