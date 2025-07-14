@@ -22,6 +22,7 @@
 
 ABaseEnemyCharacter::ABaseEnemyCharacter()
 {
+	
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	bUseControllerRotationPitch = false;
@@ -49,6 +50,14 @@ void ABaseEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+
+	
+	if (BaseAbilitySystemComponent && !BaseAbilitySystemComponent->AbilityActorInfo.IsValid())
+	{
+		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this); // 백업 Init
+	}
+
+	
 	if (UWidgetBase* HealthWidget = Cast<UWidgetBase>(WidgetComponent->GetUserWidgetObject()))
 	{
 		HealthWidget->InitEnemyCreateWidget(this);
@@ -58,10 +67,14 @@ void ABaseEnemyCharacter::BeginPlay()
 void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	
+
+	if (BaseAbilitySystemComponent && !BaseAbilitySystemComponent->AbilityActorInfo.IsValid())
+	{
+		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
+	}
 	if (BaseAbilitySystemComponent)
 	{
-		//BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
+		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
 		//UE_LOG(LogTemp, Error, TEXT("BaseAbilitySystemComponent is Exist on %s"), *GetName());
 		
 	}
@@ -94,17 +107,18 @@ void ABaseEnemyCharacter::InitEnemyStartUpData()
 	{
 		return;
 	}
-	UAssetManager::GetStreamableManager().RequestAsyncLoad(
-		StartupData.ToSoftObjectPath(),
-		FStreamableDelegate::CreateLambda(
-			[this]()
-			{
-				if (UDataAsset_StartupBase* LoadedData = StartupData.Get())
-				{
-					UDataAsset_StartupBaseEnemy* LoadedDataEnemy = Cast<UDataAsset_StartupBaseEnemy>(LoadedData);
-					LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
-				}
-			}
-		)
+
+	 UAssetManager::GetStreamableManager().RequestAsyncLoad(
+	 	StartupData.ToSoftObjectPath(),
+	 	FStreamableDelegate::CreateLambda(
+	 		[this]()
+	 		{
+	 			if (UDataAsset_StartupBase* LoadedData = StartupData.Get())
+	 			{
+	 				UDataAsset_StartupBaseEnemy* LoadedDataEnemy = Cast<UDataAsset_StartupBaseEnemy>(LoadedData);
+	 				LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
+	 			}
+	 		}
+	 	)
 	);
 }
