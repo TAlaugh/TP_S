@@ -19,22 +19,15 @@ class TP_S_API UPGA_Attack_Melee_Heavy : public UPGA_Attack_Melee
 	GENERATED_BODY()
 
 public:
+	UPGA_Attack_Melee_Heavy();
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	UFUNCTION()
 	virtual void ThrowWeapon(FGameplayEventData Data);
-
-	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
-
 	UPROPERTY()
 	UAT_Attack_Melee_ThrowWeapon* Task;
-
-	UPROPERTY()
-	ABasePlayerWeapon* Weapon;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
-	UAnimMontage* ReceiveMontage;
-
 	FTimerHandle ReceiveTimer;
 };

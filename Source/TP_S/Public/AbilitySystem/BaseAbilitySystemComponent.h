@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "BaseType/Player/PlayerStructType.h"
 #include "GameplayTagContainer.h"
+#include "Items/Weapons/BasePlayerWeapon.h"
 #include "BaseAbilitySystemComponent.generated.h"
 
 /**
@@ -20,11 +21,11 @@ public:
 	// Grant Abilities in WeaponData
 	UFUNCTION(BlueprintCallable, Category = "Ability", meta = (Level = "1"))
 	void GrantPlayerWeaponAbilities(const TArray<FPlayerAbilitiySet>& WeaponAbilities, int32 Level,
-		TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles);
+		ABasePlayerWeapon* Weapon);
 
-	// Remove Granted Spec Handle Abililites in WeaponData
+	// Remove Granted Spec Handle Abilities in WeaponData
 	UFUNCTION(BlueprintCallable, Category = "Ability")
-	void RemoveGrantedPlayerWeaponAbilities(UPARAM(ref) TArray<FGameplayAbilitySpecHandle>& SpecHandlesToRemove);
+	void RemoveGrantedPlayerWeaponAbilities(TArray<FGameplayAbilitySpecHandle>& SpecHandlesToRemove);
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	bool TryActivateAbilityByTag(FGameplayTag Tag);

@@ -21,9 +21,10 @@ void UPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	if (GetPlayerCharacterFromActorInfo() && GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->CurrentEquippedWeaponTag.IsValid())
+	if (GetPlayerCharacterFromActorInfo())
 	{
-		//Debug::Print(GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->CurrentEquippedWeaponTag.ToString());		
+		PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();
+		EquipWeapon();
 	}
 }
 
@@ -51,22 +52,37 @@ void UPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	UnEquipWeapon();
 }
 
-void UPGA_Attack::EquipWeapon(FName SocketName)
+void UPGA_Attack::HandleApplyDamage(FGameplayEventData Data)
 {
 }
 
-void UPGA_Attack::UnEquipWeapon(FGameplayEventData TargetData = FGameplayEventData())
+void UPGA_Attack::EquipWeapon()
 {
+	if (PlayerCombatComponent)
+	{
+		PlayerCombatComponent->EquipWeapon(WeaponType, WeaponSocketName);
+	}
 }
 
-void UPGA_Attack::EquipWeaponLeftSocket(FGameplayEventData Data)
+void UPGA_Attack::UnEquipWeapon()
 {
+	if (PlayerCombatComponent && bUnEquipWhenEnd)
+	{
+		PlayerCombatComponent->UnEquipWeapon(WeaponType);
+	}
 }
 
-void UPGA_Attack::EquipWeaponRightSocket(FGameplayEventData Data)
+void UPGA_Attack::EquipWeaponFromEvent(FGameplayEventData Data)
 {
+	EquipWeapon();
+}
+
+void UPGA_Attack::UnEquipWeaponFromEvent(FGameplayEventData Data)
+{
+	UnEquipWeapon();
 }
 
 FName UPGA_Attack::GetNextSection()

@@ -22,9 +22,7 @@ public:
 	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
-	virtual void EquipWeapon(FName SocketName = FName("hand_rSocket")) override;
-	virtual void UnEquipWeapon(FGameplayEventData TargetData) override;
-	
+	virtual void HandleApplyDamage(FGameplayEventData Data) override;
 	UPROPERTY()
 	UAT_Attack_Range_Fire* FireTask;
 	

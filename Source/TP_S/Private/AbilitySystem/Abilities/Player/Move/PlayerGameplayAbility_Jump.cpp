@@ -41,8 +41,8 @@ void UPlayerGameplayAbility_Jump::Jump()
 	}
 	
 	MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_Idle];
-	JumpX = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().X * 500.f;
-	JumpY = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().Y * 500.f;
+	JumpX = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().X * 1.f;
+	JumpY = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().Y * 1.f;
 	JumpZ = 740.f;
 	
 	if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_Slide))
@@ -50,14 +50,18 @@ void UPlayerGameplayAbility_Jump::Jump()
 		MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_Slide];
 		JumpX = GetPlayerCharacterFromActorInfo()->GetVelocity().X;
 		JumpY = GetPlayerCharacterFromActorInfo()->GetVelocity().Y;
-		
+		GetPlayerCharacterFromActorInfo()->LaunchCharacter(FVector(JumpX, JumpY, JumpZ), true, true);
 	}
-	else if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_Run))
+	else
 	{
-		MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_Run];
+		if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_Run))
+		{
+			MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_Run];
+		}
+		GetPlayerCharacterFromActorInfo()->LaunchCharacter(FVector(JumpX, JumpY, JumpZ), false, true);
 	}
 	
-	GetPlayerCharacterFromActorInfo()->LaunchCharacter(FVector(JumpX, JumpY, JumpZ), false, false);
+	
 	//GetPlayerCharacterFromActorInfo()->Jump();
 	GetPlayerCharacterFromActorInfo()->JumpCount++;
 }
@@ -76,7 +80,7 @@ void UPlayerGameplayAbility_Jump::SecondJump()
 	JumpX = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().X * 500.f;
 	JumpY = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().Y * 500.f;
 	JumpZ = 740.f;
-	GetPlayerCharacterFromActorInfo()->LaunchCharacter(FVector(JumpX, JumpY, JumpZ), false, false);
+	GetPlayerCharacterFromActorInfo()->LaunchCharacter(FVector(JumpX, JumpY, JumpZ), true, true);
 	GetPlayerCharacterFromActorInfo()->JumpCount = 2;
 }
 

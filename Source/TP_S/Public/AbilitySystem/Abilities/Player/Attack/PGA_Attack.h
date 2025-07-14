@@ -6,6 +6,7 @@
 #include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
 #include "PGA_Attack.generated.h"
 
+class ABasePlayerWeapon;
 /**
  * 
  */
@@ -22,14 +23,18 @@ public:
 	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
+	
+	virtual void HandleApplyDamage(FGameplayEventData Data);
+	
 	UFUNCTION()
-	virtual void EquipWeapon(FName SocketName = FName("hand_rSocket"));
+	virtual void EquipWeapon();
+	UFUNCTION()
+	virtual void UnEquipWeapon();
 
 	UFUNCTION()
-	virtual void UnEquipWeapon(FGameplayEventData TargetData);
-	
-	virtual void EquipWeaponLeftSocket(FGameplayEventData Data);
-	virtual	void EquipWeaponRightSocket(FGameplayEventData Data);
+	virtual void EquipWeaponFromEvent(FGameplayEventData Data);
+	UFUNCTION()
+	virtual void UnEquipWeaponFromEvent(FGameplayEventData Data);
 
 protected:	
 	virtual FName GetNextSection();
@@ -38,6 +43,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UPlayerGameplayAbility> Ability;
 
-	
-	
+	UPROPERTY()
+	UBasePlayerCombatComponent* PlayerCombatComponent;
+
+	UPROPERTY()
+	FName WeaponSocketName;
+
+	UPROPERTY()
+	FGameplayTag WeaponType;
+
+	UPROPERTY()
+	ABasePlayerWeapon* Weapon;
+
+	UPROPERTY()
+	bool bUnEquipWhenEnd;
 };
