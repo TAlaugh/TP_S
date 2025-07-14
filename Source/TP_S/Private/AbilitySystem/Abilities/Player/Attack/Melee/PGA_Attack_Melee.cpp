@@ -11,13 +11,22 @@
 #include "AbilitySystem/Effects/GE/GE_DealDamage.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 
+UPGA_Attack_Melee::UPGA_Attack_Melee()
+{
+	AbilityTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Range);
+	ActivationBlockedTags.AddTag(BaseGamePlayTags::Shared_Status_Crouch);
+
+	WeaponType = BaseGamePlayTags::Item_Equipable_Weapon_Melee;
+	WeaponSocketName = FName("hand_rSocket");
+}
+
 void UPGA_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                         const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                         const FGameplayEventData* TriggerEventData)
 {
 	
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	EquipWeapon();
 	
 	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 			this,
@@ -25,7 +34,7 @@ void UPGA_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 			MontageToPlay,
 			1.f,
 			GetNextSection(),
-			false);
+			true);
 	Task->OnCancelled.AddDynamic(this, &ThisClass::OnInterruptedCallback);
 	Task->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptedCallback);
 	Task->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
@@ -42,7 +51,6 @@ void UPGA_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 void UPGA_Attack_Melee::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
@@ -51,10 +59,9 @@ void UPGA_Attack_Melee::HandleApplyDamage(FGameplayEventData Data)
 	AActor* TargetActor = const_cast<AActor*>(Data.Target.Get());
 	if (IsValid(TargetActor))
 	{
-		
 		TSubclassOf<UGameplayEffect> Effect = UGE_DealDamage::StaticClass();
 		float BaseDamage = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeaponDamageAtLevel(GetAbilityLevel());
-		int ComboCount = 0;
+		int ComboCount = CachedCurrentSection;
 		FGameplayEffectSpecHandle SpecHandle = MakePlayerDamageGameplayEffectHandle(
 			Effect,
 			BaseDamage,
@@ -65,22 +72,19 @@ void UPGA_Attack_Melee::HandleApplyDamage(FGameplayEventData Data)
 	}
 }
 
-void UPGA_Attack_Melee::EquipWeapon(FName SocketName)
+void UPGA_Attack_Melee::UnEquipWeaponFromEvent(FGameplayEventData Data)
 {
-	GetPlayerCombatComponentFromActorInfo()->EquipWeapon(BaseGamePlayTags::Item_Equipable_Weapon_Melee, SocketName);
+	UnEquipWeapon();
 }
 
-void UPGA_Attack_Melee::UnEquipWeapon(FGameplayEventData TargetData)
+void UPGA_Attack_Melee::EquipWeaponLeftFromEvent(FGameplayEventData Data)
 {
-	GetPlayerCombatComponentFromActorInfo()->UnEquipWeapon(BaseGamePlayTags::Item_Equipable_Weapon_Melee);
+	WeaponSocketName = FName("hand_lSocket"); 
+	EquipWeapon();
 }
 
-void UPGA_Attack_Melee::EquipWeaponLeftSocket(FGameplayEventData Data)
+void UPGA_Attack_Melee::EquipWeaponRightFromEvent(FGameplayEventData Data)
 {
-	EquipWeapon(FName("hand_lSocket"));
-}
-
-void UPGA_Attack_Melee::EquipWeaponRightSocket(FGameplayEventData Data)
-{
-	EquipWeapon(FName("hand_rSocket"));
+	WeaponSocketName = FName("hand_rSocket"); 
+	EquipWeapon();
 }

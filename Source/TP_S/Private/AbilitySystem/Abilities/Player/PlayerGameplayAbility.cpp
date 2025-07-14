@@ -8,6 +8,7 @@
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 UPlayerGameplayAbility::UPlayerGameplayAbility()
@@ -90,4 +91,21 @@ void UPlayerGameplayAbility::OnInterruptedCallback()
 	bool bWasCancelled = true;
 	
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
+void UPlayerGameplayAbility::MovementFix(bool bCan)
+{
+	if (GetPlayerControllerFromActorInfo())
+	{
+		GetPlayerControllerFromActorInfo()->SetIgnoreMoveInput(bCan);
+	}
+}
+
+void UPlayerGameplayAbility::DirectionFix(bool bCan)
+{
+	Debug::Print(TEXT("bCan : %d") , bCan);
+	if (GetPlayerCharacterFromActorInfo())
+	{
+		GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = !bCan;
+	}
 }

@@ -26,13 +26,11 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
-	
 
 	public:
 	ABaseEnemyCharacter();
 
 	protected:
-
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="MotionWarping")
 	UMotionWarpingComponent* MotionWarpingComponent;

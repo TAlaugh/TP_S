@@ -14,20 +14,25 @@ class TP_S_API UPGA_Attack_Melee : public UPGA_Attack
 {
 	GENERATED_BODY()
 public:
+	UPGA_Attack_Melee();
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-	
+
 	UFUNCTION(BlueprintCallable)
-	void HandleApplyDamage(FGameplayEventData Data);
+	virtual void HandleApplyDamage(FGameplayEventData Data) override;
 
-	virtual void EquipWeapon(FName SocketName = FName("hand_rSocket")) override;
-	virtual void UnEquipWeapon(FGameplayEventData TargetData) override;
-
+	virtual void UnEquipWeaponFromEvent(FGameplayEventData Data) override;
 	UFUNCTION()
-	virtual void EquipWeaponLeftSocket(FGameplayEventData Data) override;
-
+	virtual void EquipWeaponLeftFromEvent(FGameplayEventData Data);
 	UFUNCTION()
-	virtual void EquipWeaponRightSocket(FGameplayEventData Data) override;
+	virtual void EquipWeaponRightFromEvent(FGameplayEventData Data);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Section")
+	uint8 MaxSection = 0;
+	
+	uint8 CurrentSection = 0;
+	uint8 CachedCurrentSection = 0;
 	FTimerHandle TimerHandle;
+
+protected:
 };

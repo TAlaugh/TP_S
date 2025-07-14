@@ -6,6 +6,8 @@
 #include "AbilitySystem/Abilities/Player/Attack/Melee/PGA_Attack_Melee.h"
 #include "PGA_Attack_Melee_Light.generated.h"
 
+
+
 /**
  * 
  */
@@ -15,6 +17,7 @@ class TP_S_API UPGA_Attack_Melee_Light : public UPGA_Attack_Melee
 	GENERATED_BODY()
 
 public:
+	UPGA_Attack_Melee_Light();
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
@@ -22,15 +25,17 @@ public:
 	virtual FName GetNextSection() override;
 
 	UFUNCTION(BlueprintCallable)
-	void NextCombo(FGameplayEventData TargetData);
+	void SetNextSection(FGameplayEventData Data);
 
 	UFUNCTION(BlueprintCallable)
 	void StopAttack(FGameplayEventData Data);
 
-	uint8 CurrentCombo = 0;
-	uint8 CachedCurrentCombo = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
+	TMap<FGameplayTag, UAnimMontage*> MontageByTag;
+
+	EPlayerState CurrentPlayerState = EPlayerState::None;
+	
 	FTimerHandle ComboTimerHandle;
 	bool HasNextComboInput = false;
-	bool bIsAttacking = false;
 	
 };

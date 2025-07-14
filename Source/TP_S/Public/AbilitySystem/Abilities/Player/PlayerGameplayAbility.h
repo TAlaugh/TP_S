@@ -49,4 +49,12 @@ protected:
 
 	UFUNCTION()
 	void OnInterruptedCallback();
+
+	// bCan = true -> 움직임가능, bCan = false -> 움직임불가능
+	UFUNCTION()
+	void MovementFix(bool bCan);
+
+	// bCan = true -> 회전 가능, bCan = false -> 회전 불가능
+	UFUNCTION()
+	void DirectionFix(bool bCan);
 };
