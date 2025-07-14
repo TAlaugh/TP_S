@@ -23,3 +23,15 @@ enum class EInventoryCategory : uint8
 	Melee,
 	Ranged
 };
+
+UENUM(BlueprintType)
+enum class EPlayerState : uint8
+{
+	None	UMETA(DisplayName = "None"),
+	Idle	UMETA(DisplayName = "Idle"),
+	Run		UMETA(DisplayName = "Run"),
+	Attack	UMETA(DisplayName = "Attack"),
+	InAir	UMETA(DisplayName = "InAir"),
+	Slide	UMETA(DisplayName = "Slide"),
+	Dodge	UMETA(DisplayName = "Dodge"),
+};

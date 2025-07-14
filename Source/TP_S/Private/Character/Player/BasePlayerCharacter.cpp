@@ -3,15 +3,13 @@
 
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 
-#include <string>
 
 #include "AbilitySystemBlueprintLibrary.h"
+
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
-#include "AbilitySystem/Player/PlayerAttributeSet.h"
-#include "BaseType/BaseEnumType.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -86,6 +84,11 @@ void ABasePlayerCharacter::Landed(const FHitResult& Hit)
 	Super::Landed(Hit);
 
 	JumpCount = 0;
+	if (bAttackSlam)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, BaseGamePlayTags::Shared_Event_Land, FGameplayEventData());
+		bAttackSlam = false;
+	}
 }
 
 void ABasePlayerCharacter::BeginPlay()
