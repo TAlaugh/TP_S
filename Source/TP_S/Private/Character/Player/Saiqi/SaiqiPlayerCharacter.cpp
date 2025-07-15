@@ -5,7 +5,7 @@
 
 #include "Components/UI/BaseUIComponent.h"
 
-ASaiqiPlayerCharacter::ASaiqiPlayerCharacter()
+ASaiqiPlayerCharacter::ASaiqiPlayerCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	BaseUIComponent = CreateDefaultSubobject<UBaseUIComponent>(TEXT("BaseUIComponent"));
 }
