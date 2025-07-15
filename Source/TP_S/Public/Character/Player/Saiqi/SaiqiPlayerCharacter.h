@@ -16,7 +16,7 @@ class TP_S_API ASaiqiPlayerCharacter : public ABasePlayerCharacter, public IBase
 	GENERATED_BODY()
 
 public:
-	ASaiqiPlayerCharacter();
+	ASaiqiPlayerCharacter(const FObjectInitializer& ObjectInitializer);
 	virtual UBaseUIComponent* GetBaseUIComponent() const override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
