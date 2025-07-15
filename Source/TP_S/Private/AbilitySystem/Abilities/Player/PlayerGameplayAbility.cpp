@@ -103,7 +103,6 @@ void UPlayerGameplayAbility::MovementFix(bool bCan)
 
 void UPlayerGameplayAbility::DirectionFix(bool bCan)
 {
-	Debug::Print(TEXT("bCan : %d") , bCan);
 	if (GetPlayerCharacterFromActorInfo())
 	{
 		GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = !bCan;

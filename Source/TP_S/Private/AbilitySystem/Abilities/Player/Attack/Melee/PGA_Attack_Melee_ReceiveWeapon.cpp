@@ -21,6 +21,8 @@ void UPGA_Attack_Melee_ReceiveWeapon::ActivateAbility(const FGameplayAbilitySpec
                                               const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                               const FGameplayEventData* TriggerEventData)
 {
+	PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();
+	bUnEquipWhenEnd = true;
 	if (GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->CurrentThrownWeaponTag.IsValid())
 	{
 		UAbilityTask_PlayMontageAndWait* ReceiveTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(

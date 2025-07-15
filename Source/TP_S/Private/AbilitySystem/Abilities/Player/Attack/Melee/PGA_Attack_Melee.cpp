@@ -16,6 +16,7 @@ UPGA_Attack_Melee::UPGA_Attack_Melee()
 	AbilityTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Range);
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Shared_Status_Crouch);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement);
 
 	WeaponType = BaseGamePlayTags::Item_Equipable_Weapon_Melee;
 	WeaponSocketName = FName("hand_rSocket");

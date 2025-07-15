@@ -3,10 +3,13 @@
 
 #include "AnimInstances/Player/BasePlayerAnimInstance.h"
 
+#include <string>
+
 #include "DebugHelper.h"
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
+#include "KismetAnimationLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 void UBasePlayerAnimInstance::NativeInitializeAnimation()
@@ -22,8 +25,6 @@ void UBasePlayerAnimInstance::NativeInitializeAnimation()
 void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
-
-
 	
 	if (OwningPlayerCharacter != nullptr)
 	{
@@ -69,5 +70,7 @@ void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds
 			UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Run);
 			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(OwningPlayerCharacter, BaseGamePlayTags::Shared_Status_Idle);
 		}
+
+		CachedLocomotionDirection = LocomotionDirection;
 	}
 }
