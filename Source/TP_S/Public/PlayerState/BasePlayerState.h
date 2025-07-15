@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerState.h"
 #include "BasePlayerState.generated.h"
 
+class ABasePlayerWeapon;
 class ABasePlayerCharacter;
 struct FGameplayTag;
 class UItemDataAsset;
@@ -44,7 +45,13 @@ struct FStoredCombatInfo
 	FGameplayTag MeleeWeaponTag;
 
 	UPROPERTY()
+	TSubclassOf<ABasePlayerWeapon> MeleeWeaponClass;
+
+	UPROPERTY()
 	FGameplayTag RangeWeaponTag;
+
+	UPROPERTY()
+	TSubclassOf<ABasePlayerWeapon> RangeWeaponClass;
 };
 
 USTRUCT(BlueprintType)
@@ -70,24 +77,29 @@ class TP_S_API ABasePlayerState : public APlayerState
 	ABasePlayerState();
 	
 public:
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	TArray<FStoredItem> StoredInventory;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	FStoredQuickSlot StoredQuickSlot;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	FStoredCombatInfo StoredCombatInfo;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	FStoredAttributeDate StoredAttributes;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	bool bShouldRestoreData = false;
-	
-	void CaptureFromComponents(ABasePlayerCharacter* PlayerChar);
-	void RestoreToComponents(ABasePlayerCharacter* PlayerChar);
 
-	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	UFUNCTION()
+	void CaptureFromComponents(ABasePlayerCharacter* PlayerChar);
+
+	UFUNCTION()
+	void RestoreToComponents(ABasePlayerCharacter* PlayerChar);
 	
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual void CopyProperties(APlayerState* PlayerState) override;
+
 };

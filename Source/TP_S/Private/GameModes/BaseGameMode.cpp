@@ -26,6 +26,12 @@ void ABaseGameMode::BeginPlay()
 	}
 }
 
+void ABaseGameMode::PostSeamlessTravel()
+{
+	Super::PostSeamlessTravel();
+	// UE_LOG(LogTemp, Warning, TEXT("[GameMode] PostSeamlessTravel called"));
+}
+
 void ABaseGameMode::SpawnMonster()
 {
 	

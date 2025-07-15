@@ -78,54 +78,33 @@ void UInventoryMainWidget::OnRangedTab()
 
 void UInventoryMainWidget::Refresh()
 {
-	// UE_LOG(LogTemp,Warning,TEXT("Refresh called"));
-	
-	if (!Inventory || !ScrollItems || !SlotClass)
-	{
-		// UE_LOG(LogTemp,Error,TEXT("Null ptr: ScrollItems=%s SlotClass=%s Inv=%s"), *GetNameSafe(ScrollItems), *GetNameSafe(SlotClass), *GetNameSafe(Inventory));
-		return;
-	}
+	if (!Inventory || !ScrollItems || !SlotClass) return;
 
-	ScrollItems->ClearChildren();
-
-	if (InfoWidgetHolder)
-	{
-		InfoWidgetHolder->ClearChildren();
-		CurrentInfoWidget = nullptr;
-	}
-	
-	UItemDataAsset* QuickItem = QuickSlotComponent ? QuickSlotComponent->GetData().ItemData : nullptr;
+	ResetInventoryUI();
 	
 	const TArray<FItemStack>& Items = Inventory->GetStacks();
-	// UE_LOG(LogTemp,Warning,TEXT("Stacks = %d"), Items.Num());
 	
 	for (const FItemStack& Stack : Items)
 	{
-		// UE_LOG(LogTemp,Warning,TEXT("item %s cat %d cnt %d"), *Stack.ItemData->GetName(), int32(Stack.ItemData->Category), Stack.Count);
-		
 		if (CurrentTab != EInventoryCategory::None && Stack.ItemData->Category != CurrentTab) continue;
 
 		UInventorySlotWidget* SlotWidget = CreateWidget<UInventorySlotWidget>(this, SlotClass);
-		SlotWidget->SetupSlot(Stack.ItemData, Stack.Count);
-		
-		const bool bIsQuick = (QuickItem && Stack.ItemData == QuickItem);
-		SlotWidget->SetQuickSlotBG(bIsQuick);
-		
-		SlotWidget->OnSlotClicked.RemoveDynamic(this, &UInventoryMainWidget::HandleSlotClicked);
-		SlotWidget->OnSlotClicked.AddDynamic(this, &UInventoryMainWidget::HandleSlotClicked);
+		SlotWidget->SetupSlot(Stack.ItemData, Stack.Count, Stack.SlotID);
+
+		ApplySlotStates(SlotWidget, Stack);
+		BindSlotEvents(SlotWidget);
 		ScrollItems->AddChild(SlotWidget);
-		
-		SlotWidget->OnItemClicked.RemoveDynamic(this, &UInventoryMainWidget::ShowItemInfo);
-		SlotWidget->OnItemClicked.AddDynamic(this, &UInventoryMainWidget::ShowItemInfo);
 	}
 }
 
 void UInventoryMainWidget::HandleSlotClicked(UInventorySlotWidget* Clicked)
 {
 	if (!Clicked) return;
-	
-	SetSelectedSlot(Clicked);
 
+	SelectedSlotID = Clicked->SlotID;
+
+	Refresh();
+	
 	UItemDataAsset* Item = Clicked->GetItem();
 	if (!Item) return;
 
@@ -138,7 +117,6 @@ void UInventoryMainWidget::HandleSlotClicked(UInventorySlotWidget* Clicked)
 				if (auto* Inv = P->FindComponentByClass<UPlayerInventoryComponent>())
 				{
 					QSC->RegisterItem(Cast<UConsumableItemDataAsset>(Item), Inv);
-					// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, (TEXT("%s"), QSC->GetData().ItemData.GetName()));
 				}
 			}
 		}
@@ -149,28 +127,18 @@ void UInventoryMainWidget::HandleSlotClicked(UInventorySlotWidget* Clicked)
 
 		if (APawn* PlayerPawn = GetOwningPlayerPawn())
 		{
-			UBasePlayerCombatComponent* CombatComponent = PlayerPawn->FindComponentByClass<UBasePlayerCombatComponent>();
-			if (CombatComponent)
+			if (UBasePlayerCombatComponent* CombatComponent = PlayerPawn->FindComponentByClass<UBasePlayerCombatComponent>())
 			{
+				if (CombatComponent->CurrentEquippedRangeWeaponTag == WeaponTag || CombatComponent->CurrentEquippedMeleeWeaponTag == WeaponTag)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("이미 장착된 무기입니다."));
+					return;
+				}
+				
 				UWeaponItemDataAsset* Weapon = Cast<UWeaponItemDataAsset>(Item);
 				CombatComponent->EquipWeaponFromInventory(Weapon->WeaponClass, WeaponTag);
 			}
 		}
-	}
-}
-
-void UInventoryMainWidget::SetSelectedSlot(UInventorySlotWidget* NewSlot)
-{
-	if (SelectedSlot && SelectedSlot != NewSlot)
-	{
-		SelectedSlot->SetSelected(false);
-	}
-	
-	SelectedSlot = NewSlot;
-	
-	if (SelectedSlot)
-	{
-		SelectedSlot->SetSelected(true);
 	}
 }
 
@@ -193,4 +161,47 @@ void UInventoryMainWidget::ShowItemInfo(UItemDataAsset* ItemData)
 	CurrentInfoWidget->ItemData = ItemData;
 
 	InfoWidgetHolder->AddChild(CurrentInfoWidget);
+}
+
+void UInventoryMainWidget::ApplySlotStates(UInventorySlotWidget* SlotWidget, const FItemStack& Stack)
+{
+	UItemDataAsset* QuickItem = QuickSlotComponent ? QuickSlotComponent->GetData().ItemData : nullptr;
+
+	UBasePlayerCombatComponent* CombatComp = nullptr;
+	if (APawn* PlayerPawn = GetOwningPlayerPawn())
+	{
+		CombatComp = PlayerPawn->FindComponentByClass<UBasePlayerCombatComponent>();
+	}
+	
+	const bool bIsQuick = (QuickItem && Stack.ItemData == QuickItem);
+	SlotWidget->SetQuickSlotBg(bIsQuick);
+
+	bool bIsEquippedWeapon = false;
+	if (CombatComp && (Stack.ItemData->Category == EInventoryCategory::Melee || Stack.ItemData->Category == EInventoryCategory::Ranged))
+	{
+		FGameplayTag WeaponTag = Stack.ItemData->GetWeaponGameplayTag();
+		bIsEquippedWeapon = (WeaponTag == CombatComp->GetEquippedMeleeTag() || WeaponTag == CombatComp->GetEquippedRangeTag());
+	}
+	SlotWidget->SetEquippedWeaponBG(bIsEquippedWeapon);
+	SlotWidget->SetSelected(Stack.SlotID == SelectedSlotID);
+}
+
+void UInventoryMainWidget::ResetInventoryUI()
+{
+	ScrollItems->ClearChildren();
+
+	if (InfoWidgetHolder)
+	{
+		InfoWidgetHolder->ClearChildren();
+		CurrentInfoWidget = nullptr;
+	}
+}
+
+void UInventoryMainWidget::BindSlotEvents(UInventorySlotWidget* SlotWidget)
+{
+	SlotWidget->OnSlotClicked.RemoveDynamic(this, &UInventoryMainWidget::HandleSlotClicked);
+	SlotWidget->OnSlotClicked.AddDynamic(this, &UInventoryMainWidget::HandleSlotClicked);
+
+	SlotWidget->OnItemClicked.RemoveDynamic(this, &UInventoryMainWidget::ShowItemInfo);
+	SlotWidget->OnItemClicked.AddDynamic(this, &UInventoryMainWidget::ShowItemInfo);
 }

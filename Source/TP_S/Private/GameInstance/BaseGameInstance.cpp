@@ -15,5 +15,5 @@ void UBaseGameInstance::AdvancedFloor()
 {
 	CurrentFloorCount++;
 	CurrentStageCount = 0;
-	// bBossStage = false;
+	bBossStage = false;
 }

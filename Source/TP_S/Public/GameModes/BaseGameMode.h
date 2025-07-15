@@ -15,8 +15,11 @@ class TP_S_API ABaseGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 	ABaseGameMode();
+	
 public:
 	virtual void BeginPlay() override;
+
+	virtual void PostSeamlessTravel() override;
 	
 	void SpawnMonster();
 	void SpawnBoss();

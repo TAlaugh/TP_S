@@ -38,6 +38,22 @@ void ABasePlayerState::CaptureFromComponents(ABasePlayerCharacter* PlayerChar)
 	{
 		StoredCombatInfo.MeleeWeaponTag = CombatComp->GetEquippedMeleeTag();
 		StoredCombatInfo.RangeWeaponTag = CombatComp->GetEquippedRangeTag();
+		if (ABasePlayerWeapon* MeleeWeapon = CombatComp->GetEquippedMeleeWeaponClass())
+		{
+			StoredCombatInfo.MeleeWeaponClass = MeleeWeapon->GetClass();
+		}
+		else
+		{
+			StoredCombatInfo.MeleeWeaponClass = nullptr;
+		}
+		if (ABasePlayerWeapon* RangeWeapon = CombatComp->GetEquippedRangeWeaponClass())
+		{
+			StoredCombatInfo.RangeWeaponClass = RangeWeapon->GetClass();
+		}
+		else
+		{
+			StoredCombatInfo.RangeWeaponClass = nullptr;
+		}
 	}
 
 	if (UBaseAbilitySystemComponent* ASC = PlayerChar->FindComponentByClass<UBaseAbilitySystemComponent>())
@@ -73,11 +89,11 @@ void ABasePlayerState::RestoreToComponents(ABasePlayerCharacter* PlayerChar)
 	{
 		if (StoredCombatInfo.MeleeWeaponTag.IsValid())
 		{
-			Combat->EquipWeaponFromInventory(nullptr, StoredCombatInfo.MeleeWeaponTag);
+			Combat->EquipWeaponFromInventory(StoredCombatInfo.MeleeWeaponClass, StoredCombatInfo.MeleeWeaponTag);
 		}
 		if (StoredCombatInfo.RangeWeaponTag.IsValid())
 		{
-			Combat->EquipWeaponFromInventory(nullptr, StoredCombatInfo.RangeWeaponTag);
+			Combat->EquipWeaponFromInventory(StoredCombatInfo.RangeWeaponClass, StoredCombatInfo.RangeWeaponTag);
 		}
 	}
 
@@ -94,10 +110,26 @@ void ABasePlayerState::RestoreToComponents(ABasePlayerCharacter* PlayerChar)
 void ABasePlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
+	
 	DOREPLIFETIME(ABasePlayerState, StoredInventory);
 	DOREPLIFETIME(ABasePlayerState, StoredQuickSlot);
 	DOREPLIFETIME(ABasePlayerState, StoredCombatInfo);
 	DOREPLIFETIME(ABasePlayerState, StoredAttributes);
 	DOREPLIFETIME(ABasePlayerState, bShouldRestoreData);
+}
+
+void ABasePlayerState::CopyProperties(APlayerState* PlayerState)
+{
+	Super::CopyProperties(PlayerState);
+
+	if (ABasePlayerState* NewPS = Cast<ABasePlayerState>(PlayerState))
+	{
+		NewPS->StoredInventory = StoredInventory;
+		NewPS->StoredQuickSlot = StoredQuickSlot;
+		NewPS->StoredCombatInfo = StoredCombatInfo;
+		NewPS->StoredAttributes = StoredAttributes;
+		NewPS->bShouldRestoreData = bShouldRestoreData;
+
+		// UE_LOG(LogTemp, Warning, TEXT("[CopyProperties] PlayerState 복사됨 (Melee: %s)"), *StoredCombatInfo.MeleeWeaponTag.ToString());
+	}
 }

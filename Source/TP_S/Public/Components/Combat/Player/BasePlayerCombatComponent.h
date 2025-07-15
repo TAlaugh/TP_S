@@ -103,14 +103,15 @@ public:
 
 	// 저장용도 함수
 	FGameplayTag GetEquippedMeleeTag() const;
-	
+	ABasePlayerWeapon* GetEquippedMeleeWeaponClass() const;
 	FGameplayTag GetEquippedRangeTag() const;
+	ABasePlayerWeapon* GetEquippedRangeWeaponClass() const;
 
+	UPROPERTY()
+	FGuid CurrentEquippedSlotID;
+	
 	UFUNCTION()
 	void UpdateAnimLayer();
-	
-	// Debug용도 // 지워도 무방함
-	virtual void BeginPlay() override;
 
 protected:
 	// 중복방지 배열

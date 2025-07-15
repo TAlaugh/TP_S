@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "AbilitySystem/Player/PlayerAbilitySystemComponent.h"
+#include "PlayerState/BasePlayerState.h"
 #include "TP_S/Public/Character/BaseCharacter.h"
 #include "BasePlayerCharacter.generated.h"
 
@@ -92,4 +93,8 @@ public:
 	FORCEINLINE UBasePlayerCombatComponent* GetPlayerCombatComponent() const { return PlayerCombatComponent; }
 	FORCEINLINE UCameraComponent* GetCameraComponent() const { return FollowCamera; }
 	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
+
+	// 저장 불러오기
+	UFUNCTION()
+	void TryRestoreAfterReplication(ABasePlayerState* PS);
 };
