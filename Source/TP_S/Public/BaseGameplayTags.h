@@ -38,6 +38,7 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Hit_Range);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Land);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_SpawnProjectile);
 
 
 	// Shared Ability(HitReact, Death)

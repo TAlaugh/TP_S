@@ -95,7 +95,7 @@ void ABasePlayerCharacter::Landed(const FHitResult& Hit)
 void ABasePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	// --------------------------------------------------------------------------
 	if (ABasePlayerState* PS = GetPlayerState<ABasePlayerState>())
 	{
@@ -110,6 +110,7 @@ void ABasePlayerCharacter::BeginPlay()
 			UE_LOG(LogTemp, Warning, TEXT("[Restore] 저장된 데이터 없음 → 초기 상태 유지"));
 		}
 	}
+	
 }
 
 void ABasePlayerCharacter::PossessedBy(AController* NewController)

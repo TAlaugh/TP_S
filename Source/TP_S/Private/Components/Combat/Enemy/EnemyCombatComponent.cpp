@@ -62,7 +62,7 @@ void UEnemyCombatComponent::ToggleWeaponCollision(bool bUse, EToggleDamageType T
 		if (bUse)
 		{
 			OverlappedActors.Empty();
-
+			Weapon->SetCollisionActive(false);
 			
 			Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			UE_LOG(LogTemp, Warning, TEXT("Collision Enabled"));

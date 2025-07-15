@@ -43,5 +43,12 @@ public:
 	virtual void OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UPROPERTY()
+	bool bIsWeaponCollisionActive = false;
+
+
+	void SetCollisionActive(bool bActive) { bIsWeaponCollisionActive = bActive; }
+	bool IsCollisionActive() const { return bIsWeaponCollisionActive; }
+	
 	FORCEINLINE USkeletalMeshComponent* GetSkeletalMeshComponent() const { return WeaponMesh; };
 };
