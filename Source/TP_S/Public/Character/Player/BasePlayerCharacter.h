@@ -29,7 +29,7 @@ class TP_S_API ABasePlayerCharacter : public ABaseCharacter
 	GENERATED_BODY()
 	
 protected:
-	ABasePlayerCharacter();
+	ABasePlayerCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	

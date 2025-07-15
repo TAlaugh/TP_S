@@ -16,6 +16,7 @@
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "Components/Inventory/QuickSlotComponent.h"
+#include "Components/Movement/PlayerMovementComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "DataAssets/Player/DataAsset_StartupBasePlayer.h"
@@ -23,7 +24,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "PlayerState/BasePlayerState.h"
 
-ABasePlayerCharacter::ABasePlayerCharacter()
+ABasePlayerCharacter::ABasePlayerCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer.SetDefaultSubobjectClass<UPlayerMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
 
@@ -41,13 +42,25 @@ ABasePlayerCharacter::ABasePlayerCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.5f, 500.f, 0.f);
+	UPlayerMovementComponent* PlayerMoveComp = CastChecked<UPlayerMovementComponent>(GetCharacterMovement());
+	PlayerMoveComp->GravityScale = 1.0f;
+	PlayerMoveComp->MaxAcceleration = 2400.0f;
+	PlayerMoveComp->BrakingFrictionFactor = 1.0f;
+	PlayerMoveComp->BrakingFriction = 6.0f;
+	PlayerMoveComp->GroundFriction = 8.0f;
+	//PlayerMoveComp->BrakingDecelerationWalking = 1400.0f;
+	PlayerMoveComp->bUseControllerDesiredRotation = false;
+	PlayerMoveComp->bOrientRotationToMovement = true;
+	PlayerMoveComp->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
+	PlayerMoveComp->bAllowPhysicsRotationDuringAnimRootMotion = false;
+	PlayerMoveComp->GetNavAgentPropertiesRef().bCanCrouch = true;
+	PlayerMoveComp->GetNavAgentPropertiesRef().bCanJump = true;
+	PlayerMoveComp->GetNavAgentPropertiesRef().bCanWalk = true;
+	PlayerMoveComp->bCanWalkOffLedgesWhenCrouching = true;
+	//PlayerMoveComp->SetCrouchedHalfHeight(95.0f);
+	
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
-	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
-	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanJump = true;
-	ABasePlayerCharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanWalk = true;
 
 	PlayerInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("InventoryComponent"));
 	PlayerQuickSlotComponent = CreateDefaultSubobject<UQuickSlotComponent>(TEXT("QuickSlotComponent"));

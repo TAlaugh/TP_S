@@ -13,7 +13,7 @@
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
 
-AEnemyCharacter_Lianhuo::AEnemyCharacter_Lianhuo() : ABaseEnemyCharacter()
+AEnemyCharacter_Lianhuo::AEnemyCharacter_Lianhuo(const FObjectInitializer& ObjectInitializer) : ABaseEnemyCharacter(ObjectInitializer)
 {
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -39,6 +39,17 @@ AEnemyCharacter_Lianhuo::AEnemyCharacter_Lianhuo() : ABaseEnemyCharacter()
 	GetCapsuleComponent()->SetCapsuleHalfHeight(150.f);
 	
 }
+
+UBaseUIComponent* AEnemyCharacter_Lianhuo::GetBaseUIComponent() const
+{
+	return Cast<UBaseUIComponent>(EnemyUIComponent);
+}
+
+UEnemyUIComponent* AEnemyCharacter_Lianhuo::GetEnemyUIComponent() const
+{
+	return Cast<UEnemyUIComponent>(EnemyUIComponent);
+}
+
 
 void AEnemyCharacter_Lianhuo::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {

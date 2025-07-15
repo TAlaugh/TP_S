@@ -24,7 +24,7 @@ UEnemyCombatComponent* UEnemyGameplayAbility::GetEnemyCombatComponentFromActorIn
 }
 
 FGameplayEffectSpecHandle UEnemyGameplayAbility::MakeEnemyDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect,
-	const FScalableFloat& DamageFloat)
+	const FScalableFloat& DamageFloat) const
 {
 	check(Effect);
 
@@ -33,14 +33,9 @@ FGameplayEffectSpecHandle UEnemyGameplayAbility::MakeEnemyDamageEffectSpecHandle
 	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
 	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
 
-	FGameplayEffectSpecHandle SpecHandle = GetBaseAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(
-	Effect,
-	GetAbilityLevel(),
-	ContextHandle
-	);
+	FGameplayEffectSpecHandle SpecHandle = GetBaseAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(Effect, GetAbilityLevel(), ContextHandle);
 
-	SpecHandle.Data->SetSetByCallerMagnitude(BaseGamePlayTags::Shared_SetByCaller_BaseDamage,
-		DamageFloat.GetValueAtLevel(GetAbilityLevel()));
-	
+	SpecHandle.Data->SetSetByCallerMagnitude(BaseGamePlayTags::Shared_SetByCaller_BaseDamage, DamageFloat.GetValueAtLevel(GetAbilityLevel()));
+
 	return SpecHandle;
 }

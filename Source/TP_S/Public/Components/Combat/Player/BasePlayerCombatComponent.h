@@ -110,6 +110,9 @@ public:
 	UPROPERTY()
 	FGuid CurrentEquippedSlotID;
 	
+	UFUNCTION()
+	void UpdateAnimLayer();
+
 protected:
 	// 중복방지 배열
 	TArray<AActor*> OverlappedActors;
@@ -120,4 +123,7 @@ protected:
 
 	UPROPERTY()
 	ABasePlayerCharacter* OwnerPlayer;
+
+	UPROPERTY()
+	TSubclassOf<UAnimInstance> CombatLayer;
 };

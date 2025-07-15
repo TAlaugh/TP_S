@@ -54,6 +54,7 @@ void UAT_Attack_Melee_ThrowWeapon::GameplayEventContainerCallback(FGameplayTag M
 	// 장착중인 무기를 던졌을 경우 태그랑 위치를 컴뱃 컴포넌트에 저장
 	Player->GetPlayerCombatComponent()->WeaponThrownLocation = TargetLocation;
 	Player->GetPlayerCombatComponent()->CurrentThrownWeaponTag = Player->GetPlayerCombatComponent()->CurrentEquippedWeaponTag;
+	Player->GetPlayerCombatComponent()->CurrentEquippedWeaponTag = FGameplayTag();
 	Player->GetPlayerCombatComponent()->ToggleWeaponCollision(true);
 	
 	Weapon->FindComponentByClass<USkeletalMeshComponent>()->GetAnimInstance()->Montage_Play(Weapon->ItemMontage);

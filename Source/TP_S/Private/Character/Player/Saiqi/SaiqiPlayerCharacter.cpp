@@ -3,3 +3,14 @@
 
 #include "TP_S/Public/Character/Player/Saiqi/SaiqiPlayerCharacter.h"
 
+#include "Components/UI/BaseUIComponent.h"
+
+ASaiqiPlayerCharacter::ASaiqiPlayerCharacter()
+{
+	BaseUIComponent = CreateDefaultSubobject<UBaseUIComponent>(TEXT("BaseUIComponent"));
+}
+
+UBaseUIComponent* ASaiqiPlayerCharacter::GetBaseUIComponent() const
+{
+	return FindComponentByClass<UBaseUIComponent>();
+}
