@@ -114,9 +114,9 @@ void ABaseEnemyCharacter::InitEnemyStartUpData()
 	 		{
 	 			if (UDataAsset_StartupBase* LoadedData = StartupData.Get())
 	 			{
-	 				UDataAsset_StartupBaseEnemy* LoadedDataEnemy = Cast<UDataAsset_StartupBaseEnemy>(LoadedData);
-	 				LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
-	 			}
+					 LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
+					 Debug::Print(TEXT("Enemy Startup Data Loaded"), FColor::Green);
+				 }
 	 		}
 	 	)
 	);

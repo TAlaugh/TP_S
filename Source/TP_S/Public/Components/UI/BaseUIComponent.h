@@ -6,6 +6,7 @@
 #include "Components/BaseExtensionComponent.h"
 #include "BaseUIComponent.generated.h"
 
+class UWidgetBase;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPercentChangeDelegate, float, NewPercent);
 /**
  * 
@@ -18,4 +19,12 @@ class TP_S_API UBaseUIComponent : public UBaseExtensionComponent
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnPercentChangeDelegate OnCurrentHpChanged;
+	
+	UFUNCTION(BlueprintCallable)
+	void RegisterEnemyDrawnWidget(UWidgetBase* InWidgetToRegister);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveEnemyDrawnWidgetIfAny();
+private:
+	TArray<UWidgetBase*> EnemyDrawnWidgets;
 };
