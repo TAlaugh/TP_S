@@ -102,6 +102,18 @@ bool UBaseFunctionLibrary::IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPa
 	}
 	return false;
 }
+
+bool UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToActor(AActor* InInstigator, AActor* InTargetActor,
+	const FGameplayEffectSpecHandle InSpecHandle)
+{
+	UBaseAbilitySystemComponent* SourceASC =  NativeGetBaseASCFromActor(InInstigator);
+	UBaseAbilitySystemComponent* TargetASC = NativeGetBaseASCFromActor(InTargetActor);
+
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = SourceASC->ApplyGameplayEffectSpecToTarget(*InSpecHandle.Data,TargetASC);
+
+	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
+}
+
 /*
 float UBaseFunctionLibrary::GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel)
 {
