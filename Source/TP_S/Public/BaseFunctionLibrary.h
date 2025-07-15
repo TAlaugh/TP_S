@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BaseType/BaseEnumType.h"
 #include "ScalableFloat.h"
@@ -47,7 +48,10 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
 	static bool IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn);
-	
+
+
+	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
+	static bool ApplyGameplayEffectSpecHandleToActor(AActor* InInstigator,AActor* InTargetActor, const FGameplayEffectSpecHandle InSpecHandle);
 	/*
 	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary", meta = (CompactNodeTitle = "Get Value At Level"))
 	static float GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel = 1.f);
