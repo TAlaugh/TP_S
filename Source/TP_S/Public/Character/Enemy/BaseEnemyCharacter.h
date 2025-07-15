@@ -28,7 +28,7 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 
 
 	public:
-	ABaseEnemyCharacter();
+	ABaseEnemyCharacter(const FObjectInitializer& ObjectInitializer);
 
 	protected:
 	

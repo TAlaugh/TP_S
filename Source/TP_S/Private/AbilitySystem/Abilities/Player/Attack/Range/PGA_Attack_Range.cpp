@@ -18,7 +18,13 @@
 
 UPGA_Attack_Range::UPGA_Attack_Range()
 {
+	AbilityTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Range);
+	ActivationOwnedTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Range);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
+	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Crouch);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Slide);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Dodge);
 }
 
 void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -29,27 +35,13 @@ void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();
 	WeaponType = BaseGamePlayTags::Item_Equipable_Weapon_Range;
 	WeaponSocketName = FName("hand_rRangeSocket");
+	bUnEquipWhenEnd = false;
 	EquipWeapon();
 	
 	FireTask = UAT_Attack_Range_Fire::Action(this, 0.2f);
 	FireTask->OnStartedTask.AddDynamic(this, &ThisClass::HandleFire);
 	FireTask->OnFinishedTask.AddDynamic(this, &ThisClass::StopFire);
 	FireTask->ReadyForActivation();
-	
-	if (UAnimInstance* Anim = GetOwningComponentFromActorInfo()->GetAnimInstance())
-	{
-		if (AnimLayer)
-		{
-			Anim->LinkAnimClassLayers(AnimLayer);
-		}
-	}
-	
-	if (GetPlayerCharacterFromActorInfo())
-	{
-		GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = false;
-		//GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->MaxWalkSpeed = 200.f;
-		GetPlayerCharacterFromActorInfo()->bUseControllerRotationYaw = true;
-	}
 }
 
 void UPGA_Attack_Range::InputPressed(const FGameplayAbilitySpecHandle Handle,
@@ -81,13 +73,7 @@ void UPGA_Attack_Range::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 	{
 		FireTask->StopFire();
 	}
-	if (GetPlayerCharacterFromActorInfo())
-	{
-		GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = true;
-		GetPlayerCharacterFromActorInfo()->bUseControllerRotationYaw = false;
-		//GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->MaxWalkSpeed = 400.f;
-	}
-	DirectionFix(true);
+	DirectionFix(false);
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
@@ -110,6 +96,15 @@ void UPGA_Attack_Range::HandleApplyDamage(FGameplayEventData Data)
 	}
 }
 
+void UPGA_Attack_Range::DirectionFix(bool bCan)
+{
+	Super::DirectionFix(bCan);
+	if (GetPlayerCharacterFromActorInfo())
+	{
+		GetPlayerCharacterFromActorInfo()->bUseControllerRotationYaw = bCan;
+	}
+}
+
 void UPGA_Attack_Range::HandleFire()
 {
 	// 총알 발사 구현부
@@ -126,6 +121,9 @@ void UPGA_Attack_Range::HandleFire()
 			Data.Target = Hit.GetActor();
 			HandleApplyDamage(Data);
 		}
+
+		//UE_LOG(LogTemp, Warning, TEXT("Current AnimInstance Class: %s"), CachedPlayerCharacter->GetMesh()->GetAnimInstance()->GetClass()->GetName());
+		Debug::Print(CachedPlayerCharacter->GetMesh()->GetAnimInstance()->GetClass()->GetName());
 	}
 }
 

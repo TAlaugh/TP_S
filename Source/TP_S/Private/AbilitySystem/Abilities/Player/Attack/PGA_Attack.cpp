@@ -13,6 +13,7 @@
 UPGA_Attack::UPGA_Attack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+	AbilityInputID = EAbility::Attack;
 }
 
 void UPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -74,7 +75,6 @@ void UPGA_Attack::UnEquipWeapon()
 {
 	if (PlayerCombatComponent)
 	{
-		Debug::Print("UNEQUIP");
 		PlayerCombatComponent->UnEquipWeapon(WeaponType);
 	}
 }

@@ -56,5 +56,5 @@ protected:
 
 	// bCan = true -> 회전 가능, bCan = false -> 회전 불가능
 	UFUNCTION()
-	void DirectionFix(bool bCan);
+	virtual void DirectionFix(bool bCan);
 };

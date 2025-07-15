@@ -19,7 +19,7 @@ class TP_S_API AEnemyCharacter_Lianhuo : public ABaseEnemyCharacter
 	GENERATED_BODY()
 
 protected:
-	AEnemyCharacter_Lianhuo();
+	AEnemyCharacter_Lianhuo(const FObjectInitializer& ObjectInitializer);
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

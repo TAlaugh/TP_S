@@ -20,7 +20,7 @@
 #include "Widget/WidgetBase.h"
 
 
-ABaseEnemyCharacter::ABaseEnemyCharacter()
+ABaseEnemyCharacter::ABaseEnemyCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 

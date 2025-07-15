@@ -13,7 +13,7 @@
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
 
-AEnemyCharacter_Lianhuo::AEnemyCharacter_Lianhuo() : ABaseEnemyCharacter()
+AEnemyCharacter_Lianhuo::AEnemyCharacter_Lianhuo(const FObjectInitializer& ObjectInitializer) : ABaseEnemyCharacter(ObjectInitializer)
 {
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
