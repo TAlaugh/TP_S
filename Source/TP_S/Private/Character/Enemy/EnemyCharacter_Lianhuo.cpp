@@ -40,6 +40,17 @@ AEnemyCharacter_Lianhuo::AEnemyCharacter_Lianhuo(const FObjectInitializer& Objec
 	
 }
 
+UBaseUIComponent* AEnemyCharacter_Lianhuo::GetBaseUIComponent() const
+{
+	return Cast<UBaseUIComponent>(EnemyUIComponent);
+}
+
+UEnemyUIComponent* AEnemyCharacter_Lianhuo::GetEnemyUIComponent() const
+{
+	return Cast<UEnemyUIComponent>(EnemyUIComponent);
+}
+
+
 void AEnemyCharacter_Lianhuo::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	checkf(InputConfigDataAsset, TEXT("Forgot to assign a valid data asset as Input Config"));
