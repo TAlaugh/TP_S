@@ -8,10 +8,11 @@
 #include "Components/TextBlock.h"
 #include "Items/ItemDataAsset.h"
 
-void UInventorySlotWidget::SetupSlot(UItemDataAsset* InItemData, int32 InCount)
+void UInventorySlotWidget::SetupSlot(UItemDataAsset* InItemData, int32 InCount, FGuid InSlotID)
 {
 	ItemData = InItemData;
 	Count = InCount;
+	SlotID = InSlotID;
 
 	if (!IConImage) return;
 	
@@ -76,11 +77,19 @@ void UInventorySlotWidget::SetSelected(bool bNewSelected)
 	}
 }
 
-void UInventorySlotWidget::SetQuickSlotBG(bool bOn)
+void UInventorySlotWidget::SetQuickSlotBg(bool bOn) const
 {
 	if (QuickSlot_BG)
 	{
 		QuickSlot_BG->SetVisibility(bOn ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	}
+}
+
+void UInventorySlotWidget::SetEquippedWeaponBG(bool bOn) const
+{
+	if (WeaponSlot_BG)
+	{
+		WeaponSlot_BG->SetVisibility(bOn ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 	}
 }
 

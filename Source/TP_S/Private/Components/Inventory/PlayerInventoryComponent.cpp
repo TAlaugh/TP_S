@@ -44,7 +44,13 @@ bool UPlayerInventoryComponent::AddItem(UItemDataAsset* Item, int32 Qty)
 	while (Qty > 0)
 	{
 		const int32 Add = FMath::Min(MaxPerStack, Qty);
-		Items.Add({ Item, Add });
+
+		FItemStack NewStack;
+		NewStack.ItemData = Item;
+		NewStack.Count = Add;
+		NewStack.SlotID = FGuid::NewGuid();
+		
+		Items.Add(NewStack);
 		Qty -= Add;
 	}
 

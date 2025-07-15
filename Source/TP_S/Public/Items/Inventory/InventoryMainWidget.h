@@ -8,6 +8,7 @@
 #include "Components/Inventory/QuickSlotComponent.h"
 #include "InventoryMainWidget.generated.h"
 
+class UBasePlayerCombatComponent;
 class USizeBox;
 class UItemInfoWidget;
 class UItemDataAsset;
@@ -62,12 +63,10 @@ public:
 	TSubclassOf<UInventorySlotWidget> SlotClass;
 
 	UPROPERTY()
-	UInventorySlotWidget* SelectedSlot;
+	FGuid SelectedSlotID;
 
 	UFUNCTION()
 	void HandleSlotClicked(UInventorySlotWidget* Clicked);
-	
-	void SetSelectedSlot(UInventorySlotWidget* NewSlot);
 
 	UFUNCTION()
 	void HandleQuickSlotChanged(const FQuickSlotData& Data);
@@ -84,7 +83,16 @@ public:
 
 	UFUNCTION()
 	void ShowItemInfo(UItemDataAsset* ItemData);
-	
+
+	UFUNCTION()
+	void ApplySlotStates(UInventorySlotWidget* SlotWidget, const FItemStack& Stack);
+
+	UFUNCTION()
+	void ResetInventoryUI();
+
+	UFUNCTION()
+	void BindSlotEvents(UInventorySlotWidget* SlotWidget);
+
 private:
 	UPROPERTY()
 	UPlayerInventoryComponent* Inventory;

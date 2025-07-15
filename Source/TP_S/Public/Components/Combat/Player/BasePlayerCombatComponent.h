@@ -103,12 +103,13 @@ public:
 
 	// 저장용도 함수
 	FGameplayTag GetEquippedMeleeTag() const;
-	
+	ABasePlayerWeapon* GetEquippedMeleeWeaponClass() const;
 	FGameplayTag GetEquippedRangeTag() const;
-	
-	// Debug용도 // 지워도 무방함
-	virtual void BeginPlay() override;
+	ABasePlayerWeapon* GetEquippedRangeWeaponClass() const;
 
+	UPROPERTY()
+	FGuid CurrentEquippedSlotID;
+	
 protected:
 	// 중복방지 배열
 	TArray<AActor*> OverlappedActors;

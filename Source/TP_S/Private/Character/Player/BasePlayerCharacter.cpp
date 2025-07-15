@@ -96,18 +96,26 @@ void ABasePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// --------------------------------------------------------------------------
 	if (ABasePlayerState* PS = GetPlayerState<ABasePlayerState>())
 	{
 		if (PS->bShouldRestoreData)
 		{
-			PS->RestoreToComponents(this);
-			PS->bShouldRestoreData = false;
-			UE_LOG(LogTemp, Warning, TEXT("[Restore] PlayerState에서 데이터 복원 완료"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[Restore] 저장된 데이터 없음 → 초기 상태 유지"));
+			if (!PS->StoredCombatInfo.MeleeWeaponTag.IsValid() || !PS->StoredCombatInfo.RangeWeaponTag.IsValid())
+			{
+				// 아직 데이터가 복제되지 않음 → 0.1초 뒤 재시도
+				GetWorldTimerManager().SetTimerForNextTick([=, this]()
+				{
+					TryRestoreAfterReplication(PS);
+					UE_LOG(LogTemp, Warning, TEXT("아직 데이터가 복제되지 않음 → 재시도"));
+				});
+			}
+			else
+			{
+				// 데이터 바로 복원 가능
+				PS->RestoreToComponents(this);
+				PS->bShouldRestoreData = false;
+				UE_LOG(LogTemp, Warning, TEXT("PlayerState 복원 수행 (바로 가능)"));
+			}
 		}
 	}
 }
@@ -204,4 +212,25 @@ void ABasePlayerCharacter::Input_AbilityInputReleased(const FGameplayTag InputTa
 UBaseCombatComponent* ABasePlayerCharacter::GetBaseCombatComponent() const
 {
 	return PlayerCombatComponent;
+}
+
+void ABasePlayerCharacter::TryRestoreAfterReplication(ABasePlayerState* PS)
+{
+	if (PS)
+	{
+		if (PS->StoredCombatInfo.MeleeWeaponTag.IsValid() || PS->StoredCombatInfo.RangeWeaponTag.IsValid() || PS->StoredInventory.Num() > 0)
+		{
+			PS->RestoreToComponents(this);
+			UE_LOG(LogTemp, Warning, TEXT("[TryRestoreAfterReplication] 복원 완료 - PlayerCharacter"));
+		}
+		else
+		{
+			FTimerHandle TimerHandle;
+			UE_LOG(LogTemp, Warning, TEXT("[TryRestoreAfterReplication] 복원 실패 - PlayerCharacter"));
+			GetWorldTimerManager().SetTimer( TimerHandle, FTimerDelegate::CreateLambda([this, PS]()
+				{
+					TryRestoreAfterReplication(PS);
+				}),0.1f,false);
+		}
+	}
 }

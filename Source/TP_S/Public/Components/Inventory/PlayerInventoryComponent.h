@@ -16,13 +16,16 @@ struct FItemStack
 {
 	GENERATED_BODY()
 
-	/** 어떤 아이템 **/
+	// 어떤 아이템
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UItemDataAsset> ItemData;
 
-	/** 개수 **/
+	// 개수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Count = 0;
+
+	UPROPERTY()
+	FGuid SlotID;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChanged);

@@ -26,7 +26,7 @@ class TP_S_API UInventorySlotWidget : public UUserWidget
 public:
 	// 슬롯에 아이템과 수량을 세팅
 	UFUNCTION(BlueprintCallable)
-	void SetupSlot(UItemDataAsset* InItemData, int32 InCount);
+	void SetupSlot(UItemDataAsset* InItemData, int32 InCount, FGuid InSlotID);
 
 	// 클릭 이벤트
 	UPROPERTY(BlueprintAssignable)
@@ -62,7 +62,12 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UImage* QuickSlot_BG;
 
-	void SetQuickSlotBG(bool bOn);
+	void SetQuickSlotBg(bool bOn) const;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* WeaponSlot_BG;
+	
+	void SetEquippedWeaponBG(bool bOn) const;
 
 	// 클릭 시 호출
 	UFUNCTION()
@@ -73,6 +78,9 @@ public:
 
 	UPROPERTY()
 	int32 Count;
+
+	UPROPERTY()
+	FGuid SlotID;
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	UItemDataAsset* GetItem() const { return ItemData; }

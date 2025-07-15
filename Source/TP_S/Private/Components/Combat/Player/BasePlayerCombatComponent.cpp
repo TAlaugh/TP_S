@@ -316,17 +316,28 @@ FGameplayTag UBasePlayerCombatComponent::GetEquippedMeleeTag() const
 	return CurrentEquippedMeleeWeaponTag;
 }
 
+ABasePlayerWeapon* UBasePlayerCombatComponent::GetEquippedMeleeWeaponClass() const
+{
+	if (PlayerWeaponMap.Contains(CurrentEquippedMeleeWeaponTag))
+	{
+		ABasePlayerWeapon* Weapon = PlayerWeaponMap[CurrentEquippedMeleeWeaponTag];
+		return Weapon ? Weapon : nullptr;
+	}
+	return nullptr;
+}
+
 FGameplayTag UBasePlayerCombatComponent::GetEquippedRangeTag() const
 {
 	return CurrentEquippedRangeWeaponTag;
 }
 
-// Debug용 입니다. 지워도 무방
-void UBasePlayerCombatComponent::BeginPlay()
+ABasePlayerWeapon* UBasePlayerCombatComponent::GetEquippedRangeWeaponClass() const
 {
-	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("Current Melee Tag: %s"), *CurrentEquippedMeleeWeaponTag.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Current Range Tag: %s"), *CurrentEquippedRangeWeaponTag.ToString());
+	if (PlayerWeaponMap.Contains(CurrentEquippedRangeWeaponTag))
+	{
+		ABasePlayerWeapon* Weapon = PlayerWeaponMap[CurrentEquippedRangeWeaponTag];
+		return Weapon ? Weapon : nullptr;
+	}
+	return nullptr;
 }
 
