@@ -19,8 +19,9 @@ class TP_S_API AEnemyCharacter_Lianhuo : public ABaseEnemyCharacter,  public IBa
 {
 	GENERATED_BODY()
 
+
 public:
-	AEnemyCharacter_Lianhuo();
+	AEnemyCharacter_Lianhuo(const FObjectInitializer& ObjectInitializer);
 	virtual UBaseUIComponent* GetBaseUIComponent() const override;
 	virtual UEnemyUIComponent* GetEnemyUIComponent() const override;
 protected:
@@ -39,7 +40,5 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-
-
 	
 };

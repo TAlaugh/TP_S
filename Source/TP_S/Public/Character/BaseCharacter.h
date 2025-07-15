@@ -20,7 +20,7 @@ class TP_S_API ABaseCharacter : public ACharacter, public IAbilitySystemInterfac
 
 public:
 	// Sets default values for this character's properties
-	ABaseCharacter();
+	ABaseCharacter(const FObjectInitializer& ObjectInitializer);
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	

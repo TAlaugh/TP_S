@@ -105,6 +105,9 @@ public:
 	FGameplayTag GetEquippedMeleeTag() const;
 	
 	FGameplayTag GetEquippedRangeTag() const;
+
+	UFUNCTION()
+	void UpdateAnimLayer();
 	
 	// Debug용도 // 지워도 무방함
 	virtual void BeginPlay() override;
@@ -119,4 +122,7 @@ protected:
 
 	UPROPERTY()
 	ABasePlayerCharacter* OwnerPlayer;
+
+	UPROPERTY()
+	TSubclassOf<UAnimInstance> CombatLayer;
 };

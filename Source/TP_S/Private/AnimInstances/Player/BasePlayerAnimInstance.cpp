@@ -3,14 +3,36 @@
 
 #include "AnimInstances/Player/BasePlayerAnimInstance.h"
 
-#include <string>
-
 #include "DebugHelper.h"
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "KismetAnimationLibrary.h"
+#include "Components/Movement/PlayerMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Misc/DataValidation.h"
+
+UBasePlayerAnimInstance::UBasePlayerAnimInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+}
+
+void UBasePlayerAnimInstance::InitializeWithAbilitySystem(UBaseAbilitySystemComponent* ASC)
+{
+	check(ASC);
+
+	GameplayTagPropertyMap.Initialize(this, ASC);
+}
+
+#if WITH_EDITOR
+EDataValidationResult UBasePlayerAnimInstance::IsDataValid(class FDataValidationContext& Context) const
+{
+	Super::IsDataValid(Context);
+
+	GameplayTagPropertyMap.IsDataValid(this, Context);
+
+	return ((Context.GetNumErrors() > 0) ? EDataValidationResult::Invalid : EDataValidationResult::Valid);
+}
+#endif
 
 void UBasePlayerAnimInstance::NativeInitializeAnimation()
 {
@@ -19,6 +41,13 @@ void UBasePlayerAnimInstance::NativeInitializeAnimation()
 	if (OwningCharacter != nullptr)
 	{
 		OwningPlayerCharacter = Cast<ABasePlayerCharacter>(OwningCharacter); 
+	}
+	if (OwningPlayerCharacter)
+	{
+		if (UBaseAbilitySystemComponent* ASC = UBaseFunctionLibrary::NativeGetBaseASCFromActor(OwningPlayerCharacter))
+		{
+			InitializeWithAbilitySystem(ASC);
+		}
 	}
 }
 
@@ -72,5 +101,8 @@ void UBasePlayerAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds
 		}
 
 		CachedLocomotionDirection = LocomotionDirection;
+		UPlayerMovementComponent* CharMoveComp = CastChecked<UPlayerMovementComponent>(OwningPlayerCharacter->GetCharacterMovement());
+		const FPlayerGroundInfo& GroundInfo = CharMoveComp->GetGroundInfo();
+		GroundDistance = GroundInfo.GroundDistance;
 	}
 }

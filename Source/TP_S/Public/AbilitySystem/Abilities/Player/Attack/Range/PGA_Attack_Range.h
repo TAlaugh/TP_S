@@ -23,6 +23,8 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	virtual void HandleApplyDamage(FGameplayEventData Data) override;
+	virtual void DirectionFix(bool bCan) override;
+	
 	UPROPERTY()
 	UAT_Attack_Range_Fire* FireTask;
 	

@@ -3,14 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BasePlayerAnimInstance.h"
+#include "AnimInstances/BaseAnimInstance.h"
 #include "BasePlayerLinkedAnimLayer.generated.h"
 
+class UBasePlayerAnimInstance;
 /**
  * 
  */
 UCLASS()
-class TP_S_API UBasePlayerLinkedAnimLayer : public UBasePlayerAnimInstance
+class TP_S_API UBasePlayerLinkedAnimLayer : public UBaseAnimInstance
 {
 	GENERATED_BODY()
 
