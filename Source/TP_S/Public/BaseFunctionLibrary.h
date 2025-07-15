@@ -25,7 +25,7 @@ class TP_S_API UBaseFunctionLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
-	static UBaseAbilitySystemComponent* NativeGetBaseASCFromActor(AActor*  InActor);
+	static UBaseAbilitySystemComponent* NativeGetBaseASCFromActor(AActor* InActor);
 	
 	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary")
 	static void AddGameplayTagToActorIfNone(AActor* InActor,FGameplayTag TagToAdd);

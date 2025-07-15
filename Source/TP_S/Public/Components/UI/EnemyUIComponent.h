@@ -6,6 +6,7 @@
 #include "Components/UI/BaseUIComponent.h"
 #include "EnemyUIComponent.generated.h"
 
+class UWidgetBase;
 /**
  * 
  */
@@ -13,4 +14,5 @@ UCLASS()
 class TP_S_API UEnemyUIComponent : public UBaseUIComponent
 {
 	GENERATED_BODY()
+	
 };

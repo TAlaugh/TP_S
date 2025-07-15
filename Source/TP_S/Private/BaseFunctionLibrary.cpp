@@ -15,26 +15,18 @@ UBaseAbilitySystemComponent* UBaseFunctionLibrary::NativeGetBaseASCFromActor(AAc
 {
 	if (!InActor)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("NativeGetBaseASCFromActor: InActor is nullptr!"));
 		return nullptr;
 	}
+	
+	//UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
 
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
-	if (!ASC)
-	{
-		return nullptr;
-	}
-
-	return Cast<UBaseAbilitySystemComponent>(ASC);
+	return CastChecked<UBaseAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor));
 }
 
 void UBaseFunctionLibrary::AddGameplayTagToActorIfNone(AActor* InActor, FGameplayTag TagToAdd)
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
-
-	if (!ASC)
-	{
-		return;
-	}
 
 	if (!ASC->HasMatchingGameplayTag(TagToAdd))
 	{
@@ -45,12 +37,7 @@ void UBaseFunctionLibrary::AddGameplayTagToActorIfNone(AActor* InActor, FGamepla
 void UBaseFunctionLibrary::RemoveGameplayTagFromActorIfFound(AActor* InActor, FGameplayTag TagToRemove)
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
-
-	if (!ASC)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("RemoveGameplayTagFromActorIfFound: ASC is nullptr!"));
-		return;
-	}
+	
 
 	if (ASC->HasMatchingGameplayTag(TagToRemove))
 	{
@@ -62,12 +49,6 @@ bool UBaseFunctionLibrary::NativeDoesActorHaveTag(AActor* InActor, FGameplayTag 
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
 
-	if (!ASC)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("NativeDoesActorHaveTag: ASC is nullptr!"));
-		return false;
-	}
-	
 	return ASC->HasMatchingGameplayTag(TagToCheck);
 }
 
@@ -79,7 +60,7 @@ void UBaseFunctionLibrary::BP_DoesActorHaveTag(AActor* InActor, FGameplayTag Tag
 
 UBaseCombatComponent* UBaseFunctionLibrary::NativeGetBaseCombatComponentFromActor(AActor* Actor)
 {
-	//check(Actor);
+	check(Actor);
 
 	if (IBaseCombatInterface* BaseCombatInterface = Cast<IBaseCombatInterface>(Actor))
 	{

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseEnemyCharacter.h"
+#include "Components/UI/EnemyUIcomponent.h"
 #include "EnemyCharacter_Lianhuo.generated.h"
 
 struct FInputActionValue;
@@ -14,13 +15,16 @@ class UCameraComponent;
  * 
  */
 UCLASS()
-class TP_S_API AEnemyCharacter_Lianhuo : public ABaseEnemyCharacter
+class TP_S_API AEnemyCharacter_Lianhuo : public ABaseEnemyCharacter,  public IBaseUIInterface
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	AEnemyCharacter_Lianhuo();
-
+	virtual UBaseUIComponent* GetBaseUIComponent() const override;
+	virtual UEnemyUIComponent* GetEnemyUIComponent() const override;
+protected:
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (AllowPrivateAccess = "true"))
@@ -35,5 +39,7 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+
 	
 };
