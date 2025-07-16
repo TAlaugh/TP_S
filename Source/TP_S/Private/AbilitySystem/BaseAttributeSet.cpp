@@ -12,8 +12,8 @@
 
 UBaseAttributeSet::UBaseAttributeSet()
 {
-	InitCurrentHp(1.f);
-	InitMaxHp(1.f);
+	InitMaxHp(100.f);
+	InitCurrentHp(100.f);
 	// InitCurrentMp(1.f);
 	// InitMaxMp(1.f);
 	InitAttack(1.f);

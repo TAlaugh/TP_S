@@ -7,9 +7,11 @@
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
+#include "Character/Enemy/BaseEnemyCharacter.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "Character/Enemy/BaseEnemyCharacter.h"
 #include  "Items/Weapons/BaseWeapon.h"
+#include "Components/BoxComponent.h"
 
 void UEnemyCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, ABaseWeapon* Weapon,
 	bool bRegisterAsEquippedWeapon)

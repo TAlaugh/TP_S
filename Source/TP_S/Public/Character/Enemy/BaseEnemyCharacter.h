@@ -17,23 +17,39 @@ class UEnemyCombatComponent;
 class UBaseCombatComponent;
 class UMotionWarpingComponent;
 class UWidgetComponent;
-
+class UBoxComponent;
 /**
  * 
  */
 UCLASS()
-class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
+class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterface 
 {
 	GENERATED_BODY()
 
 
 	public:
 	ABaseEnemyCharacter(const FObjectInitializer& ObjectInitializer);
-
+	
+	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
+	virtual UBaseUIComponent* GetBaseUIComponent() const override;
+	virtual UEnemyUIComponent* GetEnemyUIComponent() const override;
+	
+	
+	
 	protected:
 
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty( struct FPropertyChangedEvent& PropertyChangedEvent ) override;
+#endif
+	
+	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;
+
+#if WITH_EDITOR
+	//게임내에서 캐릭터 본네임으로 바꾸는거
+	//uobject에서 인터페이스에서 시작해서
+	virtual void PostEditChangeProperty( struct FPropertyChangedEvent& PropertyChangedEvent) override;
+	//uobject 인터페이스에서 끝
 #endif
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="MotionWarping")
