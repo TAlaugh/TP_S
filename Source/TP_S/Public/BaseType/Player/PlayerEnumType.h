@@ -35,3 +35,20 @@ enum class EPlayerState : uint8
 	Slide	UMETA(DisplayName = "Slide"),
 	Dodge	UMETA(DisplayName = "Dodge"),
 };
+
+UENUM(BlueprintType)
+enum class EAnimEnumCardinalDirection : uint8
+{
+	Forward		UMETA(DisplayName = "Forward"),
+	Backward	UMETA(DisplayName = "Backward"),
+	Left		UMETA(DisplayName = "Left"),
+	Right		UMETA(DisplayName = "Right"),
+};
+
+UENUM(BlueprintType)
+enum class EAnimEnum_RootYawOffsetMode : uint8
+{
+	BlendOut	UMETA(DisplayName = "BlendOut"),
+	Hold		UMETA(DisplayName = "Hold"),
+	Accumulate	UMETA(DisplayName = "Accumulate"),
+};

@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/Player/Attack/Range/PGA_Attack_Range.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
@@ -75,13 +76,15 @@ void UPGA_Attack_Range::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 	}
 	DirectionFix(false);
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	GetPlayerCombatComponentFromActorInfo()->UpdateAnimLayer();
 }
 
 void UPGA_Attack_Range::HandleApplyDamage(FGameplayEventData Data)
 {
 	Super::HandleApplyDamage(Data);
 	AActor* TargetActor = const_cast<AActor*>(Data.Target.Get());
-	if (IsValid(TargetActor))
+	UAbilitySystemComponent* ASC1 = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	if (IsValid(TargetActor) && ASC1)
 	{
 		TSubclassOf<UGameplayEffect> Effect = UGE_DealDamage::StaticClass();
 		float BaseDamage = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeaponDamageAtLevel(GetAbilityLevel());
@@ -121,9 +124,6 @@ void UPGA_Attack_Range::HandleFire()
 			Data.Target = Hit.GetActor();
 			HandleApplyDamage(Data);
 		}
-
-		//UE_LOG(LogTemp, Warning, TEXT("Current AnimInstance Class: %s"), CachedPlayerCharacter->GetMesh()->GetAnimInstance()->GetClass()->GetName());
-		Debug::Print(CachedPlayerCharacter->GetMesh()->GetAnimInstance()->GetClass()->GetName());
 	}
 }
 

@@ -66,7 +66,6 @@ void UPlayerGameplayAbility_Jump::Jump()
 
 void UPlayerGameplayAbility_Jump::SecondJump()
 {
-	Debug::Print(TEXT("%d"), GetPlayerCharacterFromActorInfo()->JumpCount);
 	if (GetPlayerCharacterFromActorInfo()->JumpCount >= 2)
 	{
 		OnCompleteCallback();
