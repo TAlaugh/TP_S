@@ -15,7 +15,7 @@ UCLASS()
 class TP_S_API UBaseUIComponent : public UBaseExtensionComponent
 {
 	GENERATED_BODY()
-	
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnPercentChangeDelegate OnCurrentHpChanged;

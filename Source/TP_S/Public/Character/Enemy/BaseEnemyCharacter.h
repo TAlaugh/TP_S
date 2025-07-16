@@ -37,6 +37,10 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	
 	
 	protected:
+
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty( struct FPropertyChangedEvent& PropertyChangedEvent ) override;
+#endif
 	
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
@@ -57,20 +61,20 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
 	UEnemyCombatComponent* EnemyCombatComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
-	UBaseCombatComponent* BaseCombatComponent;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
 	UBoxComponent* LeftHandCollisionBox;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
 	FName LeftHandCollisionBoxAttachBoneName;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
 	UBoxComponent* RightHandCollisionBox;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
 	FName RightHandCollisionBoxAttachBoneName;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
+	UBaseCombatComponent* BaseCombatComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UEnemyUIComponent* EnemyUIComponent;
@@ -79,15 +83,16 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	UWidgetComponent* EnemyHealthWidgetComponent;
 
 	UFUNCTION()
-	virtual void OnBodyCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-				UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;
+	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
+	virtual UBaseUIComponent* GetBaseUIComponent() const; //override;
+	virtual UEnemyUIComponent* GetEnemyUIComponent() const;// override;
 	
-
-
-
 
 private:
-	
 	void InitEnemyStartUpData();
 
 public:

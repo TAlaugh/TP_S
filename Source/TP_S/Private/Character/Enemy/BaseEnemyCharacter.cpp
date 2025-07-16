@@ -5,6 +5,7 @@
 
 #include "TP_S/Public/Character/Enemy/BaseEnemyCharacter.h"
 
+#include "BaseFunctionLibrary.h"
 #include "DebugHelper.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/BaseAttributeSet.h"
@@ -21,6 +22,8 @@
 #include "Widget/WidgetBase.h"
 #include "Components/BoxComponent.h"
 #include "BaseFunctionLibrary.h"
+
+#include "Misc/MapErrors.h"
 
 
 ABaseEnemyCharacter::ABaseEnemyCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -42,31 +45,61 @@ ABaseEnemyCharacter::ABaseEnemyCharacter(const FObjectInitializer& ObjectInitial
 	EnemyHealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyHealthWidgetComponent"));
 	EnemyHealthWidgetComponent->SetupAttachment(GetMesh());
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
-
+	
 	LeftHandCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("LeftHandCollisionBox"));
 	LeftHandCollisionBox->SetupAttachment(GetMesh());
 	LeftHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	LeftHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this,&ThisClass::OnBodyCollisionBeginOverlap);
-	
+	LeftHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
 
 	RightHandCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("RightHandCollisionBox"));
 	RightHandCollisionBox->SetupAttachment(GetMesh());
 	RightHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	RightHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this,&ThisClass::OnBodyCollisionBeginOverlap);
+	RightHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
+}
+
+void ABaseEnemyCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+
+	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, LeftHandCollisionBoxAttachBoneName))
+	{
+		LeftHandCollisionBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, LeftHandCollisionBoxAttachBoneName);
+	}
+
+	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, RightHandCollisionBoxAttachBoneName))
+	{
+		RightHandCollisionBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, RightHandCollisionBoxAttachBoneName);
+	}
 }
 
 
+void ABaseEnemyCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                                         UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (APawn* HitPawn = Cast<APawn>(OtherActor))
+	{
+		if (UBaseFunctionLibrary::IsTargetPawnHostile(this, HitPawn))
+		{
+			EnemyCombatComponent->OnHitTargetActor(HitPawn);
+		}
+	}
+}
 
 void ABaseEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	if (!EnemyUIComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("EnemyUIComponent is null!"));
+		return;
+	}
+	
 	if (BaseAbilitySystemComponent && !BaseAbilitySystemComponent->AbilityActorInfo.IsValid())
 	{
-		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
-		UE_LOG(LogTemp, Warning, TEXT("[ASC] Enemy Init in BeginPlay %s"), *GetName());
+		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this); // 백업 Init
 	}
+
 	
 	if (UWidgetBase* HealthWidget = Cast<UWidgetBase>(EnemyHealthWidgetComponent->GetUserWidgetObject()))
 	{
@@ -126,7 +159,7 @@ UBaseUIComponent* ABaseEnemyCharacter::GetBaseUIComponent() const
 
 UEnemyUIComponent* ABaseEnemyCharacter::GetEnemyUIComponent() const
 {
-	return EnemyUIComponent;
+	return Cast<UEnemyUIComponent>(EnemyUIComponent);
 }
 
 void ABaseEnemyCharacter::OnBodyCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
