@@ -15,7 +15,7 @@ class UCameraComponent;
  * 
  */
 UCLASS()
-class TP_S_API AEnemyCharacter_Lianhuo : public ABaseEnemyCharacter,  public IBaseUIInterface
+class TP_S_API AEnemyCharacter_Lianhuo : public ABaseEnemyCharacter//,  public IBaseUIInterface
 {
 	GENERATED_BODY()
 

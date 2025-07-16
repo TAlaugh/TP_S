@@ -7,8 +7,10 @@
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
+#include "Character/Enemy/BaseEnemyCharacter.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include  "Items/Weapons/BaseWeapon.h"
+#include "Components/BoxComponent.h"
 
 void UEnemyCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, ABaseWeapon* Weapon,
 	bool bRegisterAsEquippedWeapon)
@@ -56,28 +58,13 @@ void UEnemyCombatComponent::ToggleWeaponCollision(bool bUse, EToggleDamageType T
 {
 	if (ToggleDamageType == EToggleDamageType::CurrentEquippedWeapon)
 	{
-		ABaseWeapon* Weapon = GetCharacterCurrentEquippedWeapon();
-		check(Weapon);
-		
-		if (bUse)
-		{
-			OverlappedActors.Empty();
-			Weapon->SetCollisionActive(false);
-			
-			Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-			UE_LOG(LogTemp, Warning, TEXT("Collision Enabled"));
-		}
-		
-		else
-		{
-			Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			UE_LOG(LogTemp, Warning, TEXT(" Collision Disabled"));
-			
-		}
-
-		
+		ToggleCurrentEquippedWeaponCollision(bUse);
 	}
 
+	else
+	{
+		ToggleBodyCollisionBoxCollision(bUse,ToggleDamageType);
+	}
 	
 }
 
@@ -129,7 +116,11 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	// 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_MeleeHit, EventData);
 	// }
 
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit_Melee, EventData);
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+	   GetOwningPawn(),
+	   BaseGamePlayTags::Shared_Event_Hit_Melee,
+	   EventData
+   );
 	
 }
 
@@ -139,5 +130,57 @@ void UEnemyCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActo
 	if (InteractedActor)
 	{
 		OverlappedActors.Remove(InteractedActor);  // 겹침 해제되면 리스트에서 제거
+	}
+}
+
+void UEnemyCombatComponent::ToggleCurrentEquippedWeaponCollision(bool bUse)
+{
+	ABaseWeapon* Weapon = GetCharacterCurrentEquippedWeapon();
+	check(Weapon);
+		
+	if (bUse)
+	{
+		OverlappedActors.Empty();
+		Weapon->SetCollisionActive(false);
+			
+		Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		UE_LOG(LogTemp, Warning, TEXT("Collision Enabled"));
+	}
+		
+	else
+	{
+		Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		UE_LOG(LogTemp, Warning, TEXT(" Collision Disabled"));
+			
+	}
+}
+
+void UEnemyCombatComponent::ToggleBodyCollisionBoxCollision(bool bUse, EToggleDamageType ToggleDamageType)
+{
+	
+	
+	ABaseEnemyCharacter* OwningEnemyCharacter = GetOwningPawn<ABaseEnemyCharacter>();
+
+	check(OwningEnemyCharacter);
+
+	UBoxComponent* LeftHandCollisionBox = OwningEnemyCharacter->GetLeftHandCollisionBox();
+	UBoxComponent* RightHandCollisionBox = OwningEnemyCharacter->GetRightHandCollisionBox();
+
+	check(LeftHandCollisionBox && RightHandCollisionBox);
+
+	switch (ToggleDamageType)
+	{
+	case EToggleDamageType::LeftHand:
+		LeftHandCollisionBox->SetCollisionEnabled(bUse? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		break;
+	case EToggleDamageType::RightHand:
+		RightHandCollisionBox->SetCollisionEnabled(bUse? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		break;
+	default:
+		break;
+	}
+	if (!bUse)
+	{
+		OverlappedActors.Empty(); 
 	}
 }
