@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "BasePlayerController.generated.h"
 
+class APreviewPlayerCharacter;
 class UBasePlayerCombatComponent;
 class UHUDWidget;
 class UQuickSlotComponent;
@@ -31,6 +32,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UHUDWidget* GetPlayerHUDWidget() const { return PlayerHUDWidget; }
+
+	UPROPERTY()
+	APreviewPlayerCharacter* PreviewCharacter;
 	
 private:
 	FGenericTeamId TeamId;
@@ -47,6 +51,8 @@ protected:
 	void ShowInventory();
 	void HideInventory();
 
+	void SpawnPreviewCharacter();
+	
 	// 퀵슬롯 사용
 	void OnUseQuickSlot(const FInputActionValue& Value);
 
@@ -70,6 +76,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> PlayerHUDClass;
+
+	UPROPERTY(EditAnywhere, Category = "Preview")
+	TSubclassOf<APreviewPlayerCharacter> PreviewCharacterClass;
 	
 private:
 	UPROPERTY()
