@@ -116,6 +116,9 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Melee,"Enemy.Ability.Melee")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Ranged,"Enemy.Ability.Ranged")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill,"Enemy.Ability.Skill")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_SpawnSkill,"Enemy.Ability.Skill.Lianhuo.SpawnSkill")
+
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnSkill, "Enemy.Event.SpawnSkill")
 	
 	// Enemy Status
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_Strafing,"Enemy.Status.Strafing")

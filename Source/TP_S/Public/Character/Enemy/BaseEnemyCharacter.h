@@ -31,6 +31,10 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 	ABaseEnemyCharacter(const FObjectInitializer& ObjectInitializer);
 
 	protected:
+
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty( struct FPropertyChangedEvent& PropertyChangedEvent ) override;
+#endif
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="MotionWarping")
 	UMotionWarpingComponent* MotionWarpingComponent;
@@ -38,27 +42,38 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="StartupData")
 	TSoftObjectPtr<UDataAsset_StartupBase> StartupData;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
 	UEnemyCombatComponent* EnemyCombatComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
+	UBoxComponent* LeftHandCollisionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
+	FName LeftHandCollisionBoxAttachBoneName;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
+	UBoxComponent* RightHandCollisionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
+	FName RightHandCollisionBoxAttachBoneName;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
 	UBaseCombatComponent* BaseCombatComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
-	UBaseUIComponent* EnemyUIComponent;
+	UEnemyUIComponent* EnemyUIComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UWidgetComponent* EnemyHealthWidgetComponent;
 
-	
-	
-
+	UFUNCTION()
+	virtual void OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
 	virtual UBaseUIComponent* GetBaseUIComponent() const; //override;
-	virtual UBaseUIComponent* GetEnemyUIComponent() const;// override;
+	virtual UEnemyUIComponent* GetEnemyUIComponent() const;// override;
 	
 
 private:
@@ -66,4 +81,6 @@ private:
 
 public:
 	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const {return EnemyCombatComponent;}
+	FORCEINLINE UBoxComponent* GetLeftHandCollisionBox() const {return LeftHandCollisionBox;}
+	FORCEINLINE UBoxComponent* GetRightHandCollisionBox() const {return RightHandCollisionBox;}
 };

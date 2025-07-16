@@ -32,16 +32,16 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 
 	checkf(CachedUIInterface.IsValid(), TEXT("%s does not Implementation IBaseUIInterface."), *Data.Target.GetAvatarActor()->GetActorLabel());
 	
-	UBaseUIComponent* BaseUIComponent = CachedUIInterface->GetBaseUIComponent();
+	UBaseUIComponent* EnemyUIComponent = CachedUIInterface->GetBaseUIComponent();
 
-	checkf(BaseUIComponent, TEXT("Can not Load BaseUIComponent from %s"), *Data.Target.GetAvatarActor()->GetActorLabel());
+	checkf(EnemyUIComponent, TEXT("Can not Load BaseUIComponent from %s"), *Data.Target.GetAvatarActor()->GetActorLabel());
 	
 	if (Data.EvaluatedData.Attribute == GetCurrentHpAttribute())
 	{
 		const float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.0f, GetMaxHp());
 		SetCurrentHp(NewCurrentHp);
 
-		BaseUIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+		EnemyUIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
 	}
 
 	// if (Data.EvaluatedData.Attribute == GetCurrentMpAttribute())
@@ -68,7 +68,7 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 		Debug::Print(DebugString, FColor::Green);
 		
 		// TODO:: Ui에 값을 전달
-		BaseUIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+		EnemyUIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
 
 		//Character Death Process
 		if (NewCurrentHp == 0.0f)
