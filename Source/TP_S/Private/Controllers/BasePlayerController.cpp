@@ -7,15 +7,18 @@
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/Player/BasePlayerCharacter.h"
+#include "Character/Player/PreviewPlayerCharacter.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
 #include "Items/Inventory/InventoryMainWidget.h"
 #include "Items/Inventory/QuickSlotWidget.h"
+#include "Kismet/GameplayStatics.h"
 #include "Widget/HUDWidget.h"
 
 ABasePlayerController::ABasePlayerController()
 {
 	bShowMouseCursor = false;
+	bShouldPerformFullTickWhenPaused = true;
 	TeamId = FGenericTeamId(0);
 }
 
@@ -122,8 +125,13 @@ void ABasePlayerController::ShowInventory()
 		InventoryWidget->AddToViewport();
 	}
 
+	if (PlayerHUDWidget && PlayerHUDWidget->IsInViewport())
+	{
+		PlayerHUDWidget->RemoveFromParent();
+	}
+	
 	InventoryWidget->Refresh();
-
+	
 	FInputModeGameAndUI Mode;
 	Mode.SetWidgetToFocus(InventoryWidget->TakeWidget());
 	Mode.SetHideCursorDuringCapture(false);
@@ -131,6 +139,17 @@ void ABasePlayerController::ShowInventory()
 
 	bShowMouseCursor = true;
 	bInventoryOpen = true;
+
+	// UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.01f);
+	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	
+	SpawnPreviewCharacter();
+
+	if (PreviewCharacter)
+	{
+		SetViewTargetWithBlend(PreviewCharacter, 0.0f);
+		PreviewCharacter->PlayEnterMontage();
+	}
 }
 
 void ABasePlayerController::HideInventory()
@@ -141,6 +160,43 @@ void ABasePlayerController::HideInventory()
 	SetInputMode(FInputModeGameOnly());
 	bShowMouseCursor = false;
 	bInventoryOpen = false;
+
+	// UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.f);
+	// PreviewCharacter->CustomTimeDilation = 1.f;
+
+	UGameplayStatics::SetGamePaused(GetWorld(), false);
+	
+	if (PreviewCharacter)
+	{
+		PreviewCharacter->Destroy();
+		PreviewCharacter = nullptr;
+	}
+
+	if (PlayerHUDWidget)
+	{
+		PlayerHUDWidget->AddToViewport();
+	}
+}
+
+void ABasePlayerController::SpawnPreviewCharacter()
+{
+	if (!PreviewCharacterClass) return;
+
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FVector PreviewSpawnLocation(0.f, 0.f, 1000.f);
+	FRotator PreviewSpawnRotation = FRotator::ZeroRotator;
+	
+	// FVector PreviewSpawnLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	// FRotator PreviewSpawnRotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
+
+	PreviewCharacter = GetWorld()->SpawnActor<APreviewPlayerCharacter>(PreviewCharacterClass, PreviewSpawnLocation, PreviewSpawnRotation, Params);
+
+	if (ABasePlayerCharacter* PlayerChar = Cast<ABasePlayerCharacter>(GetPawn()))
+	{
+		PreviewCharacter->CopyMeshFromPlayer(PlayerChar);
+	}
 }
 
 void ABasePlayerController::OnUseQuickSlot(const FInputActionValue& Value)

@@ -7,6 +7,7 @@
 #include "DebugHelper.h"
 #include "GenericTeamAgentInterface.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "Character/Player/PreviewPlayerCharacter.h"
 #include "Components/Combat/Enemy/EnemyCombatComponent.h"
 #include "Interfaces/BaseCombatInterface.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -16,6 +17,11 @@ UBaseAbilitySystemComponent* UBaseFunctionLibrary::NativeGetBaseASCFromActor(AAc
 	if (!InActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("NativeGetBaseASCFromActor: InActor is nullptr!"));
+		return nullptr;
+	}
+
+	if (InActor->IsA(APreviewPlayerCharacter::StaticClass()))
+	{
 		return nullptr;
 	}
 	
@@ -49,6 +55,11 @@ bool UBaseFunctionLibrary::NativeDoesActorHaveTag(AActor* InActor, FGameplayTag 
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetBaseASCFromActor(InActor);
 
+	if (InActor->IsA(APreviewPlayerCharacter::StaticClass()))
+	{
+		return false;
+	}
+	
 	return ASC->HasMatchingGameplayTag(TagToCheck);
 }
 

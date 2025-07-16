@@ -4,12 +4,14 @@
 #include "Items/Inventory/InventoryMainWidget.h"
 
 #include "DebugHelper.h"
+#include "Character/Player/PreviewPlayerCharacter.h"
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "Components/SizeBox.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "Components/Inventory/QuickSlotComponent.h"
+#include "Controllers/BasePlayerController.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
 #include "Items/Inventory/InventorySlotWidget.h"
 #include "Items/Inventory/ItemInfoWidget.h"
@@ -124,18 +126,28 @@ void UInventoryMainWidget::HandleSlotClicked(UInventorySlotWidget* Clicked)
 	else if (Item->Category == EInventoryCategory::Melee || Item->Category == EInventoryCategory::Ranged)
 	{
 		FGameplayTag WeaponTag = Item->GetWeaponGameplayTag();
-
+		
 		if (APawn* PlayerPawn = GetOwningPlayerPawn())
 		{
 			if (UBasePlayerCombatComponent* CombatComponent = PlayerPawn->FindComponentByClass<UBasePlayerCombatComponent>())
 			{
+				UWeaponItemDataAsset* Weapon = Cast<UWeaponItemDataAsset>(Item);
+				
+				if (ABasePlayerController* PC = Cast<ABasePlayerController>(GetOwningPlayer()))
+				{
+					if (APreviewPlayerCharacter* Preview = PC->PreviewCharacter)
+					{
+						Preview->AttachWeaponMeshComponent(Weapon->WeaponMesh);
+						Preview->PlayEquipMontage(WeaponTag);
+					}
+				}
+				
 				if (CombatComponent->CurrentEquippedRangeWeaponTag == WeaponTag || CombatComponent->CurrentEquippedMeleeWeaponTag == WeaponTag)
 				{
 					UE_LOG(LogTemp, Warning, TEXT("이미 장착된 무기입니다."));
 					return;
 				}
-				
-				UWeaponItemDataAsset* Weapon = Cast<UWeaponItemDataAsset>(Item);
+
 				CombatComponent->EquipWeaponFromInventory(Weapon->WeaponClass, WeaponTag);
 			}
 		}
