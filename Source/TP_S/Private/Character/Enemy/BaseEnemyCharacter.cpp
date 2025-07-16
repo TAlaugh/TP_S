@@ -129,24 +129,6 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 	InitEnemyStartUpData();
 }
 
-#if WITH_EDITOR
-void ABaseEnemyCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
-{
-	Super::PostEditChangeProperty(PropertyChangedEvent);
-
-	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, LeftHandCollisionBoxAttachBoneName))
-	{
-		LeftHandCollisionBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, LeftHandCollisionBoxAttachBoneName);
-	}
-
-	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, RightHandCollisionBoxAttachBoneName))
-	{
-		RightHandCollisionBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, RightHandCollisionBoxAttachBoneName);
-	}
-}
-
-#endif
-
 UBaseCombatComponent* ABaseEnemyCharacter::GetBaseCombatComponent() const
 {
 	return EnemyCombatComponent;
@@ -160,18 +142,6 @@ UBaseUIComponent* ABaseEnemyCharacter::GetBaseUIComponent() const
 UEnemyUIComponent* ABaseEnemyCharacter::GetEnemyUIComponent() const
 {
 	return Cast<UEnemyUIComponent>(EnemyUIComponent);
-}
-
-void ABaseEnemyCharacter::OnBodyCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (APawn* HitPawn = Cast<APawn>(OtherActor))
-	{
-		if (UBaseFunctionLibrary::IsTargetPawnHostile(this,HitPawn))
-		{
-			EnemyCombatComponent->OnHitTargetActor(HitPawn);
-		}
-	}
 }
 
 void ABaseEnemyCharacter::InitEnemyStartUpData()
