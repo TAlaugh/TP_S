@@ -37,11 +37,6 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	
 	
 	protected:
-
-#if WITH_EDITOR
-	virtual void PostEditChangeProperty( struct FPropertyChangedEvent& PropertyChangedEvent ) override;
-#endif
-	
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -84,13 +79,6 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 
 	UFUNCTION()
 	virtual void OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	virtual void BeginPlay() override;
-	virtual void PossessedBy(AController* NewController) override;
-	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
-	virtual UBaseUIComponent* GetBaseUIComponent() const; //override;
-	virtual UEnemyUIComponent* GetEnemyUIComponent() const;// override;
-	
 
 private:
 	void InitEnemyStartUpData();
