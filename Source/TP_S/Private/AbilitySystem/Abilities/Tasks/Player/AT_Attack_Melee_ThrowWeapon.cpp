@@ -49,14 +49,16 @@ void UAT_Attack_Melee_ThrowWeapon::GameplayEventContainerCallback(FGameplayTag M
 	const FGameplayEventData* Payload)
 {
 	bHasThrow = true;
-	Weapon->K2_DetachFromActor(EDetachmentRule::KeepWorld, EDetachmentRule::KeepRelative);
+	FDetachmentTransformRules Rule(EDetachmentRule::KeepWorld, EDetachmentRule::KeepRelative, EDetachmentRule::KeepWorld, false);	
+	Weapon->DetachFromActor(Rule);
+	Weapon->SetOwner(Player);
+	Weapon->SetInstigator(Player);
 	
 	// 장착중인 무기를 던졌을 경우 태그랑 위치를 컴뱃 컴포넌트에 저장
 	Player->GetPlayerCombatComponent()->WeaponThrownLocation = TargetLocation;
 	Player->GetPlayerCombatComponent()->CurrentThrownWeaponTag = Player->GetPlayerCombatComponent()->CurrentEquippedWeaponTag;
-	Player->GetPlayerCombatComponent()->CurrentEquippedWeaponTag = FGameplayTag();
 	Player->GetPlayerCombatComponent()->ToggleWeaponCollision(true);
-	
+	Player->GetPlayerCombatComponent()->CurrentEquippedWeaponTag = FGameplayTag();
 	Weapon->FindComponentByClass<USkeletalMeshComponent>()->GetAnimInstance()->Montage_Play(Weapon->ItemMontage);
 }
 
@@ -64,9 +66,12 @@ void UAT_Attack_Melee_ThrowWeapon::TickTask(float DeltaTime)
 {
 	if (bHasThrow)
 	{
+		FRotator WeaponRotation = Weapon->GetActorRotation();
+		WeaponRotation.Yaw += 360.f * DeltaTime * InterpSpeed;
 		FVector CurrentLocation = Weapon->GetActorLocation();
 		WeaponLocation = FMath::VInterpTo(CurrentLocation, TargetLocation, GetWorld()->GetDeltaSeconds(), InterpSpeed);
 		Weapon->SetActorLocation(WeaponLocation);
+		
 		
 		if (float Distance = FVector::Dist(CurrentLocation, WeaponLocation) <= 10.f)
 		{

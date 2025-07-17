@@ -25,7 +25,7 @@ void UAT_Attack_Melee_ReceiveWeapon::Activate()
 	if (Player)
 	{
 		FGameplayTag WeaponTag = Player->GetPlayerCombatComponent()->CurrentThrownWeaponTag; 
-		Weapon = Player->GetPlayerCombatComponent()->GetPlayerCarriedWeaponByTag(WeaponTag);
+		Weapon = Player->GetPlayerCombatComponent()->GetPlayerCarriedWeaponByWeaponTag(WeaponTag);
 		PlayerLocation = Player->GetActorLocation();
 		PlayerRotation = UKismetMathLibrary::FindLookAtRotation(PlayerLocation, Player->GetPlayerCombatComponent()->WeaponThrownLocation);
 		Player->SetActorRotation(PlayerRotation);

@@ -65,7 +65,7 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 
 		const FString DebugString =
 			FString::Printf(TEXT("Before Hp: %f, Damage: %f, NewCurrentHp : %f"), BeforeHp, Damage, NewCurrentHp);
-		Debug::Print(DebugString, FColor::Green);
+		//Debug::Print(DebugString, FColor::Green);
 		
 		// TODO:: Ui에 값을 전달
 		EnemyUIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
