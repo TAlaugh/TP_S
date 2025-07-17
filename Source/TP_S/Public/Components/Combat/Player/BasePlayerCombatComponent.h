@@ -38,16 +38,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void RemoveSpawnedWeapon(FGameplayTag WeaponTag, ABasePlayerWeapon* Weapon, FGameplayTag WeaponType);
 
-	// Character's Weapon
+	// 무기 자체 태그를 기준으로 현재 보유중인 무기 반환
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	ABasePlayerWeapon* GetPlayerCarriedWeaponByTag(FGameplayTag WeaponTag) const;
+	ABasePlayerWeapon* GetPlayerCarriedWeaponByWeaponTag(FGameplayTag WeaponTag) const;
 
 	// 현재 장착중인 무기 인스턴스 반환
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	ABasePlayerWeapon* GetPlayerCurrentEquippedWeapon() const;
 
+	// 현재 던진 무기 인스턴스 반환
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	ABasePlayerWeapon* GetPlayerCurrentEquippedWeaponByTag(FGameplayTag WeaponType) const;
+	ABasePlayerWeapon* GetPlayerCurrentThrownWeapon() const;
+
+	// 아이템 타입을 기준으로 현재 보유중인 무기 반환(Melee : Item_Equipable_Weapon_Melee, Range : Item_Equipable_Weapon_Range)
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	ABasePlayerWeapon* GetPlayerCarriedWeaponByTypeTag(FGameplayTag WeaponType) const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void EquipWeapon(FGameplayTag WeaponType, FName SocketName = FName("hand_rSocket"));
@@ -57,6 +62,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	float GetPlayerCurrentEquippedWeaponDamageAtLevel(float Level) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	float GetPlayerCurrentThrownWeaponDamageAtLevel(float Level) const;
 	
 	// 장착중인 무기의 태그
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
@@ -89,6 +97,24 @@ public:
 	// 무기 콜리전 변경(타격)
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void ToggleWeaponCollision(bool bUse, EPlayerToggleDamageType ToggleDamageType = EPlayerToggleDamageType::CurrentEquippedWeapon);
+
+	UFUNCTION()
+	void SetMultiHitTimer(bool bUse);
+
+	UFUNCTION()
+	bool GetMultiHitTimer() const;
+
+	UPROPERTY()
+	FTimerHandle MultiHitTimer;
+
+	UFUNCTION(BlueprintCallable, Category = "Owner")
+	UBaseAbilitySystemComponent* GetOwnerAbilitySystemComponent() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	UBaseAbilitySystemComponent* GetTargetAbilitySystemComponent(AActor* TargetActor) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void MakePlayerDamageFromComponent(AActor* HitActor, float Level);
 
 	// 인벤토리에서 무기 호출
 	UFUNCTION(BlueprintCallable, Category = "Combat")

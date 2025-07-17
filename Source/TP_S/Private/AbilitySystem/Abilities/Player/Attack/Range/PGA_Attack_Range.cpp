@@ -83,8 +83,9 @@ void UPGA_Attack_Range::HandleApplyDamage(FGameplayEventData Data)
 {
 	Super::HandleApplyDamage(Data);
 	AActor* TargetActor = const_cast<AActor*>(Data.Target.Get());
-	UAbilitySystemComponent* ASC1 = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
-	if (IsValid(TargetActor) && ASC1)
+	
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	if (IsValid(TargetActor) && ASC)
 	{
 		TSubclassOf<UGameplayEffect> Effect = UGE_DealDamage::StaticClass();
 		float BaseDamage = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeaponDamageAtLevel(GetAbilityLevel());
@@ -115,10 +116,14 @@ void UPGA_Attack_Range::HandleFire()
 		TArray<AActor*> Ignores;
 		FVector Start = GetPlayerCharacterFromActorInfo()->GetCameraComponent()->GetComponentLocation();
 		FVector End = Start + GetPlayerCharacterFromActorInfo()->GetCameraComponent()->GetForwardVector() * 1000;
-		TArray<FHitResult> Hits;
-		UKismetSystemLibrary::LineTraceMulti(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false, Ignores, EDrawDebugTrace::ForDuration, Hits, true);
+		FHitResult Hit;
+		// 충돌체 판별(지형지물만)
+		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+		ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_Pawn));
+		ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldDynamic));
+		UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, ObjectTypes, false, Ignores, EDrawDebugTrace::None, Hit, true);
 
-		for (const FHitResult& Hit : Hits)
+		if (IsValid(Hit.GetActor()))
 		{
 			FGameplayEventData Data = FGameplayEventData();
 			Data.Target = Hit.GetActor();
