@@ -22,6 +22,8 @@ ABaseWeapon::ABaseWeapon()
 	//Overlap Connect
 	WeaponCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ABaseWeapon::OnCollisionBoxBeginOverlap);
 	WeaponCollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &ABaseWeapon::OnCollisionBoxEndOverlap);
+
+	WeaponMesh->SetHiddenInSceneCapture(true);
 }
 
 void ABaseWeapon::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

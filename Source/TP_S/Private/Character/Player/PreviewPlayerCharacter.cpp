@@ -51,7 +51,7 @@ APreviewPlayerCharacter::APreviewPlayerCharacter()
 	SceneCapture->bCaptureEveryFrame = true;
 	SceneCapture->bCaptureOnMovement = false;
 	SceneCapture->SetTickableWhenPaused(true);
-	SceneCapture->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
+	SceneCapture->CaptureSource = ESceneCaptureSource::SCS_SceneColorHDR;
 	// SceneCapture->PrimitiveRenderMode = ESceneCapturePrimitiveRenderMode::PRM_UseShowOnlyList;
 	SceneCapture->TextureTarget = RenderTarget;
 	SceneCapture->SetRelativeRotation(FRotator(-180.f, 0.f, 180.f));

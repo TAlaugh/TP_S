@@ -8,6 +8,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Character/Player/PreviewPlayerCharacter.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/Inventory/PlayerInventoryComponent.h"
 #include "Items/Consumables/ConsumableItemDataAsset.h"
 #include "Items/Inventory/InventoryMainWidget.h"
@@ -185,12 +186,27 @@ void ABasePlayerController::SpawnPreviewCharacter()
 	FActorSpawnParameters Params;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	FVector PreviewSpawnLocation(0.f, 0.f, 1000.f);
-	FRotator PreviewSpawnRotation = FRotator::ZeroRotator;
+	// FVector PreviewSpawnLocation(0.f, 0.f, 1000.f);
+	// FRotator PreviewSpawnRotation = FRotator::ZeroRotator;
 	
-	// FVector PreviewSpawnLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-	// FRotator PreviewSpawnRotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
+	FVector BaseLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	FRotator PreviewSpawnRotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
 
+	FHitResult HitResult;
+	FVector TraceStart = BaseLocation + FVector(0, 0, 50);
+	FVector TraceEnd = BaseLocation - FVector(0, 0, 1000);
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(GetPawn());
+
+	FVector PreviewSpawnLocation = BaseLocation;
+
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_Visibility, QueryParams))
+	{
+		ABasePlayerCharacter* PlayerChar = Cast<ABasePlayerCharacter>(GetPawn());
+		PreviewSpawnLocation.Z = HitResult.ImpactPoint.Z + PlayerChar->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	}
+	
 	PreviewCharacter = GetWorld()->SpawnActor<APreviewPlayerCharacter>(PreviewCharacterClass, PreviewSpawnLocation, PreviewSpawnRotation, Params);
 
 	if (ABasePlayerCharacter* PlayerChar = Cast<ABasePlayerCharacter>(GetPawn()))
