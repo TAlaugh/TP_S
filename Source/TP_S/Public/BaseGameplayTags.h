@@ -125,10 +125,11 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Ranged)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Skill)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Skill_Lianhuo_SpawnSkill)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_SpawnEnemy)
 
-	
+	//Enemy Event
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Event_SpawnSkill)
-
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Event_SpawnEnemy)
 	
 	// Enemy Status
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Status_Strafing)
