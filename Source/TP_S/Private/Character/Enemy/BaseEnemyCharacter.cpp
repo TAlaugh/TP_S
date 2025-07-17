@@ -55,6 +55,8 @@ ABaseEnemyCharacter::ABaseEnemyCharacter(const FObjectInitializer& ObjectInitial
 	RightHandCollisionBox->SetupAttachment(GetMesh());
 	RightHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RightHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
+
+	GetMesh()->SetHiddenInSceneCapture(true);
 }
 
 void ABaseEnemyCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)

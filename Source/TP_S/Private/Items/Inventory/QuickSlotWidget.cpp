@@ -16,7 +16,7 @@ void UQuickSlotWidget::NativeConstruct()
 	{
 		if (auto* QuickSlotComponent = P->FindComponentByClass<UQuickSlotComponent>())
 		{
-			QuickSlotComponent->OnQuickSlotChanged.AddDynamic(this, &UQuickSlotWidget::Update);
+			// 	QuickSlotComponent->OnQuickSlotChanged.AddDynamic(this, &UQuickSlotWidget::Update);
 			Update(QuickSlotComponent->GetData());
 		}
 	}
