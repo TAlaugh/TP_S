@@ -132,8 +132,14 @@ void UEnemyCombatComponent::ToggleCurrentEquippedWeaponCollision(bool bShouldEna
 {
 	ABaseWeapon* WeaponToToggle = GetCharacterCurrentEquippedWeapon();
 	
-	check(WeaponToToggle);
-		
+	//check(WeaponToToggle);
+	
+	if (!IsValid(WeaponToToggle)) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No weapon equipped! Skipping weapon collision toggle."));
+		return;
+	}
+
 	if (bShouldEnable)
 	{
 		WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -180,4 +186,5 @@ void UEnemyCombatComponent::ToggleBodyCollisionBoxCollision(bool bShouldEnable, 
 	{
 		OverlappedActors.Empty();
 	}
+	
 }
