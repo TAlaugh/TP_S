@@ -8,6 +8,7 @@
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
+#include "AbilitySystem/Effects/GE/GE_DealDamage.h"
 #include "AnimInstances/Player/BasePlayerLinkedAnimLayer.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
@@ -88,7 +89,7 @@ void UBasePlayerCombatComponent::RemoveSpawnedWeapon(FGameplayTag WeaponTag, ABa
 }
 
 // 플레이어가 소지하고 있는 무기를 태그로 검색
-ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCarriedWeaponByTag(FGameplayTag WeaponTag) const
+ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCarriedWeaponByWeaponTag(FGameplayTag WeaponTag) const
 {
 	if (PlayerWeaponMap.Contains(WeaponTag))
 	{
@@ -109,11 +110,21 @@ ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeapon() 
 		return nullptr;
 	}
 
-	return GetPlayerCarriedWeaponByTag(CurrentEquippedWeaponTag);
+	return GetPlayerCarriedWeaponByWeaponTag(CurrentEquippedWeaponTag);
+}
+
+ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCurrentThrownWeapon() const
+{
+	if (!CurrentThrownWeaponTag.IsValid())
+	{
+		return nullptr;
+	}
+
+	return GetPlayerCarriedWeaponByWeaponTag(CurrentThrownWeaponTag);
 }
 
 // 플레이어가 소지하고 있는 무기를 무기타입의 태그로 검색해서 반환
-ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponByTag(FGameplayTag WeaponType) const
+ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCarriedWeaponByTypeTag(FGameplayTag WeaponType) const
 {
 	if (WeaponType == BaseWeaponTypeMelee && !CurrentEquippedMeleeWeaponTag.IsValid())
 	{
@@ -125,24 +136,24 @@ ABasePlayerWeapon* UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponByT
 		return nullptr;
 	}
 	
-	return GetPlayerCarriedWeaponByTag(WeaponType == BaseWeaponTypeMelee ? CurrentEquippedMeleeWeaponTag : CurrentEquippedRangeWeaponTag);
+	return GetPlayerCarriedWeaponByWeaponTag(WeaponType == BaseWeaponTypeMelee ? CurrentEquippedMeleeWeaponTag : CurrentEquippedRangeWeaponTag);
 }
 
 // 무기 장착(무기타입{근접,원거리} | 소켓)
 void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName SocketName)
 {
-	if (!GetPlayerCurrentEquippedWeaponByTag(WeaponType))
+	if (!GetPlayerCarriedWeaponByTypeTag(WeaponType))
 	{
 		return;
 	}
 
 	// 현재 손에 들고있는 무기랑 장착하려는 무기랑 다른 경우 WeaponType으로 분기해서 미리 장착을 해제하고 다시 Equip
-	if (GetPlayerCurrentEquippedWeapon() != nullptr && GetPlayerCurrentEquippedWeapon() != GetPlayerCurrentEquippedWeaponByTag(WeaponType))
+	if (GetPlayerCurrentEquippedWeapon() != nullptr && GetPlayerCurrentEquippedWeapon() != GetPlayerCarriedWeaponByTypeTag(WeaponType))
 	{
 		UnEquipWeapon(WeaponType == BaseWeaponTypeMelee ? BaseWeaponTypeRange : BaseWeaponTypeMelee);
 	}
 	
-	GetPlayerCurrentEquippedWeaponByTag(WeaponType)->AttachToComponent(
+	GetPlayerCarriedWeaponByTypeTag(WeaponType)->AttachToComponent(
 		GetOwningPawn()->FindComponentByClass<USkeletalMeshComponent>(),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
 		SocketName);
@@ -165,7 +176,7 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName Sock
 // 무기 장착해제(무기타입{근접,원거리})
 void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 {
-	if (!GetPlayerCurrentEquippedWeaponByTag(WeaponType))
+	if (!GetPlayerCarriedWeaponByTypeTag(WeaponType))
 	{
 		return;
 	}
@@ -180,7 +191,7 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 		SocketName = RangeSocketName;
 	}
 	
-	GetPlayerCurrentEquippedWeaponByTag(WeaponType)->AttachToComponent(
+	GetPlayerCarriedWeaponByTypeTag(WeaponType)->AttachToComponent(
 		GetOwningPawn()->FindComponentByClass<USkeletalMeshComponent>(),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
 		SocketName);
@@ -191,7 +202,20 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 // TODO::현재 장착중인 무기의 데미지를 가져옴
 float UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel(float Level) const
 {
-	//return GetPlayerCurrentEquippedWeapon()->data.WeaponBaseDamage.GetValueAtLevel(Level);
+	if (GetPlayerCurrentEquippedWeapon())
+	{
+		return GetPlayerCurrentEquippedWeapon()->ItemDataAsset->BaseDamage; //GetValueAtLevel(Level);
+	}
+	return Level;
+
+}
+
+float UBasePlayerCombatComponent::GetPlayerCurrentThrownWeaponDamageAtLevel(float Level) const
+{
+	if (GetPlayerCurrentThrownWeapon())
+	{
+		return GetPlayerCurrentThrownWeapon()->ItemDataAsset->BaseDamage; //GetValueAtLevel(Level);
+	}
 	return Level;
 }
 
@@ -204,13 +228,22 @@ void UBasePlayerCombatComponent::OnHitTargetActor(AActor* HitActor)
 	}
 
 	OverlappedActors.AddUnique(HitActor);
-	
-	FGameplayEventData Data;
-	Data.Instigator = GetOwningPawn();
-	Data.Target = HitActor;
 
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit, Data);
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_HitReact, FGameplayEventData());
+	if (GetMultiHitTimer())
+	{
+		// 컴포넌트 기반으로 데미지 처리
+		MakePlayerDamageFromComponent(HitActor, 1);
+	}
+	else
+	{
+		// GA 내에서 WaitGameplayEvent로 데미지 처리
+		FGameplayEventData Data;
+		Data.Instigator = GetOwningPawn();
+		Data.Target = HitActor;
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit, Data);
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_HitReact, FGameplayEventData());
+	}
 }
 
 void UBasePlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
@@ -230,15 +263,103 @@ void UBasePlayerCombatComponent::ToggleWeaponCollision(bool bUse, EPlayerToggleD
 			if (bUse)
 			{
 				Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+				// 무기 콜리전이 켜졌을 때 무기투척이면 OnHitTargetActor에서 사용하는 OverlappedActor를 주기적으로 초기화시켜준다.
+				// TODO:: CombatComponent 안에서 데미지 처리하는 것도 필요함.
+				if (CurrentThrownWeaponTag.IsValid())
+				{
+					SetMultiHitTimer(true);
+				}
 			}
 			else
 			{
 				Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				OverlappedActors.Empty();
+				SetMultiHitTimer(false);
 			}
 		}
 	}
 	
+}
+
+void UBasePlayerCombatComponent::SetMultiHitTimer(bool bUse)
+{
+	if (bUse && !MultiHitTimer.IsValid())
+	{
+		GetWorld()->GetTimerManager().SetTimer(
+			MultiHitTimer,
+			FTimerDelegate::CreateLambda([this]()
+			{
+				OverlappedActors.Empty();
+			}),
+			.25f,
+			true);
+	}
+	else
+	{
+		if (MultiHitTimer.IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(MultiHitTimer);
+		}
+	}
+}
+
+bool UBasePlayerCombatComponent::GetMultiHitTimer() const
+{
+	return MultiHitTimer.IsValid();
+}
+
+UBaseAbilitySystemComponent* UBasePlayerCombatComponent::GetOwnerAbilitySystemComponent() const
+{
+	if (OwnerPlayer)
+	{
+		return Cast<UBaseAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwnerPlayer));
+	}
+	return nullptr;
+}
+
+UBaseAbilitySystemComponent* UBasePlayerCombatComponent::GetTargetAbilitySystemComponent(AActor* TargetActor) const
+{
+	if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor))
+	{
+		return Cast<UBaseAbilitySystemComponent>(ASC);
+	}
+	return nullptr;
+}
+
+void UBasePlayerCombatComponent::MakePlayerDamageFromComponent(AActor* HitActor, float Level)
+{
+	TSubclassOf<UGameplayEffect> Effect = UGE_DealDamage::StaticClass();
+	float BaseDamage = GetPlayerCurrentEquippedWeaponDamageAtLevel(Level);
+		
+	//NativeApplyEffectSpecHandleToTarget()
+	UAbilitySystemComponent* TargetASC = GetTargetAbilitySystemComponent(HitActor);
+	if (!TargetASC)
+	{
+		UE_LOG(LogTemp, Error, TEXT("NativeApplyEffectSpecHandleToTarget: ASC is nullptr! TargetActor: %s"), *GetNameSafe(HitActor));
+		return;
+	}
+	UBaseAbilitySystemComponent* OwnerASC = GetOwnerAbilitySystemComponent();
+	if (!OwnerASC)
+	{
+		UE_LOG(LogTemp, Error, TEXT("NativeApplyEffectSpecHandleToTarget: ASC is nullptr! Owner: %s"), *GetNameSafe(OwnerPlayer));
+		return;
+	}
+		
+	FGameplayEffectContextHandle ContextHandle;
+	ContextHandle.AddSourceObject(OwnerPlayer);
+	ContextHandle.AddInstigator(OwnerPlayer, OwnerPlayer);
+
+	FGameplayEffectSpecHandle SpecHandle = OwnerASC->MakeOutgoingSpec(Effect, 1, ContextHandle);
+	SpecHandle.Data->SetSetByCallerMagnitude(BaseGamePlayTags::Shared_SetByCaller_BaseDamage, BaseDamage);
+		
+	if (!SpecHandle.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("NativeApplyEffectSpecHandleToTarget: SpecHandle is invalid!"));
+		return;
+	}
+
+	OwnerASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, TargetASC);
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, BaseGamePlayTags::Shared_Event_HitReact, FGameplayEventData());
 }
 
 // 인벤토리에서 무기 장착(태그, Class 기반)
@@ -252,47 +373,6 @@ void UBasePlayerCombatComponent::EquipWeaponFromInventory(TSubclassOf<ABasePlaye
 	FGameplayEventData Data;
 	Data.OptionalObject = WeaponClass;
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerPlayer, BaseGamePlayTags::Player_Event_Equip, Data);
-
-	return;
-	UBaseAbilitySystemComponent* ASC = UBaseFunctionLibrary::NativeGetBaseASCFromActor(OwnerPlayer);
-	if (!ASC) return;
-	
-	FGameplayTag MeleeWeaponTag = FGameplayTag::RequestGameplayTag(FName("Item.Equipable.Weapon.Melee"));
-	FGameplayTag RangeWeaponTag = FGameplayTag::RequestGameplayTag(FName("Item.Equipable.Weapon.Range"));
-
-	bool bIsMeleeWeapon = WeaponTag.MatchesTag(MeleeWeaponTag);
-	bool bIsRangeWeapon = WeaponTag.MatchesTag(RangeWeaponTag);
-	
-	if (!bIsMeleeWeapon && !bIsRangeWeapon)
-	{
-		//Debug::Print(TEXT("Unknown Weapon Type"));
-		return;
-	}
-
-	FGameplayTag OldTag = bIsMeleeWeapon ? CurrentEquippedMeleeWeaponTag : CurrentEquippedRangeWeaponTag;
-	if (ASC->HasMatchingGameplayTag(OldTag))
-	{
-		ASC->RemoveLooseGameplayTag(OldTag);
-		UnEquipWeapon(bIsMeleeWeapon ? MeleeWeaponTag : RangeWeaponTag);
-	}
-
-	ASC->AddLooseGameplayTag(WeaponTag);
-	if (bIsMeleeWeapon)
-	{
-		CurrentEquippedMeleeWeaponTag = WeaponTag;
-		EquipWeapon(MeleeWeaponTag, FName("hook_1_back_weaponSocket"));
-	}
-	else
-	{
-		CurrentEquippedRangeWeaponTag = WeaponTag;
-		EquipWeapon(RangeWeaponTag, FName("hook_2_back_weaponSocket"));
-	}
-	
-	//UE_LOG(LogTemp, Warning, TEXT("Selected Weapon Tag: %s"), *WeaponTag.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("Current Melee Tag: %s"), *CurrentEquippedMeleeWeaponTag.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("Current Range Tag: %s"), *CurrentEquippedRangeWeaponTag.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("ASC has Melee Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedMeleeWeaponTag) ? TEXT("Yes") : TEXT("No"));
-	//UE_LOG(LogTemp, Warning, TEXT("ASC has Range Tag? %s"), ASC->HasMatchingGameplayTag(CurrentEquippedRangeWeaponTag) ? TEXT("Yes") : TEXT("No"));
 }
 
 // 현재 손에 들고 있는 무기의 Material반환

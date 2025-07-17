@@ -59,7 +59,7 @@ void UPGA_Spawn_Weapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 			Weapon->AttachToComponent(GetPlayerCharacterFromActorInfo()->GetMesh(), Attachment, SocketNameToAttachment);
 
 			// 기존 무기 해제
-			if (ABasePlayerWeapon* CurrentPlayerWeapon = GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->GetPlayerCurrentEquippedWeaponByTag(WeaponType))
+			if (ABasePlayerWeapon* CurrentPlayerWeapon = GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->GetPlayerCarriedWeaponByTypeTag(WeaponType))
 			{
 				FGameplayTag CurrentPlayerWeaponTag = CurrentPlayerWeapon->ItemDataAsset->GetWeaponGameplayTag();
 				GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent()->RemoveSpawnedWeapon(CurrentPlayerWeaponTag, CurrentPlayerWeapon, WeaponType);
