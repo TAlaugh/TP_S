@@ -18,14 +18,20 @@ class TP_S_API ABasePlayerWeapon : public ABaseWeapon
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
 	TObjectPtr<UWeaponItemDataAsset> ItemDataAsset;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
 	TObjectPtr<UAnimMontage> ItemMontage;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
 	FPlayerWeaponData PlayerWeaponData;
+
+	// 콜리전이 붙을 SkeletalMesh의 소켓, 또는 본 네임
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
+	FName CollisionSocketName;
 
 	// 플레이어에게 주입된 무기능력 초기화
 	UFUNCTION()

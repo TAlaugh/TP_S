@@ -5,6 +5,15 @@
 
 #include "BaseFunctionLibrary.h"
 
+void ABasePlayerWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	WeaponCollisionBox->AttachToComponent(
+		WeaponMesh,
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, false),
+		CollisionSocketName);
+}
+
 void ABasePlayerWeapon::AssignGrantedAbilitySpecHandles(const TArray<FGameplayAbilitySpecHandle>& SpecHandles)
 {
 	GrantedAbilitySpecHandles = SpecHandles;
