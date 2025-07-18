@@ -20,6 +20,7 @@ void UPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                     const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                                     const FGameplayEventData* TriggerEventData)
 {
+	RotationSetByAim(true);
 	if (GetPlayerCharacterFromActorInfo())
 	{
 		PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();
@@ -53,6 +54,7 @@ void UPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	RotationSetByAim(false);
 	if (bUnEquipWhenEnd)
 	{
 		UnEquipWeapon();

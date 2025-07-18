@@ -43,7 +43,7 @@ void UPlayerGameplayAbility_Jump::Jump()
 	MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_Idle];
 	JumpX = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().X * 1.f;
 	JumpY = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().Y * 1.f;
-	JumpZ = 740.f;
+	JumpZ = 850.f;
 	
 	if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_Slide))
 	{
@@ -74,9 +74,9 @@ void UPlayerGameplayAbility_Jump::SecondJump()
 	
 	MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_InAir];
 
-	JumpX = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().X * 500.f;
-	JumpY = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().Y * 500.f;
-	JumpZ = 740.f;
+	JumpX = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().X * 300.f;
+	JumpY = GetPlayerCharacterFromActorInfo()->GetActorForwardVector().Y * 300.f;
+	JumpZ = 1000.f;
 	GetPlayerCharacterFromActorInfo()->LaunchCharacter(FVector(JumpX, JumpY, JumpZ), true, true);
 	GetPlayerCharacterFromActorInfo()->JumpCount = 2;
 }
