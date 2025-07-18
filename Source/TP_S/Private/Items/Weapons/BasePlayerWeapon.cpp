@@ -4,6 +4,12 @@
 #include "Items/Weapons/BasePlayerWeapon.h"
 
 #include "BaseFunctionLibrary.h"
+#include "DebugHelper.h"
+
+ABasePlayerWeapon::ABasePlayerWeapon()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
 
 void ABasePlayerWeapon::BeginPlay()
 {
@@ -12,6 +18,25 @@ void ABasePlayerWeapon::BeginPlay()
 		WeaponMesh,
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, false),
 		CollisionSocketName);
+	SetActorTickEnabled(false);
+}
+
+void ABasePlayerWeapon::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (bIsDissolving)
+	{
+		DissolveTimeElapsed += DeltaTime;
+		float DissolveAlpha = FMath::Clamp(DissolveTimeElapsed / DissolveDuration, 0.f, 1.f);
+		WeaponMesh->SetScalarParameterValueOnMaterials(FName("Dissolve Amount"), 1 + DissolveAlpha);
+
+		if (DissolveAlpha >= 1.2f)
+		{
+			bIsDissolving = false;
+			SetActorTickEnabled(false);
+		}
+	}
 }
 
 void ABasePlayerWeapon::AssignGrantedAbilitySpecHandles(const TArray<FGameplayAbilitySpecHandle>& SpecHandles)
@@ -58,5 +83,21 @@ void ABasePlayerWeapon::OnCollisionBoxEndOverlap(UPrimitiveComponent* Overlapped
 		{
 			OnWeaponHitTarget.ExecuteIfBound(OtherActor);
 		}
+	}
+}
+
+void ABasePlayerWeapon::DissolveFXWeapon(bool bDissolve)
+{
+	if (WeaponMesh && bDissolve)
+	{
+		bIsDissolving = true;
+		DissolveTimeElapsed = 0.f;
+		WeaponMesh->SetScalarParameterValueOnMaterials(FName("Dissolve Amount"),1);
+		SetActorTickEnabled(true);
+	}
+	else
+	{
+		SetActorTickEnabled(false);
+		WeaponMesh->SetScalarParameterValueOnMaterials(FName("Dissolve Amount"),3);
 	}
 }
