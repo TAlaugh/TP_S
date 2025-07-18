@@ -15,6 +15,7 @@
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Controllers/BasePlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 UPGA_Attack_Range::UPGA_Attack_Range()
@@ -32,6 +33,10 @@ void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                         const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                         const FGameplayEventData* TriggerEventData)
 {
+	CachedPlayerCameraBoomSocket = GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->SocketOffset;
+	CachedPlayerCameraBoomLength = GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->TargetArmLength; 
+	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->TargetArmLength = 200.0f;
+	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->SocketOffset = FVector(0.f, 55.f, 65.f);
 	DirectionFix(true);
 	RotationSetByAim(true);
 	PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();
@@ -78,6 +83,8 @@ void UPGA_Attack_Range::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 	DirectionFix(false);
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	GetPlayerCombatComponentFromActorInfo()->UpdateAnimLayer();
+	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->TargetArmLength = CachedPlayerCameraBoomLength;
+	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->SocketOffset = CachedPlayerCameraBoomSocket;
 }
 
 void UPGA_Attack_Range::HandleApplyDamage(FGameplayEventData Data)
@@ -107,7 +114,7 @@ void UPGA_Attack_Range::HandleFire()
 	if (GetPlayerCharacterFromActorInfo()){
 		TArray<AActor*> Ignores;
 		FVector Start = GetPlayerCharacterFromActorInfo()->GetCameraComponent()->GetComponentLocation();
-		FVector End = Start + GetPlayerCharacterFromActorInfo()->GetCameraComponent()->GetForwardVector() * 1000;
+		FVector End = Start + GetPlayerCharacterFromActorInfo()->GetCameraComponent()->GetForwardVector() * 10000;
 		FHitResult Hit;
 		// 충돌체 판별(지형지물만)
 		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
