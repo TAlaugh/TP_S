@@ -71,7 +71,10 @@ void UBaseFunctionLibrary::BP_DoesActorHaveTag(AActor* InActor, FGameplayTag Tag
 
 UBaseCombatComponent* UBaseFunctionLibrary::NativeGetBaseCombatComponentFromActor(AActor* Actor)
 {
-	check(Actor);
+	if (!Actor)
+	{
+		return nullptr;
+	}
 
 	if (IBaseCombatInterface* BaseCombatInterface = Cast<IBaseCombatInterface>(Actor))
 	{

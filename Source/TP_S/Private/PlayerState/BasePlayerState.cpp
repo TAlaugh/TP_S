@@ -62,6 +62,8 @@ void ABasePlayerState::CaptureFromComponents(ABasePlayerCharacter* PlayerChar)
 		{
 			StoredAttributes.CurrentHp = AS->GetCurrentHp();
 			StoredAttributes.MaxHp = AS->GetMaxHp();
+			StoredAttributes.Attack = AS->GetAttack();
+			StoredAttributes.Defence = AS->GetDefense();
 		}
 	}
 }
@@ -103,6 +105,8 @@ void ABasePlayerState::RestoreToComponents(ABasePlayerCharacter* PlayerChar)
 		{
 			ASC->SetNumericAttributeBase(UBaseAttributeSet::GetCurrentHpAttribute(), StoredAttributes.CurrentHp);
 			ASC->SetNumericAttributeBase(UBaseAttributeSet::GetMaxHpAttribute(), StoredAttributes.MaxHp);
+			ASC->SetNumericAttributeBase(UBaseAttributeSet::GetAttackAttribute(), StoredAttributes.Attack);
+			ASC->SetNumericAttributeBase(UBaseAttributeSet::GetDefenseAttribute(), StoredAttributes.Defence);
 		}
 	}
 }

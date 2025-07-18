@@ -53,6 +53,7 @@ void UPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	RotationSetByAim(false);
 	if (bUnEquipWhenEnd)
 	{
 		UnEquipWeapon();

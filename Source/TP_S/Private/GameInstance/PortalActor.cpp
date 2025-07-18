@@ -99,7 +99,7 @@ void APortalActor::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedCom
 				
 				UE_LOG(LogTemp, Warning, TEXT("bShouldRestoreData (Before Travel): %s"),
 					PS->bShouldRestoreData ? TEXT("true") : TEXT("false"));
-
+				
 				GetWorld()->ServerTravel("Game/Content/Common/ThirdPerson/Maps/ThirdPersonMap?listen", true);
 			}
 		}

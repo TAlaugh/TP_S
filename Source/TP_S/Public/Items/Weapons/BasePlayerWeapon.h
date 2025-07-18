@@ -18,7 +18,10 @@ class TP_S_API ABasePlayerWeapon : public ABaseWeapon
 	GENERATED_BODY()
 
 public:
+	ABasePlayerWeapon();
+	
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
 	TObjectPtr<UWeaponItemDataAsset> ItemDataAsset;
@@ -45,6 +48,16 @@ public:
 	virtual void OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 
 	UWeaponItemDataAsset* GetWeaponData() const { return ItemDataAsset; }
+	// 무기 Material Instance 조정
+	UFUNCTION()
+	void DissolveFXWeapon(bool bDissolve);
+
+	UPROPERTY()
+	UCurveFloat* CurveFloat;
+	
+	bool bIsDissolving = false;
+	float DissolveTimeElapsed = 0.f;
+	float DissolveDuration = 0.7f;	
 
 private:
 	TArray<FGameplayAbilitySpecHandle> GrantedAbilitySpecHandles;

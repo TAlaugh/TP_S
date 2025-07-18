@@ -161,6 +161,7 @@ void UBasePlayerCombatComponent::EquipWeapon(FGameplayTag WeaponType, FName Sock
 	if (WeaponType == BaseWeaponTypeMelee)
 	{
 		CurrentEquippedWeaponTag = CurrentEquippedMeleeWeaponTag;
+		GetPlayerCarriedWeaponByTypeTag(WeaponType)->DissolveFXWeapon(false);
 	}
 	else
 	{
@@ -185,6 +186,7 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 	if (WeaponType == BaseWeaponTypeMelee)
 	{
 		SocketName = MeleeSocketName;
+		GetPlayerCarriedWeaponByTypeTag(WeaponType)->DissolveFXWeapon(true);
 	} else
 	{
 		GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->SetVisibility(false);
