@@ -7,12 +7,14 @@
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
+#include "NiagaraVariant.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Items/Weapons/BasePlayerWeapon.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 UAT_Attack_Melee_ThrowWeapon* UAT_Attack_Melee_ThrowWeapon::Init(UGameplayAbility* OwningAbility,
-                                                                   FGameplayTag EventTag, bool OnlyTriggerOnce, bool OnlyMatchExact)
+                                                                 FGameplayTag EventTag, bool OnlyTriggerOnce, bool OnlyMatchExact)
 {
 	UAT_Attack_Melee_ThrowWeapon* Task = NewAbilityTask<UAT_Attack_Melee_ThrowWeapon>(OwningAbility);
 	Task->Tag = EventTag;
@@ -32,15 +34,24 @@ void UAT_Attack_Melee_ThrowWeapon::Activate()
 		PlayerLocation = Player->GetActorLocation();
 		if (Weapon)
 		{
-			TargetLocation = PlayerLocation + Player->GetActorForwardVector() * 2000.f;
 			
+			TempTargetLocation = PlayerLocation + Player->GetActorForwardVector() * 2000.f;
+			
+			TArray<AActor*> Ignores;
+			FHitResult Hit;
+			// 충돌체 판별(지형지물만)
+			TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+			ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldStatic));
+			UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), PlayerLocation, TempTargetLocation, ObjectTypes, false, Ignores, EDrawDebugTrace::None, Hit, true);
+			TargetLocation = Hit.IsValidBlockingHit() ? Hit.Location : TempTargetLocation;
 			
 			UAbilitySystemComponent* ASC = Ability->GetAbilitySystemComponentFromActorInfo();
 			if (Ability && ASC)
 			{
 				MyHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(Tag).AddUObject(this, &UAT_Attack_Melee_ThrowWeapon::GameplayEventCallback);
 			}
-			
+			Weapon->GetWeaponCollisionBox()->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnOverlappedStatic);
+			Weapon->GetWeaponCollisionBox()->OnComponentHit.AddDynamic(this, &ThisClass::OnHitStatic);
 		}
 	}
 }
@@ -64,17 +75,16 @@ void UAT_Attack_Melee_ThrowWeapon::GameplayEventContainerCallback(FGameplayTag M
 
 void UAT_Attack_Melee_ThrowWeapon::TickTask(float DeltaTime)
 {
-	if (bHasThrow)
+	if (bHasThrow && TargetLocation != WeaponLocation)
 	{
-		FRotator WeaponRotation = Weapon->GetActorRotation();
-		WeaponRotation.Yaw += 360.f * DeltaTime * InterpSpeed;
 		FVector CurrentLocation = Weapon->GetActorLocation();
 		WeaponLocation = FMath::VInterpTo(CurrentLocation, TargetLocation, GetWorld()->GetDeltaSeconds(), InterpSpeed);
-		Weapon->SetActorLocation(WeaponLocation);
+		Weapon->SetActorLocation(WeaponLocation, true);
+		Weapon->GetWeaponCollisionBox()->SetWorldLocation(WeaponLocation, true);
 		
-		
-		if (float Distance = FVector::Dist(CurrentLocation, WeaponLocation) <= 10.f)
+		if (float Distance = FVector::Dist(CurrentLocation, TargetLocation) <= 100.f)
 		{
+			TargetLocation = WeaponLocation;
 			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(Player, BaseGamePlayTags::Player_Status_WeaponThrown);
 			if (!Timer.IsValid())
 			{
@@ -89,4 +99,29 @@ void UAT_Attack_Melee_ThrowWeapon::TickTask(float DeltaTime)
 			}
 		}
 	}
+}
+
+void UAT_Attack_Melee_ThrowWeapon::OnOverlappedStatic(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* TargetPrimitiveComponent, int level, bool bBool, const FHitResult& Hits)
+{
+	if (!bStop)
+	{
+		Debug::Print(PrimitiveComponent->GetName() + " : " + UEnum::GetValueAsString(TargetPrimitiveComponent->GetCollisionObjectType()));
+		Debug::Print(UEnum::GetValueAsString(TargetPrimitiveComponent->GetCollisionObjectType()));
+		Debug::Print(Actor->GetName());
+
+		if (Hits.GetActor())
+		{
+			//Debug::Print(Hits.GetActor()->GetName());
+		}
+		
+		//bStop = true;
+	}
+}
+
+void UAT_Attack_Melee_ThrowWeapon::OnHitStatic(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
+	UPrimitiveComponent* TargetPrimitiveComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+	Debug::Print(PrimitiveComponent->GetName() + " : " + UEnum::GetValueAsString(TargetPrimitiveComponent->GetCollisionObjectType()));
+	Debug::Print(UEnum::GetValueAsString(TargetPrimitiveComponent->GetCollisionObjectType()));
+	Debug::Print(Actor->GetName());
 }

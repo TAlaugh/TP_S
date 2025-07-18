@@ -28,7 +28,7 @@ public:
 	AEnemyProjectileBase();
 
 protected:
-
+	
 	virtual void BeginPlay() override;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Projectile")
 	UBoxComponent* ProjectileCollisionBox;

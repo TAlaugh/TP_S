@@ -32,6 +32,9 @@ public:
 	float BulletCount;
 	float MaxBulletCount;
 
+	float CachedPlayerCameraBoomLength;
+	FVector CachedPlayerCameraBoomSocket;
+
 	UFUNCTION()
 	void HandleFire();
 
