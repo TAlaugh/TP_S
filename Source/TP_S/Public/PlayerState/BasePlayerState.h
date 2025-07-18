@@ -64,6 +64,12 @@ struct FStoredAttributeDate
 
 	UPROPERTY()
 	float MaxHp = 0.f;
+
+	UPROPERTY()
+	float Attack = 0.f;
+
+	UPROPERTY()
+	float Defence = 0.f;
 };
 
 /**
