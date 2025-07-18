@@ -16,7 +16,7 @@ void UPlayerGameplayAbility_Slide::EndAbility(const FGameplayAbilitySpecHandle H
 	bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	if (bWasCancelled)
+	if (bWasCancelled && UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Player_Ability_Movement_Jump))
 	{
 		DirectionFix(true);
 	}
