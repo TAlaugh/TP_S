@@ -62,6 +62,8 @@ void ABasePlayerState::CaptureFromComponents(ABasePlayerCharacter* PlayerChar)
 		{
 			StoredAttributes.CurrentHp = AS->GetCurrentHp();
 			StoredAttributes.MaxHp = AS->GetMaxHp();
+			StoredAttributes.Defence = AS->GetDefense();
+			StoredAttributes.Attack = AS->GetAttack();
 		}
 	}
 }
