@@ -20,7 +20,6 @@ void UPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                     const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                                     const FGameplayEventData* TriggerEventData)
 {
-	RotationSetByAim(true);
 	if (GetPlayerCharacterFromActorInfo())
 	{
 		PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();

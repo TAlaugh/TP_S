@@ -140,7 +140,6 @@ void UPGA_Attack_Melee_Light::SetNextSection(FGameplayEventData Data)
 {
 	if (CurrentPlayerState == EPlayerState::None && HasNextComboInput)
 	{
-		RotationSetByAim(true);
 		MontageJumpToSection(GetNextSection());
 		HasNextComboInput = false;
 	}
