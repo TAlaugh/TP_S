@@ -25,6 +25,12 @@ public:
 
 protected:
 
+	UFUNCTION()
+	void OnOverlappedStatic(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* TargetPrimitiveComponent, int level, bool bBool, const FHitResult& Hits);
+
+	UFUNCTION()
+	void OnHitStatic(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* TargetPrimitiveComponent, FVector NormalImpulse, const FHitResult& Hit);
+
 	UPROPERTY()
 	ABasePlayerCharacter* Player;
 	UPROPERTY()
@@ -33,9 +39,11 @@ protected:
 	FVector PlayerLocation;
 	FVector WeaponLocation;
 	FVector TargetLocation;
+	FVector TempTargetLocation;
 	float InterpSpeed = 5.f;
 	FTimerHandle Timer;
 	bool bHasThrow = false;
 	bool bHasArrived = false;
+	bool bStop = false;
 
 };
