@@ -5,10 +5,12 @@
 
 #include "BaseGameplayTags.h"
 #include "DebugHelper.h"
+#include "Camera/CameraComponent.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "TP_S/Public/Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 UPlayerGameplayAbility::UPlayerGameplayAbility()
@@ -106,5 +108,17 @@ void UPlayerGameplayAbility::DirectionFix(bool bCan)
 	if (GetPlayerCharacterFromActorInfo())
 	{
 		GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = !bCan;
+	}
+}
+
+void UPlayerGameplayAbility::RotationSetByAim(bool bCan)
+{
+	if (GetPlayerCharacterFromActorInfo())
+	{		
+		FVector CameraLocation = GetPlayerCharacterFromActorInfo()->GetCameraComponent()->GetComponentLocation();
+		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(CameraLocation, GetPlayerCharacterFromActorInfo()->GetActorLocation());
+		//GetPlayerCharacterFromActorInfo()->SetActorRotation(Rotation);
+		
+		GetPlayerCharacterFromActorInfo()->bUseControllerRotationYaw = bCan;
 	}
 }

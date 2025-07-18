@@ -33,6 +33,7 @@ void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                         const FGameplayEventData* TriggerEventData)
 {
 	DirectionFix(true);
+	RotationSetByAim(true);
 	PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();
 	WeaponType = BaseGamePlayTags::Item_Equipable_Weapon_Range;
 	WeaponSocketName = FName("hand_rRangeSocket");
@@ -97,15 +98,6 @@ void UPGA_Attack_Range::HandleApplyDamage(FGameplayEventData Data)
 			ComboCount);
 		NativeApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, BaseGamePlayTags::Shared_Event_HitReact, Data);
-	}
-}
-
-void UPGA_Attack_Range::DirectionFix(bool bCan)
-{
-	Super::DirectionFix(bCan);
-	if (GetPlayerCharacterFromActorInfo())
-	{
-		GetPlayerCharacterFromActorInfo()->bUseControllerRotationYaw = bCan;
 	}
 }
 
