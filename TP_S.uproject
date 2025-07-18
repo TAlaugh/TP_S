@@ -14,7 +14,8 @@
 				"EnhancedInput",
 				"UMG",
 				"AIModule",
-				"CoreUObject"
+				"CoreUObject",
+				"CommonUI"
 			]
 		}
 	],
@@ -36,6 +37,10 @@
 		},
 		{
 			"Name": "SkeletalMeshModelingTools",
+			"Enabled": true
+		},
+		{
+			"Name": "CommonUI",
 			"Enabled": true
 		}
 	]
