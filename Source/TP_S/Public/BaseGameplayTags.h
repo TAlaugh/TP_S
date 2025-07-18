@@ -6,6 +6,12 @@
 
 namespace	BaseGamePlayTags
 {
+	// FrontendGameplay Tags
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_WidgetStack_Modal);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_WidgetStack_GameMenu);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_WidgetStack_GameHud);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_WidgetStack_Frontend);
+	
 	// Input Tags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Look);
