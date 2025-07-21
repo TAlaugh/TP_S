@@ -38,7 +38,7 @@ void UAsyncAction_PushSoftWidget::Activate()
 {
 	UFrontendUISubsystem* FrontendUISubsystem = UFrontendUISubsystem::Get(CachedOwningWorld.Get());
 	
-	FrontendUISubsystem->PushSoftWidgetToStackAsynsc(CachedWidgetStackTag, CachedSoftWidgetClass,
+	FrontendUISubsystem->PushSoftWidgetToStackAsync(CachedWidgetStackTag, CachedSoftWidgetClass,
 		[this](EAsyncPushWidgetState InPushState, UWidget_ActivatableBase* PushedWidget)
 		{
 			switch (InPushState)
