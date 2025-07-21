@@ -18,8 +18,9 @@ UPGA_Attack_Melee_Heavy::UPGA_Attack_Melee_Heavy()
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement);
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Status_WeaponThrown);
-	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Movement);
+	//ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Movement);
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Shared_Status_InAir);
+	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_Heavy;
 }
 
 void UPGA_Attack_Melee_Heavy::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

@@ -87,6 +87,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_StartupBasePlayer> PlayerStartUpData;
 
+	UPROPERTY()
+	UPlayerAttributeSet* PlayerAttributeSet;
+
 public:
 	
 	//FORCEINLINE UPlayerAbilitySystemComponent* GetPlayerAbilitySystemComponent() const { return PlayerAbilitySystemComponent; }

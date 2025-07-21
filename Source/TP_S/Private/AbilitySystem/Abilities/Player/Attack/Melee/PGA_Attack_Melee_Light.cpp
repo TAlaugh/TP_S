@@ -8,16 +8,15 @@
 #include "DebugHelper.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 UPGA_Attack_Melee_Light::UPGA_Attack_Melee_Light()
 {
 	AbilityTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_Light);
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Status_WeaponThrown);
+	ActivationBlockedTags.AddTag(BaseGamePlayTags::Shared_Status_InAir);
 	//BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_ReceiveWeapon);
 	WeaponSocketName = FName("hand_rSocket");
+	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_Light;
 }
 
 void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -29,34 +28,6 @@ void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle H
 	{
 		MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_Slide];
 		CurrentPlayerState = EPlayerState::Slide;
-	}
-	else if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_InAir))
-	{
-		MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_InAir];
-		CurrentPlayerState = EPlayerState::InAir;
-		GetPlayerCharacterFromActorInfo()->bAttackSlam = true;
-		TArray<AActor*> Ignores;
-		FHitResult Hit;
-
-		MovementFix(true);
-
-		// 라인트레이스 계산
-		FRotator Rotator = GetPlayerCharacterFromActorInfo()->GetActorRotation();
-		Rotator.Pitch -= 60.f;
-		FVector EndVector = Rotator.Vector();
-		FVector Start = GetPlayerCharacterFromActorInfo()->GetActorLocation();
-		FVector End = Start + EndVector * 10000.f;
-		
-		// 충돌체 판별(지형지물만)
-		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-		ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldStatic));
-		UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, ObjectTypes, false, Ignores, EDrawDebugTrace::None, Hit, true);
-
-		// 방향 계산
-		FVector Direction = Hit.Location - Start;
-		FVector DirectionNormal = Direction.GetSafeNormal();
-		FVector LaunchVelocity = DirectionNormal * 1500.f;
-		GetPlayerCharacterFromActorInfo()->LaunchCharacter(LaunchVelocity, true, true);
 	}
 	else
 	{
@@ -92,16 +63,6 @@ void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle H
 		TaskToFinish->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::StopAttack);
 		TaskToFinish->ReadyForActivation();
 	}
-	else if (CurrentPlayerState == EPlayerState::InAir)
-	{
-		UAbilityTask_WaitGameplayEvent* TaskToFinish = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
-			this,
-			BaseGamePlayTags::Shared_Event_Land
-			);
-		TaskToFinish->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::SetNextSection);
-		TaskToFinish->ReadyForActivation();
-	}
-	
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
@@ -118,36 +79,25 @@ void UPGA_Attack_Melee_Light::EndAbility(const FGameplayAbilitySpecHandle Handle
 {
 	CurrentSection = 0;
 	HasNextComboInput = false;
-	if (CurrentPlayerState == EPlayerState::InAir)
-	{
-		MovementFix(false);
-	}
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-FName UPGA_Attack_Melee_Light::GetNextSection()
+void UPGA_Attack_Melee_Light::HandleApplyDamage(FGameplayEventData Data)
 {
-	CurrentSection++;
-	if (CurrentSection > 5)
+	Super::HandleApplyDamage(Data);
+
+	if (AActor* TargetActor = const_cast<AActor*>(Data.Target.Get()))
 	{
-		CurrentSection = 1;
+		FGameplayCueParameters CueParams(Data.ContextHandle);
+		CueParams.Instigator = GetPlayerCharacterFromActorInfo();
+		CueParams.EffectCauser = TargetActor;
+		CueParams.Location = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->GetSocketLocation(FName("blade"));
+		CueParams.TargetAttachComponent = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent();
+
+		K2_ExecuteGameplayCueWithParams(BaseGamePlayTags::GameplayCue_FX_Hit_Melee_PoleArm, CueParams);
 	}
-	return *FString::Printf(TEXT("%d"), CurrentSection);
 }
 
-
-void UPGA_Attack_Melee_Light::SetNextSection(FGameplayEventData Data)
-{
-	if (CurrentPlayerState == EPlayerState::None && HasNextComboInput)
-	{
-		MontageJumpToSection(GetNextSection());
-		HasNextComboInput = false;
-	}
-	else if (CurrentPlayerState == EPlayerState::InAir)
-	{
-		MontageJumpToSection(GetNextSection());
-	}
-}
 
 void UPGA_Attack_Melee_Light::StopAttack(FGameplayEventData Data)
 {

@@ -27,6 +27,7 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Melee_Light);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Melee_Heavy);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Melee_ReceiveWeapon);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Melee_Fall);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Range);
 
 
@@ -82,6 +83,7 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee_Light);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee_Heavy);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee_Fall);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee_ReceiveWeapon);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Range);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Range_Single);
@@ -146,4 +148,12 @@ namespace	BaseGamePlayTags
 	// Enemy Status
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Status_Strafing)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Status_UnderAttack)
+
+
+	// Gameplay Cue
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Base)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Melee)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Melee_PoleArm)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Range)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Range_MachineGun)
 }

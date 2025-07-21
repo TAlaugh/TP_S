@@ -3,3 +3,9 @@
 
 #include "AbilitySystem/Player/PlayerAttributeSet.h"
 
+void UPlayerAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	
+}
