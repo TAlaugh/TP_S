@@ -2,16 +2,16 @@
 
 #pragma once
 
-UENUM(BlueprintType)
-enum class EAIState : uint8
-{
-	Idle        UMETA(DisplayName = "Idle"),
-	Patrol      UMETA(DisplayName = "Patrol"),
-	Investigate UMETA(DisplayName = "Investigate"),
-	Alert       UMETA(DisplayName = "Alert"),
-	Combat      UMETA(DisplayName = "Combat"),
-	Flee        UMETA(DisplayName = "Flee")
-};
+// UENUM(BlueprintType)
+// enum class EAIState : uint8
+// {
+// 	Idle        UMETA(DisplayName = "Idle"),
+// 	Patrol      UMETA(DisplayName = "Patrol"),
+// 	Investigate UMETA(DisplayName = "Investigate"),
+// 	Alert       UMETA(DisplayName = "Alert"),
+// 	Combat      UMETA(DisplayName = "Combat"),
+// 	Flee        UMETA(DisplayName = "Flee")
+// };
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -49,7 +49,7 @@ protected:
 	UFUNCTION(BlueprintCallable, Category="AI|Perception")
 	void HandleDamageStimulus(AActor* Actor, FAIStimulus Stimulus);
    
-	void AdjustPerceptionForState(EAIState State);
+	//void AdjustPerceptionForState(EAIState State);
 	
 	UFUNCTION()
 	virtual void OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
