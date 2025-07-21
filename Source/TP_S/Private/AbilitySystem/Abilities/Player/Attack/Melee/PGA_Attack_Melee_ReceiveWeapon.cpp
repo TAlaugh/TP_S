@@ -42,7 +42,7 @@ void UPGA_Attack_Melee_ReceiveWeapon::ActivateAbility(const FGameplayAbilitySpec
 		ReceiveTask->ReadyForActivation();
 		
 		UAT_Attack_Melee_ReceiveWeapon* Task = UAT_Attack_Melee_ReceiveWeapon::Init(this);
-		Task->OnReceivedDelegate.AddDynamic(this, &ThisClass::OnCompleteCallback);
+		//Task->OnReceivedDelegate.AddDynamic(this, &ThisClass::OnCompleteCallback);
 		Task->ReadyForActivation();
 	} else
 	{

@@ -101,17 +101,6 @@ void UPGA_Attack_Melee::EquipWeaponRightFromEvent(FGameplayEventData Data)
 	EquipWeapon();
 }
 
-FName UPGA_Attack_Melee::GetNextSection()
-{
-	CurrentSection++;
-	if (CurrentSection > MaxSection)
-	{
-		CurrentSection = 1;
-	}
-	return *FString::Printf(TEXT("%d"), CurrentSection);
-}
-
-
 void UPGA_Attack_Melee::SetNextSection(FGameplayEventData Data)
 {
 	if (CurrentPlayerState == EPlayerState::None && HasNextComboInput)

@@ -21,6 +21,7 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	virtual void HandleApplyDamage(FGameplayEventData Data) override;
+	virtual FName GetNextSection() override;
 	UFUNCTION(BlueprintCallable)
 	void StopAttack(FGameplayEventData Data);
 
