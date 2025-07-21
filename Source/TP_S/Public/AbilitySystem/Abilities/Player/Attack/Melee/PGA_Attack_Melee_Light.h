@@ -6,8 +6,6 @@
 #include "AbilitySystem/Abilities/Player/Attack/Melee/PGA_Attack_Melee.h"
 #include "PGA_Attack_Melee_Light.generated.h"
 
-
-
 /**
  * 
  */
@@ -21,21 +19,16 @@ public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-	
-	virtual FName GetNextSection() override;
 
-	UFUNCTION(BlueprintCallable)
-	void SetNextSection(FGameplayEventData Data);
-
+	virtual void HandleApplyDamage(FGameplayEventData Data) override;
 	UFUNCTION(BlueprintCallable)
 	void StopAttack(FGameplayEventData Data);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
 	TMap<FGameplayTag, UAnimMontage*> MontageByTag;
 
-	EPlayerState CurrentPlayerState = EPlayerState::None;
 	
-	FTimerHandle ComboTimerHandle;
-	bool HasNextComboInput = false;
+	
+
 	
 };

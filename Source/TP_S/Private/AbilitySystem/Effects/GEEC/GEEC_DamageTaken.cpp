@@ -59,6 +59,32 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 			BaseDamage = TagMagnitude.Value;
 		}
 		// 콤보 구현
+
+		// EffectSpec 안에 있는 SetByCallertagManitudes (GameplayTag, float으로 이루어진 데이터맵) 데이터를 비교하여 데미지,콤보값 세팅
+		if (TagMagnitude.Key.MatchesTagExact(BaseGamePlayTags::Shared_SetByCaller_BaseDamage))
+		{
+			BaseDamage = TagMagnitude.Value;
+			//Debug::Print(TEXT("BaseDamage : "), BaseDamage);
+		}
+
+		if (TagMagnitude.Key.MatchesTagExact(BaseGamePlayTags::Player_Ability_Attack_Melee_Light))
+		{
+			CachedComboCount_Light = TagMagnitude.Value;
+			//Debug::Print(TEXT("CachedComboCount_Light : "), CachedComboCount_Light);
+		}
+
+		if (TagMagnitude.Key.MatchesTagExact(BaseGamePlayTags::Player_Ability_Attack_Melee_Fall))
+		{
+			BaseDamage *= TagMagnitude.Value;
+			//Debug::Print(TEXT("Falling : "), TagMagnitude.Value);
+		}
+	
+		if (TagMagnitude.Key.MatchesTagExact(BaseGamePlayTags::Player_Ability_Attack_Melee_Heavy))
+		{
+			CachedComboCount_Heavy = TagMagnitude.Value;
+			//Debug::Print(TEXT("CachedComboCount_Heavy : "), CachedComboCount_Heavy);
+		}
+		
 	}
 
 	
@@ -67,18 +93,18 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 
 	if (CachedComboCount_Light > 0)
 	{
-		const float ComboDamage = 0.f;
+		const float ComboDamage = 1.2f;
 		BaseDamage *= ComboDamage;
 	}
 	
 	if (CachedComboCount_Heavy > 0)
 	{
-		const float ComboDamage = 0.f;
+		const float ComboDamage = 1.4f;
 		BaseDamage *= ComboDamage;
 	}
 
 	const float FinalDamage = BaseDamage * SourceAttack / TargetDefense;
-	//Debug::Print(TEXT("FinalDamage: "), FinalDamage);
+	//Debug::Print(TEXT("FinalDamage: "), BaseDamage);
 
 	if (FinalDamage > 0.f)
 	{

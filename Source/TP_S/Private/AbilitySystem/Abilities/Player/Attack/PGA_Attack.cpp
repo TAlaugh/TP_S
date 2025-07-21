@@ -14,6 +14,7 @@ UPGA_Attack::UPGA_Attack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 	AbilityInputID = EAbility::Attack;
+	CancelAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Dodge);
 }
 
 void UPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

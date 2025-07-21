@@ -199,6 +199,7 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 		SocketName);
 	
 	CurrentEquippedWeaponTag = FGameplayTag();
+	OverlappedActors.Empty();
 }
 
 // TODO::현재 장착중인 무기의 데미지를 가져옴
@@ -224,33 +225,42 @@ float UBasePlayerCombatComponent::GetPlayerCurrentThrownWeaponDamageAtLevel(floa
 // 무기의 콜리전에 닿았을 때(피격 시)
 void UBasePlayerCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
-	if (OverlappedActors.Contains(HitActor))
+	if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitActor))
 	{
-		return;
-	}
+		if (OverlappedActors.Contains(HitActor))
+		{
+			return;
+		}
 
-	OverlappedActors.AddUnique(HitActor);
+		OverlappedActors.AddUnique(HitActor);
 
-	if (GetMultiHitTimer())
-	{
-		// 컴포넌트 기반으로 데미지 처리
-		MakePlayerDamageFromComponent(HitActor, 1);
-	}
-	else
-	{
-		// GA 내에서 WaitGameplayEvent로 데미지 처리
-		FGameplayEventData Data;
-		Data.Instigator = GetOwningPawn();
-		Data.Target = HitActor;
+		if (GetMultiHitTimer())
+		{
+			// 컴포넌트 기반으로 데미지 처리
+			MakePlayerDamageFromComponent(HitActor, 1);
+		}
+		else
+		{
+			// GA 내에서 WaitGameplayEvent로 데미지 처리
+			FGameplayEventData Data;
+			Data.Instigator = GetOwningPawn();
+			Data.Target = HitActor;
 
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit, Data);
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_HitReact, FGameplayEventData());
+			
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit, Data);
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_HitReact, FGameplayEventData());
+		}
 	}
 }
 
 void UBasePlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
 {
 	
+}
+
+void UBasePlayerCombatComponent::BP_OnHitTargetActor(AActor* HitActor)
+{
+	OnHitTargetActor(HitActor);
 }
 
 // 무기의 콜리전 변경(근접무기 전용)
@@ -266,7 +276,6 @@ void UBasePlayerCombatComponent::ToggleWeaponCollision(bool bUse, EPlayerToggleD
 			{
 				Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 				// 무기 콜리전이 켜졌을 때 무기투척이면 OnHitTargetActor에서 사용하는 OverlappedActor를 주기적으로 초기화시켜준다.
-				// TODO:: CombatComponent 안에서 데미지 처리하는 것도 필요함.
 				if (CurrentThrownWeaponTag.IsValid())
 				{
 					SetMultiHitTimer(true);
@@ -328,10 +337,18 @@ UBaseAbilitySystemComponent* UBasePlayerCombatComponent::GetTargetAbilitySystemC
 	return nullptr;
 }
 
-void UBasePlayerCombatComponent::MakePlayerDamageFromComponent(AActor* HitActor, float Level)
+void UBasePlayerCombatComponent::MakePlayerDamageFromComponent(AActor* HitActor, float Level, EPlayerToggleDamageType ToggleDamageType)
 {
 	TSubclassOf<UGameplayEffect> Effect = UGE_DealDamage::StaticClass();
-	float BaseDamage = GetPlayerCurrentEquippedWeaponDamageAtLevel(Level);
+	float BaseDamage;
+	if (ToggleDamageType == EPlayerToggleDamageType::CurrentEquippedWeapon)
+	{
+		BaseDamage = GetPlayerCurrentEquippedWeaponDamageAtLevel(Level);
+	}
+	else
+	{
+		BaseDamage = GetPlayerCurrentEquippedWeaponDamageAtLevel(Level);
+	}
 		
 	//NativeApplyEffectSpecHandleToTarget()
 	UAbilitySystemComponent* TargetASC = GetTargetAbilitySystemComponent(HitActor);

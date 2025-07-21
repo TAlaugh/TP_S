@@ -53,6 +53,9 @@ protected:
 	FGameplayTag WeaponType;
 
 	UPROPERTY()
+	FGameplayTag AttackType;
+
+	UPROPERTY()
 	ABasePlayerWeapon* Weapon;
 
 	UPROPERTY()

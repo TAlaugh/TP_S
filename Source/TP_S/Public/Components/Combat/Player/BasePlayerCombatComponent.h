@@ -94,6 +94,9 @@ public:
 	virtual void OnHitTargetActor(AActor* HitActor);
 	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat", meta = (DisplayName = "On Hit TargetActor"))
+	void BP_OnHitTargetActor(AActor* HitActor);
+	
 	// 무기 콜리전 변경(타격)
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void ToggleWeaponCollision(bool bUse, EPlayerToggleDamageType ToggleDamageType = EPlayerToggleDamageType::CurrentEquippedWeapon);
@@ -114,7 +117,7 @@ public:
 	UBaseAbilitySystemComponent* GetTargetAbilitySystemComponent(AActor* TargetActor) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void MakePlayerDamageFromComponent(AActor* HitActor, float Level);
+	void MakePlayerDamageFromComponent(AActor* HitActor, float Level, EPlayerToggleDamageType ToggleDamageType = EPlayerToggleDamageType::CurrentEquippedWeapon);
 
 	// 인벤토리에서 무기 호출
 	UFUNCTION(BlueprintCallable, Category = "Combat")

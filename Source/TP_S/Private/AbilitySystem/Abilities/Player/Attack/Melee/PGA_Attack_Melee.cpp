@@ -16,10 +16,14 @@ UPGA_Attack_Melee::UPGA_Attack_Melee()
 	AbilityTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Range);
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Shared_Status_Crouch);
-	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Jump);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_DoubleJump);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Crouch);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Slide);
 
 	WeaponType = BaseGamePlayTags::Item_Equipable_Weapon_Melee;
 	WeaponSocketName = FName("hand_rSocket");
+	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee;
 }
 
 void UPGA_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -53,6 +57,10 @@ void UPGA_Attack_Melee::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	MovementFix(false);
+	if (bWasCancelled)
+	{
+		CurrentSection = 0;
+	}
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
@@ -63,13 +71,15 @@ void UPGA_Attack_Melee::HandleApplyDamage(FGameplayEventData Data)
 	{
 		TSubclassOf<UGameplayEffect> Effect = UGE_DealDamage::StaticClass();
 		float BaseDamage = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeaponDamageAtLevel(GetAbilityLevel());
-		int ComboCount = CachedCurrentSection;
+		int ComboCount = CurrentSection;
 		FGameplayEffectSpecHandle SpecHandle = MakePlayerDamageGameplayEffectHandle(
 			Effect,
 			BaseDamage,
-			BaseGamePlayTags::Player_Ability_Attack_Melee_Light,
+			AttackType,
 			ComboCount);
 		NativeApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+
+		
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, BaseGamePlayTags::Shared_Event_HitReact, Data);
 	}
 }
@@ -89,4 +99,24 @@ void UPGA_Attack_Melee::EquipWeaponRightFromEvent(FGameplayEventData Data)
 {
 	WeaponSocketName = FName("hand_rSocket"); 
 	EquipWeapon();
+}
+
+FName UPGA_Attack_Melee::GetNextSection()
+{
+	CurrentSection++;
+	if (CurrentSection > MaxSection)
+	{
+		CurrentSection = 1;
+	}
+	return *FString::Printf(TEXT("%d"), CurrentSection);
+}
+
+
+void UPGA_Attack_Melee::SetNextSection(FGameplayEventData Data)
+{
+	if (CurrentPlayerState == EPlayerState::None && HasNextComboInput)
+	{
+		MontageJumpToSection(GetNextSection());
+		HasNextComboInput = false;
+	}
 }

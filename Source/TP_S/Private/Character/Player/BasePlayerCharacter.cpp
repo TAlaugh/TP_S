@@ -10,6 +10,8 @@
 #include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "AbilitySystem/BaseAttributeSet.h"
+#include "AbilitySystem/Player/PlayerAttributeSet.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -24,7 +26,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "PlayerState/BasePlayerState.h"
 
-ABasePlayerCharacter::ABasePlayerCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer.SetDefaultSubobjectClass<UPlayerMovementComponent>(ACharacter::CharacterMovementComponentName))
+ABasePlayerCharacter::ABasePlayerCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer
+		.SetDefaultSubobjectClass<UPlayerMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
 
@@ -43,6 +47,9 @@ ABasePlayerCharacter::ABasePlayerCharacter(const FObjectInitializer& ObjectIniti
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	//PlayerAttributeSet = Cast<UPlayerAttributeSet>(BaseAttributeSet);
+	//ensure(PlayerAttributeSet);
+	
 	UPlayerMovementComponent* PlayerMoveComp = CastChecked<UPlayerMovementComponent>(GetCharacterMovement());
 	PlayerMoveComp->GravityScale = 1.0f;
 	PlayerMoveComp->MaxAcceleration = 2400.0f;
