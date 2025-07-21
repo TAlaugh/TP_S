@@ -1,4 +1,5 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=D9F62E13_002D8714_002D9308_002D8D1B_002DA85CC019C1F2_002Fd_003APrivate_002Ff_003Aappconst_002Eh/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=E16D0F8B_002D78AD_002DF797_002DE5E1_002D4767AD4F78BF_002Fd_003AClasses_002Ff_003AAIController_002Eh/@EntryIndexedValue">ForceIncluded</s:String>
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=13bf047f_002D0615_002D47b5_002D8f6c_002Db72104578c72/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="솔루션의 모든 테스트" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;

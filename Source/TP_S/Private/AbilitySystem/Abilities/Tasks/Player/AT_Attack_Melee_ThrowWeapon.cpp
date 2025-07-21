@@ -31,7 +31,7 @@ void UAT_Attack_Melee_ThrowWeapon::Activate()
 	if (Player)
 	{
 		Weapon = Player->GetPlayerCombatComponent()->GetPlayerCurrentEquippedWeapon();
-		PlayerLocation = Player->GetActorLocation();
+		PlayerLocation = Player->GetActorLocation() + Player->GetActorForwardVector() * 100.f;
 		if (Weapon)
 		{
 			
@@ -39,10 +39,11 @@ void UAT_Attack_Melee_ThrowWeapon::Activate()
 			
 			TArray<AActor*> Ignores;
 			FHitResult Hit;
-			// 충돌체 판별(지형지물만)
+			// 충돌체 판별(Boss)
 			TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 			ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldStatic));
-			UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), PlayerLocation, TempTargetLocation, ObjectTypes, false, Ignores, EDrawDebugTrace::None, Hit, true);
+			ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_Pawn));
+			UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), PlayerLocation, TempTargetLocation, ObjectTypes, false, Ignores, EDrawDebugTrace::ForDuration, Hit, true);
 			TargetLocation = Hit.IsValidBlockingHit() ? Hit.Location : TempTargetLocation;
 			
 			UAbilitySystemComponent* ASC = Ability->GetAbilitySystemComponentFromActorInfo();
@@ -64,6 +65,7 @@ void UAT_Attack_Melee_ThrowWeapon::GameplayEventContainerCallback(FGameplayTag M
 	Weapon->DetachFromActor(Rule);
 	Weapon->SetOwner(Player);
 	Weapon->SetInstigator(Player);
+	Weapon->GetWeaponCollisionBox()->SetHiddenInGame(false);
 	
 	// 장착중인 무기를 던졌을 경우 태그랑 위치를 컴뱃 컴포넌트에 저장
 	Player->GetPlayerCombatComponent()->WeaponThrownLocation = TargetLocation;
@@ -80,9 +82,8 @@ void UAT_Attack_Melee_ThrowWeapon::TickTask(float DeltaTime)
 		FVector CurrentLocation = Weapon->GetActorLocation();
 		WeaponLocation = FMath::VInterpTo(CurrentLocation, TargetLocation, GetWorld()->GetDeltaSeconds(), InterpSpeed);
 		Weapon->SetActorLocation(WeaponLocation, true);
-		Weapon->GetWeaponCollisionBox()->SetWorldLocation(WeaponLocation, true);
 		
-		if (float Distance = FVector::Dist(CurrentLocation, TargetLocation) <= 100.f)
+		if (float Distance = FVector::Dist(CurrentLocation, TargetLocation) <= 10.f)
 		{
 			TargetLocation = WeaponLocation;
 			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(Player, BaseGamePlayTags::Player_Status_WeaponThrown);
@@ -92,6 +93,8 @@ void UAT_Attack_Melee_ThrowWeapon::TickTask(float DeltaTime)
 					Timer,
 					FTimerDelegate::CreateLambda([this]()
 					{
+						Weapon->SetInstigator(Player);
+						Weapon->SetOwner(Player);
 						EndTask();
 					}),
 					1.5f,
@@ -105,10 +108,6 @@ void UAT_Attack_Melee_ThrowWeapon::OnOverlappedStatic(UPrimitiveComponent* Primi
 {
 	if (!bStop)
 	{
-		Debug::Print(PrimitiveComponent->GetName() + " : " + UEnum::GetValueAsString(TargetPrimitiveComponent->GetCollisionObjectType()));
-		Debug::Print(UEnum::GetValueAsString(TargetPrimitiveComponent->GetCollisionObjectType()));
-		Debug::Print(Actor->GetName());
-
 		if (Hits.GetActor())
 		{
 			//Debug::Print(Hits.GetActor()->GetName());
@@ -121,7 +120,4 @@ void UAT_Attack_Melee_ThrowWeapon::OnOverlappedStatic(UPrimitiveComponent* Primi
 void UAT_Attack_Melee_ThrowWeapon::OnHitStatic(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
 	UPrimitiveComponent* TargetPrimitiveComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Debug::Print(PrimitiveComponent->GetName() + " : " + UEnum::GetValueAsString(TargetPrimitiveComponent->GetCollisionObjectType()));
-	Debug::Print(UEnum::GetValueAsString(TargetPrimitiveComponent->GetCollisionObjectType()));
-	Debug::Print(Actor->GetName());
 }
