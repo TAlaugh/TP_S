@@ -15,7 +15,8 @@ UPGA_Attack_Melee_ReceiveWeapon::UPGA_Attack_Melee_ReceiveWeapon()
 	AbilityTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_ReceiveWeapon);
 	ActivationRequiredTags.AddTag(BaseGamePlayTags::Player_Status_WeaponThrown);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
-	AbilityInputID = EAbility::None;
+	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Movement);
+	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_ReceiveWeapon;
 }
 
 void UPGA_Attack_Melee_ReceiveWeapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

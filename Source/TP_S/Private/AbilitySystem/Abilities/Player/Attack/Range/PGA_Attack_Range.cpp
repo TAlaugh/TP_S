@@ -27,6 +27,7 @@ UPGA_Attack_Range::UPGA_Attack_Range()
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Crouch);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Slide);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Dodge);
+	AttackType = BaseGamePlayTags::Player_Ability_Attack_Range;
 }
 
 void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -126,6 +127,7 @@ void UPGA_Attack_Range::HandleFire()
 		{
 			FGameplayEventData Data = FGameplayEventData();
 			Data.Target = Hit.GetActor();
+			Data.Instigator = GetAvatarActorFromActorInfo();
 			HandleApplyDamage(Data);
 		}
 	}

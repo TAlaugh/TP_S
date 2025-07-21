@@ -123,10 +123,6 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 		//UE_LOG(LogTemp, Error, TEXT("BaseAbilitySystemComponent is Exist on %s"), *GetName());
 		
 	}
-	else
-	{
-		Debug::Print("e");
-	}
 
 	InitEnemyStartUpData();
 }
@@ -161,7 +157,6 @@ void ABaseEnemyCharacter::InitEnemyStartUpData()
 	 			if (UDataAsset_StartupBase* LoadedData = StartupData.Get())
 	 			{
 					 LoadedData->GiveToAbilitySystemComponent(BaseAbilitySystemComponent);
-					 Debug::Print(TEXT("Enemy Startup Data Loaded"), FColor::Green);
 				 }
 	 		}
 	 	)

@@ -23,6 +23,7 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Light, "InputTag.Attack.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Heavy, "InputTag.Attack.Melee.Heavy");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_ReceiveWeapon, "InputTag.Attack.Melee.ReceiveWeapon");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Melee_Fall, "InputTag.Attack.Melee.Fall");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Range, "InputTag.Attack.Range");
 	
 	// Shared Status(Dead, Idle, Jump, etc)
@@ -74,6 +75,7 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee, "Player.Ability.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Light, "Player.Ability.Attack.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Heavy, "Player.Ability.Attack.Melee.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Fall, "Player.Ability.Attack.Melee.Fall");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_ReceiveWeapon, "Player.Ability.Attack.Melee.ReceiveWeapon");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range, "Player.Ability.Attack.Range");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Range_Single, "Player.Ability.Attack.Range.Single");
@@ -135,6 +137,13 @@ namespace BaseGamePlayTags
 	// Enemy Status
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_Strafing,"Enemy.Status.Strafing")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_UnderAttack,"Enemy.Status.UnderAttack")
+
+	// GameplayCue
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Base, "GameplayCue.FX.Hit.Base")
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Melee, "GameplayCue.FX.Hit.Melee")
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Melee_PoleArm, "GameplayCue.FX.Hit.Melee.PoleArm")
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Range, "GameplayCue.FX.Hit.Range")
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Range_MachineGun, "GameplayCue.FX.Hit.Range.MachineGun")
 }
 
 

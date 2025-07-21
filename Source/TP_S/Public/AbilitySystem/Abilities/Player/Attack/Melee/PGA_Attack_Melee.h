@@ -27,12 +27,18 @@ public:
 	UFUNCTION()
 	virtual void EquipWeaponRightFromEvent(FGameplayEventData Data);
 
+	virtual FName GetNextSection() override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void SetNextSection(FGameplayEventData Data);
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Section")
 	uint8 MaxSection = 0;
+
+	EPlayerState CurrentPlayerState = EPlayerState::None;
 	
 	uint8 CurrentSection = 0;
-	uint8 CachedCurrentSection = 0;
-	FTimerHandle TimerHandle;
+	bool HasNextComboInput = false;
 
 protected:
 };
