@@ -3,24 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/Player/Attack/Melee/PGA_Attack_Melee.h"
-#include "PGA_Attack_Melee_Fall.generated.h"
+#include "AbilitySystem/Abilities/Player/PlayerGameplayAbility.h"
+#include "PGA_Death.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TP_S_API UPGA_Attack_Melee_Fall : public UPGA_Attack_Melee
+class TP_S_API UPGA_Death : public UPlayerGameplayAbility
 {
 	GENERATED_BODY()
-
 public:
-	UPGA_Attack_Melee_Fall();
+	UPGA_Death();
+
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-
-	virtual FName GetNextSection() override;
 	
-	UFUNCTION()
-	virtual void SetNextSection(FGameplayEventData Data) override;
 };

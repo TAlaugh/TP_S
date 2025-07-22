@@ -13,6 +13,7 @@ namespace BaseGamePlayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG(Frontend_Widget_PressAnyKeyScreen, "Frontend.Widget.PressAnyKeyScreen");
 	UE_DEFINE_GAMEPLAY_TAG(Frontend_Widget_MainMenuScreen, "Frontend.Widget.MainMenuScreen");
+	UE_DEFINE_GAMEPLAY_TAG(Frontend_Widget_ConfirmScreen, "Frontend.Widget.ConfirmScreen");
 	
 	// Input Tags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move, "InputTag.Move");
@@ -65,6 +66,7 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_HitReact_Right, "Shared.Status.HitReact.Right")
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_HitReact_Back, "Shared.Status.HitReact.Back")
 	
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability, "Player.Ability");
 	
 	// Player Ability(Movement)
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement, "Player.Ability.Movement");

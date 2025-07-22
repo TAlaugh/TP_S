@@ -68,6 +68,16 @@ void UPGA_Attack_Melee_Fall::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
+FName UPGA_Attack_Melee_Fall::GetNextSection()
+{
+	CurrentSection++;
+	if (CurrentSection > MaxSection)
+	{
+		CurrentSection = 1;
+	}
+	return *FString::Printf(TEXT("%d"), CurrentSection);
+}
+
 void UPGA_Attack_Melee_Fall::SetNextSection(FGameplayEventData Data)
 {
 	MontageJumpToSection(GetNextSection());
