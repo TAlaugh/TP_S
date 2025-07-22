@@ -51,12 +51,11 @@ ABasePlayerCharacter::ABasePlayerCharacter(const FObjectInitializer& ObjectIniti
 	//ensure(PlayerAttributeSet);
 	
 	UPlayerMovementComponent* PlayerMoveComp = CastChecked<UPlayerMovementComponent>(GetCharacterMovement());
-	PlayerMoveComp->GravityScale = 1.0f;
+	PlayerMoveComp->GravityScale = 1.5f;
 	PlayerMoveComp->MaxAcceleration = 2400.0f;
 	PlayerMoveComp->BrakingFrictionFactor = 1.0f;
 	PlayerMoveComp->BrakingFriction = 6.0f;
 	PlayerMoveComp->GroundFriction = 8.0f;
-	//PlayerMoveComp->BrakingDecelerationWalking = 1400.0f;
 	PlayerMoveComp->bUseControllerDesiredRotation = false;
 	PlayerMoveComp->bOrientRotationToMovement = true;
 	PlayerMoveComp->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
@@ -65,10 +64,8 @@ ABasePlayerCharacter::ABasePlayerCharacter(const FObjectInitializer& ObjectIniti
 	PlayerMoveComp->GetNavAgentPropertiesRef().bCanJump = true;
 	PlayerMoveComp->GetNavAgentPropertiesRef().bCanWalk = true;
 	PlayerMoveComp->bCanWalkOffLedgesWhenCrouching = true;
-	//PlayerMoveComp->SetCrouchedHalfHeight(95.0f);
-	
-	GetCharacterMovement()->MaxWalkSpeed = 400.f;
-	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+	PlayerMoveComp->MaxWalkSpeed = 400.f;
+	PlayerMoveComp->BrakingDecelerationWalking = 2000.f;
 
 	PlayerInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("InventoryComponent"));
 	PlayerQuickSlotComponent = CreateDefaultSubobject<UQuickSlotComponent>(TEXT("QuickSlotComponent"));
@@ -236,6 +233,13 @@ void ABasePlayerCharacter::Input_AbilityInputReleased(const FGameplayTag InputTa
 UBaseCombatComponent* ABasePlayerCharacter::GetBaseCombatComponent() const
 {
 	return PlayerCombatComponent;
+}
+
+void ABasePlayerCharacter::OnDead()
+{
+	Super::OnDead();
+	GetMesh()->bPauseAnims = true;
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABasePlayerCharacter::TryRestoreAfterReplication(ABasePlayerState* PS)

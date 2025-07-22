@@ -103,9 +103,5 @@ void UPGA_Attack_Melee::EquipWeaponRightFromEvent(FGameplayEventData Data)
 
 void UPGA_Attack_Melee::SetNextSection(FGameplayEventData Data)
 {
-	if (CurrentPlayerState == EPlayerState::None && HasNextComboInput)
-	{
-		MontageJumpToSection(GetNextSection());
-		HasNextComboInput = false;
-	}
+
 }

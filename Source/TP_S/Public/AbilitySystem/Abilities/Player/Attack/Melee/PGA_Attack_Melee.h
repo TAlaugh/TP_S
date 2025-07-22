@@ -28,7 +28,7 @@ public:
 	virtual void EquipWeaponRightFromEvent(FGameplayEventData Data);
 
 
-	UFUNCTION(BlueprintCallable)
+	
 	virtual void SetNextSection(FGameplayEventData Data);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Section")

@@ -107,6 +107,15 @@ FName UPGA_Attack_Melee_Light::GetNextSection()
 	return *FString::Printf(TEXT("%d"), CurrentSection);
 }
 
+void UPGA_Attack_Melee_Light::SetNextSection(FGameplayEventData Data)
+{
+	if (CurrentPlayerState == EPlayerState::None && HasNextComboInput)
+	{
+		MontageJumpToSection(GetNextSection());
+		HasNextComboInput = false;
+	}
+}
+
 
 void UPGA_Attack_Melee_Light::StopAttack(FGameplayEventData Data)
 {

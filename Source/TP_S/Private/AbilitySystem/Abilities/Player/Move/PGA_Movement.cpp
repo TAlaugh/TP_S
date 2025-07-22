@@ -3,8 +3,13 @@
 
 #include "AbilitySystem/Abilities/Player/Move/PGA_Movement.h"
 
+UPGA_Movement::UPGA_Movement()
+{
+	CancelAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Range);
+}
+
 void UPGA_Movement::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+                                    const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	DirectionFix(true);
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);

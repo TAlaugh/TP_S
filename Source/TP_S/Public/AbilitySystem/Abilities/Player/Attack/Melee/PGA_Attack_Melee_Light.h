@@ -22,6 +22,9 @@ public:
 
 	virtual void HandleApplyDamage(FGameplayEventData Data) override;
 	virtual FName GetNextSection() override;
+
+	UFUNCTION()
+	virtual void SetNextSection(FGameplayEventData Data);
 	UFUNCTION(BlueprintCallable)
 	void StopAttack(FGameplayEventData Data);
 
