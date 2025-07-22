@@ -34,7 +34,7 @@ bool UFrontendUISubsystem::ShouldCreateSubsystem(UObject* Outer) const
 		return FoundClasses.IsEmpty();
 	}
 	
-	return Super::ShouldCreateSubsystem(Outer);
+	return false;
 }
 
 void UFrontendUISubsystem::RegisterCreatedPrimaryLayoutWidget(UPrimaryLayout_Widget* InCreatedWidget)
@@ -43,7 +43,7 @@ void UFrontendUISubsystem::RegisterCreatedPrimaryLayoutWidget(UPrimaryLayout_Wid
 	
 	CreatedPrimaryLayout = InCreatedWidget;
 
-	Debug::Print(TEXT("Primary layout Widget Stored"));
+	// Debug::Print(TEXT("Primary layout Widget Stored"));
 }
 
 void UFrontendUISubsystem::PushSoftWidgetToStackAsync(const FGameplayTag& InWidgetStackTag,
