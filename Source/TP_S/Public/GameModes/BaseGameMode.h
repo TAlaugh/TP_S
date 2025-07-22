@@ -14,9 +14,11 @@ class TP_S_API ABaseGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
-	ABaseGameMode();
+	
 	
 public:
+
+	ABaseGameMode();
 	virtual void BeginPlay() override;
 
 	virtual void PostSeamlessTravel() override;

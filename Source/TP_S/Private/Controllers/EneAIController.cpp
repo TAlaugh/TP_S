@@ -30,13 +30,13 @@ AEneAIController::AEneAIController(const FObjectInitializer& ObjectInitializer)
 	AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
 
 	//시아 반경 설정
-	AISenseConfig_Sight->SightRadius = 2000.0f;
+	AISenseConfig_Sight->SightRadius = 3000.0f;
 
 	//대상을 잃는 시아 설정
 	AISenseConfig_Sight->LoseSightRadius = 0.f;
 
 	//주변 시아각
-	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 180.0f;
+	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 230.0f;
 
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
 
@@ -101,35 +101,35 @@ void AEneAIController::HandleDamageStimulus(AActor* Actor, FAIStimulus Stimulus)
 	FRotator LookRotation = DamageDirection.Rotation();
 	GetPawn()->SetActorRotation(LookRotation);
 }
-
-void AEneAIController::AdjustPerceptionForState(EAIState State)
-{
-	if (!AISenseConfig_Sight ) return;
-	switch (State)
-	{
-	case EAIState::Alert:
-		AISenseConfig_Sight->SightRadius = 1800.0f;
-	
-		break;
-        
-	case EAIState::Combat:
-		AISenseConfig_Sight->SightRadius = 2000.0f;
-		
-		break;
-        
-	case EAIState::Investigate:
-		AISenseConfig_Sight->SightRadius = 1200.0f;
-		
-		break;
-        
-	default:
-		// 기본 설정으로 복원
-		AISenseConfig_Sight->SightRadius = 1500.0f;
-	
-		break;
-	}
-	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
-}
+//
+// void AEneAIController::AdjustPerceptionForState(EAIState State)
+// {
+// 	if (!AISenseConfig_Sight ) return;
+// 	switch (State)
+// 	{
+// 	case EAIState::Alert:
+// 		AISenseConfig_Sight->SightRadius = 1800.0f;
+// 	
+// 		break;
+//         
+// 	case EAIState::Combat:
+// 		AISenseConfig_Sight->SightRadius = 2000.0f;
+// 		
+// 		break;
+//         
+// 	case EAIState::Investigate:
+// 		AISenseConfig_Sight->SightRadius = 1200.0f;
+// 		
+// 		break;
+//         
+// 	default:
+// 		// 기본 설정으로 복원
+// 		AISenseConfig_Sight->SightRadius = 1500.0f;
+// 	
+// 		break;
+// 	}
+// 	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
+// }
 
 void AEneAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {

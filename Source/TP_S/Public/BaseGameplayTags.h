@@ -14,6 +14,7 @@ namespace	BaseGamePlayTags
 
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_Widget_PressAnyKeyScreen);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_Widget_MainMenuScreen);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_Widget_ConfirmScreen);
 	
 	// Input Tags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
