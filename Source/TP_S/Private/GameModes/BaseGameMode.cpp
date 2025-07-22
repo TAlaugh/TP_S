@@ -8,6 +8,8 @@
 ABaseGameMode::ABaseGameMode()
 {
 	bUseSeamlessTravel = true;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
 void ABaseGameMode::BeginPlay()
