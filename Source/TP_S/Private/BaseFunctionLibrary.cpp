@@ -10,6 +10,7 @@
 #include "Character/Player/PreviewPlayerCharacter.h"
 #include "Components/Combat/Enemy/EnemyCombatComponent.h"
 #include "Interfaces/BaseCombatInterface.h"
+#include "CountDownAction.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UBaseAbilitySystemComponent* UBaseFunctionLibrary::NativeGetBaseASCFromActor(AActor* InActor)
@@ -128,6 +129,46 @@ bool UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToActor(AActor* InInstig
 	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
 }
 
+void UBaseFunctionLibrary::CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval,
+	float& OutRemainingTime, EBaseCountDownActionInput CountDownInput, EBaseCountDownActionOutput& CountDownOutput,
+	FLatentActionInfo LatentInfo)
+{
+	UWorld* World = nullptr;
+
+	if (GEngine)
+	{
+		World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	}
+	if (!World)
+	{
+		return;
+	}
+
+	FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+
+	FBaseCountDownAction* FoundAction = LatentActionManager.FindExistingAction<FBaseCountDownAction>(LatentInfo.CallbackTarget,LatentInfo.UUID);
+
+	if (CountDownInput == EBaseCountDownActionInput::Start)
+	{
+			if (!FoundAction)
+			{
+				LatentActionManager.AddNewAction(
+					LatentInfo.CallbackTarget,
+					LatentInfo.UUID,
+					new FBaseCountDownAction(TotalTime,UpdateInterval,OutRemainingTime,CountDownOutput,LatentInfo));
+			}
+		
+	}
+	if (CountDownInput == EBaseCountDownActionInput::Cancel)
+	{
+		if (FoundAction)
+		{
+			FoundAction->CancelAction();
+		}
+	}
+}
+
+
 /*
 float UBaseFunctionLibrary::GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel)
 {
@@ -151,7 +192,7 @@ FGameplayTag UBaseFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAttacke
 	{
 		OutAngleDifference *= -1.f;
 	}
-
+ 
 	if (OutAngleDifference >= -45.f && OutAngleDifference <= 45.f)
 	{
 		return BaseGamePlayTags::Shared_Status_HitReact_Front;
