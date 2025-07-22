@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraSystem.h"
 #include "AbilitySystem/Abilities/Player/Attack/PGA_Attack.h"
 #include "PGA_Attack_Range.generated.h"
 
@@ -34,6 +35,7 @@ public:
 
 	float CachedPlayerCameraBoomLength;
 	FVector CachedPlayerCameraBoomSocket;
+	float CachedGravity;
 
 	UFUNCTION()
 	void HandleFire();
@@ -41,6 +43,14 @@ public:
 	UFUNCTION()
 	void StopFire();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UNiagaraSystem* MuzzleEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UNiagaraSystem* HitMuzzleEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSubclassOf<UCameraShakeBase> CameraShake;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UAnimInstance> AnimLayer;
 };

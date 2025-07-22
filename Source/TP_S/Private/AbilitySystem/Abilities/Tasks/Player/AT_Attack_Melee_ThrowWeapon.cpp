@@ -43,7 +43,7 @@ void UAT_Attack_Melee_ThrowWeapon::Activate()
 			TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 			ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldStatic));
 			ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_Pawn));
-			UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), PlayerLocation, TempTargetLocation, ObjectTypes, false, Ignores, EDrawDebugTrace::ForDuration, Hit, true);
+			UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), PlayerLocation, TempTargetLocation, ObjectTypes, false, Ignores, EDrawDebugTrace::None, Hit, true);
 			TargetLocation = Hit.IsValidBlockingHit() ? Hit.Location : TempTargetLocation;
 			
 			UAbilitySystemComponent* ASC = Ability->GetAbilitySystemComponentFromActorInfo();
@@ -93,8 +93,6 @@ void UAT_Attack_Melee_ThrowWeapon::TickTask(float DeltaTime)
 					Timer,
 					FTimerDelegate::CreateLambda([this]()
 					{
-						Weapon->SetInstigator(Player);
-						Weapon->SetOwner(Player);
 						EndTask();
 					}),
 					1.5f,

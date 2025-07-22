@@ -70,7 +70,9 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Left)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Right)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Back)
+
 	
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability);
 
 	// Player Ability(Movement)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement);

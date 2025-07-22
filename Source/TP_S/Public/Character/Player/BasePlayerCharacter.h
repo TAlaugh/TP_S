@@ -97,6 +97,7 @@ public:
 	FORCEINLINE UCameraComponent* GetCameraComponent() const { return FollowCamera; }
 	FORCEINLINE USpringArmComponent* GetSpringArmComponent() const { return CameraBoom; }
 	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
+	virtual void OnDead() override;
 
 	// 저장 불러오기
 	UFUNCTION()

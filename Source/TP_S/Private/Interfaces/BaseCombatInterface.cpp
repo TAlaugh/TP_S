@@ -4,3 +4,6 @@
 #include "Interfaces/BaseCombatInterface.h"
 
 // Add default functionality here for any IBaseCombatInterface functions that are not pure virtual.
+void IBaseCombatInterface::OnDead()
+{
+}
