@@ -70,7 +70,9 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Left)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Right)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Back)
+
 	
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability);
 
 	// Player Ability(Movement)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement);
@@ -140,15 +142,20 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Skill_2)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Skill_3)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Skill_Lianhuo_SpawnSkill)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Skill_Lianhuo_SpawnSkill2)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Skill_Lianhuo_SpawnEnemy_Skeleton)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Skill_Lianhuo_Rage)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_SpawnEnemy)
 
 	//Enemy Event
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Event_SpawnSkill)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Event_SpawnEnemy)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Event_Rage)
 	
 	// Enemy Status
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Status_Strafing)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Status_UnderAttack)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Status_Rage)
 
 
 	// Gameplay Cue

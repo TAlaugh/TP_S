@@ -97,6 +97,24 @@ void UPGA_Attack_Melee_Light::HandleApplyDamage(FGameplayEventData Data)
 		K2_ExecuteGameplayCueWithParams(BaseGamePlayTags::GameplayCue_FX_Hit_Melee_PoleArm, CueParams);
 	}
 }
+FName UPGA_Attack_Melee_Light::GetNextSection()
+{
+	CurrentSection++;
+	if (CurrentSection > MaxSection)
+	{
+		CurrentSection = 1;
+	}
+	return *FString::Printf(TEXT("%d"), CurrentSection);
+}
+
+void UPGA_Attack_Melee_Light::SetNextSection(FGameplayEventData Data)
+{
+	if (CurrentPlayerState == EPlayerState::None && HasNextComboInput)
+	{
+		MontageJumpToSection(GetNextSection());
+		HasNextComboInput = false;
+	}
+}
 
 
 void UPGA_Attack_Melee_Light::StopAttack(FGameplayEventData Data)

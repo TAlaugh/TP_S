@@ -60,7 +60,8 @@ void UAT_Attack_Melee_ReceiveWeapon::TickTask(float DeltaTime)
 					Timer,
 					FTimerDelegate::CreateLambda([this]()
 					{
-						OnReceivedDelegate.Broadcast();					
+						//OnReceivedDelegate.Broadcast();
+						EndTask();
 					}),
 					1.f,
 					false);

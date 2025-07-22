@@ -21,3 +21,18 @@ enum class EBaseSuccessType : uint8
 	Failed
 };
 
+UENUM()
+enum class EBaseCountDownActionInput : uint8
+{
+	Start,
+	Cancel
+};
+
+UENUM()
+enum class EBaseCountDownActionOutput : uint8
+{
+	Updated,
+	Completed,
+	Cancelled
+};
+

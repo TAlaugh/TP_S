@@ -66,6 +66,7 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_HitReact_Right, "Shared.Status.HitReact.Right")
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_HitReact_Back, "Shared.Status.HitReact.Back")
 	
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability, "Player.Ability");
 	
 	// Player Ability(Movement)
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement, "Player.Ability.Movement");
@@ -132,15 +133,22 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_2,"Enemy.Ability.Skill.2")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_3,"Enemy.Ability.Skill.3")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_SpawnSkill,"Enemy.Ability.Skill.Lianhuo.SpawnSkill")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_SpawnSkill2,"Enemy.Ability.Skill.Lianhuo.SpawnSkill2")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_SKill_Lianhuo_SpawnEnemy_Skeleton,"Enemy.Ability.Skill.Lianhuo.SpawnEnemy.Skeleton")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_Rage,"Enemy.Ability.Skill.Lianhuo.Rage")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_SpawnEnemy,"Enemy.Ability.SpawnEnemy")
+	 
 
 
 	// Enemy Event
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnSkill, "Enemy.Event.SpawnSkill")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnEnemy, "Enemy.Event.SpawnEnemy")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_Rage, "Enemy.Event.Rage")
+	
 	// Enemy Status
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_Strafing,"Enemy.Status.Strafing")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_UnderAttack,"Enemy.Status.UnderAttack")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_Rage, "Enemy.Status.Rage")
 
 	// GameplayCue
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Base, "GameplayCue.FX.Hit.Base")

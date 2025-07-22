@@ -27,4 +27,5 @@ class TP_S_API IBaseCombatInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual UBaseCombatComponent* GetBaseCombatComponent() const = 0;
+	virtual void OnDead();
 };
