@@ -39,6 +39,15 @@ void UPGA_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 		CurrentPlayerState = EPlayerState::InAir;
 		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetAvatarActorFromActorInfo()->GetActorLocation(), Attacker->GetActorLocation());
 		GetPlayerCharacterFromActorInfo()->SetActorRotation(Rotation);
+		Rotation *= -1.f;
+		Rotation.Pitch += 60.f;
+		FVector EndVector = Rotation.Vector();
+		FVector End = GetPlayerCharacterFromActorInfo()->GetActorLocation() + EndVector * 400.f;
+		FVector Start = GetPlayerCharacterFromActorInfo()->GetActorLocation();
+		FVector Direction = End - Start;
+		FVector DirectionNormal = Direction.GetSafeNormal();
+		FVector LaunchVelocity = DirectionNormal * 1000.f;
+		GetPlayerCharacterFromActorInfo()->LaunchCharacter(LaunchVelocity, true, true);
 
 		UAbilityTask_WaitGameplayEvent* LandTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this,
