@@ -81,12 +81,19 @@ void UPGA_HitReact::EndAbility(const FGameplayAbilitySpecHandle Handle, const FG
 
 FName UPGA_HitReact::GetNextSection()
 {
-	CurrentSection++;
-	if (CurrentSection > MaxSection)
+	if (CurrentPlayerState == EPlayerState::InAir)
 	{
-		CurrentSection = 1;
+		CurrentSection++;
+		if (CurrentSection > MaxSection)
+		{
+			CurrentSection = 1;
+		}
+		return *FString::Printf(TEXT("%d"), CurrentSection);
 	}
-	return *FString::Printf(TEXT("%d"), CurrentSection);
+	else
+	{
+		return *FString::Printf(TEXT("Default"));
+	}
 }
 
 void UPGA_HitReact::SetNextSection(FGameplayEventData Data)
