@@ -57,7 +57,7 @@ void UFrontendUISubsystem::PushSoftWidgetToStackAsync(const FGameplayTag& InWidg
 			[InSoftWidgetClass, this, InWidgetStackTag, AsyncPushStateCallback]()
 			{
 				UClass* LoadedWidgetClass = InSoftWidgetClass.Get();
-				//check(LoadedWidgetClass && CreatedPrimaryLayout);
+				check(LoadedWidgetClass && CreatedPrimaryLayout);
 
 				UCommonActivatableWidgetContainerBase* FoundWidgetStack = CreatedPrimaryLayout->FindWidgetStackByTag(InWidgetStackTag);
 
