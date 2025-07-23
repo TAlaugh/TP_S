@@ -56,12 +56,16 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary", meta = (CompactNodeTitle = "Get Value At Level"))
 	static float GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel = 1.f);
 	
-	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
-	static FGameplayTag ComputeHitReactDirectionTag(AActor* InAttacker, AActor* InVictim, float& OutAngleDifference);
 	
 	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
 	static bool IsValidBlock(AActor* InAttacker, AActor* InDefender);
 	*/
+	
+	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary")
+	static FGameplayTag NativeComputeHitReactDirectionTag(const AActor* Attacker, const AActor* HitActor);
+
+	UFUNCTION(BlueprintPure, Category = "Base|FunctionLibrary")
+	static FGameplayTag BP_ComputeHitReactDirectionTag(const AActor* Attacker, const AActor* HitActor, float& OutAngleDifference);
 
 	UFUNCTION(BlueprintCallable, Category = "Base|FunctionLibrary", meta = (Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo", ExpandEnumAsExecs = "CountDownInput|CountDownOutput",TotalTime = "1.0",UpdateInterval = "0.1"))
 	static void CountDown(const UObject* WorldContextObject,float TotalTime,float UpdateInterval,

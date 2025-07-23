@@ -29,14 +29,9 @@ public:
 
 
 	
-	virtual void SetNextSection(FGameplayEventData Data);
+	virtual void SetNextSection(FGameplayEventData Data) override;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Section")
-	uint8 MaxSection = 0;
 
-	EPlayerState CurrentPlayerState = EPlayerState::None;
-	
-	uint8 CurrentSection = 0;
 	bool HasNextComboInput = false;
 
 protected:

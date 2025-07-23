@@ -40,6 +40,13 @@ protected:
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 	virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 
+	virtual FName GetNextSection();
+	virtual void SetNextSection(FGameplayEventData Data);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Section")
+	uint8 MaxSection = 0;
+	uint8 CurrentSection = 0;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
 	UAnimMontage* MontageToPlay;
 
@@ -60,4 +67,6 @@ protected:
 
 	UFUNCTION()
 	void RotationSetByAim(bool bCan);
+
+	EPlayerState CurrentPlayerState = EPlayerState::None;
 };

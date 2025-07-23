@@ -24,7 +24,8 @@ public:
 	virtual FName GetNextSection() override;
 
 	UFUNCTION()
-	virtual void SetNextSection(FGameplayEventData Data);
+	virtual void SetNextSection(FGameplayEventData Data) override;
+	
 	UFUNCTION(BlueprintCallable)
 	void StopAttack(FGameplayEventData Data);
 

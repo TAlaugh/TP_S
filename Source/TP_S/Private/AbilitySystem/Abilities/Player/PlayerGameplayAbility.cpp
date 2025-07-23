@@ -79,6 +79,16 @@ void UPlayerGameplayAbility::InputReleased(const FGameplayAbilitySpecHandle Hand
 	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
 }
 
+FName UPlayerGameplayAbility::GetNextSection()
+{
+	return *FString::Printf(TEXT("Default"));
+}
+
+void UPlayerGameplayAbility::SetNextSection(FGameplayEventData Data)
+{
+}
+
+
 void UPlayerGameplayAbility::OnCompleteCallback()
 {
 	bool bReplicateEndAbility = false;

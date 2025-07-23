@@ -37,9 +37,8 @@ public:
 	virtual void UnEquipWeaponFromEvent(FGameplayEventData Data);
 
 protected:	
-	virtual FName GetNextSection();
 
-protected:
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UPlayerGameplayAbility> Ability;
 
