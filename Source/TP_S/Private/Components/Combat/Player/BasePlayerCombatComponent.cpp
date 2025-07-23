@@ -29,7 +29,6 @@ void UBasePlayerCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, A
 
 	if (WeaponType == BaseWeaponTypeMelee){
 		CurrentEquippedMeleeWeaponTag = WeaponTag;
-		Debug::Print(OwnerPlayer->GetMesh()->GetSocketRotation(MeleeSocketName).ToString());
 		Weapon->AttachToComponent(
 		GetOwningPawn()->FindComponentByClass<USkeletalMeshComponent>(),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
@@ -187,7 +186,6 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 	{
 		return;
 	}
-	Debug::Print(OwnerPlayer->GetMesh()->GetSocketRotation(MeleeSocketName).ToString());
 	FName SocketName;
 	if (WeaponType == BaseWeaponTypeMelee)
 	{
