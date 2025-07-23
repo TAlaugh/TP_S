@@ -117,11 +117,14 @@ void UPGA_Attack_Range::HandleFire()
 {
 	// 총알 발사 구현부
 	if (GetPlayerCharacterFromActorInfo()){
-
 		if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_InAir)
-		&& GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->IsFalling() && GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->Velocity.Z < 0)
+		&& GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->Velocity.Z < 0)
 		{
 			GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->GravityScale = 0.0001f;
+		}
+		else
+		{
+			GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->GravityScale = 1.5f;
 		}
 		TArray<AActor*> Ignores;
 		Ignores.Add(GetPlayerCharacterFromActorInfo());
@@ -143,7 +146,7 @@ void UPGA_Attack_Range::HandleFire()
 			SpawnParams.bAutoActivate = true;
 			SpawnParams.Location = FVector::ZeroVector;
 			SpawnParams.Rotation = FRotator::ZeroRotator;
-			SpawnParams.Scale = FVector(0.3f, 0.3f, 0.3f);
+			SpawnParams.Scale = FVector(0.1f, 0.1f, 0.1f);
 			SpawnParams.SystemTemplate = MuzzleEffect;
 			SpawnParams.LocationType = EAttachLocation::Type::SnapToTarget;
 			SpawnParams.PoolingMethod = EPSCPoolMethod::None;

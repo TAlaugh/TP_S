@@ -29,6 +29,12 @@ void UBasePlayerCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, A
 
 	if (WeaponType == BaseWeaponTypeMelee){
 		CurrentEquippedMeleeWeaponTag = WeaponTag;
+		Debug::Print(OwnerPlayer->GetMesh()->GetSocketRotation(MeleeSocketName).ToString());
+		Weapon->AttachToComponent(
+		GetOwningPawn()->FindComponentByClass<USkeletalMeshComponent>(),
+		FAttachmentTransformRules::SnapToTargetIncludingScale,
+		MeleeSocketName);
+		Weapon->DissolveFXWeapon(true);
 	} else
 	{
 		CurrentEquippedRangeWeaponTag = WeaponTag;
@@ -181,7 +187,7 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 	{
 		return;
 	}
-	
+	Debug::Print(OwnerPlayer->GetMesh()->GetSocketRotation(MeleeSocketName).ToString());
 	FName SocketName;
 	if (WeaponType == BaseWeaponTypeMelee)
 	{
@@ -192,7 +198,6 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 		GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->SetVisibility(false);
 		SocketName = RangeSocketName;
 	}
-	
 	GetPlayerCarriedWeaponByTypeTag(WeaponType)->AttachToComponent(
 		GetOwningPawn()->FindComponentByClass<USkeletalMeshComponent>(),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
