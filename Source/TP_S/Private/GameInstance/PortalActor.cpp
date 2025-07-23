@@ -100,7 +100,9 @@ void APortalActor::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedCom
 				UE_LOG(LogTemp, Warning, TEXT("bShouldRestoreData (Before Travel): %s"),
 					PS->bShouldRestoreData ? TEXT("true") : TEXT("false"));
 				
-				GetWorld()->ServerTravel("Game/Content/Common/ThirdPerson/Maps/ThirdPersonMap?listen", true);
+				// GetWorld()->ServerTravel("Game/Content/Common/ThirdPerson/Maps/ThirdPersonMap?listen", true);
+				// GetWorld()->ServerTravel("/Game/HeavyAssets/Stage_Lianhuo?listen", true);
+				GetWorld()->ServerTravel("/Game/HeavyAssets/Boss06_Map?listen", true);
 			}
 		}
 	}
