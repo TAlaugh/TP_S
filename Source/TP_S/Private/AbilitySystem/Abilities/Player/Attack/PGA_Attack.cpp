@@ -91,9 +91,3 @@ void UPGA_Attack::UnEquipWeaponFromEvent(FGameplayEventData Data)
 	UnEquipWeapon();
 }
 
-FName UPGA_Attack::GetNextSection()
-{
-	return *FString::Printf(TEXT("Default"));
-}
-
-

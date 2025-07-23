@@ -38,12 +38,7 @@ void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	CachedPlayerCameraBoomSocket = GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->SocketOffset;
 	CachedPlayerCameraBoomLength = GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->TargetArmLength;
-	if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_InAir)
-		&& GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->IsFalling())
-	{
-		CachedGravity = GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->GravityScale;
-		GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->GravityScale = 0.05;
-	}
+	
 	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->TargetArmLength = 100.0f;
 	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->SocketOffset = FVector(0.f, 55.f, 65.f);
 	DirectionFix(true);
@@ -122,16 +117,21 @@ void UPGA_Attack_Range::HandleFire()
 {
 	// 총알 발사 구현부
 	if (GetPlayerCharacterFromActorInfo()){
+
+		if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_InAir)
+		&& GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->IsFalling() && GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->Velocity.Z < 0)
+		{
+			GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->GravityScale = 0.0001f;
+		}
 		TArray<AActor*> Ignores;
 		Ignores.Add(GetPlayerCharacterFromActorInfo());
 		FVector Start = GetPlayerCharacterFromActorInfo()->GetCameraComponent()->GetComponentLocation();
 		FVector End = Start + GetPlayerCharacterFromActorInfo()->GetCameraComponent()->GetForwardVector() * 10000;
 		FHitResult Hit;
-		// 충돌체 판별(지형지물만)
+		// 충돌체 판별(지형지물 & Pawn)
 		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 		ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldStatic));
 		ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_Pawn));
-		ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldDynamic));
 		UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, ObjectTypes, false, Ignores, EDrawDebugTrace::None, Hit, true);
 
 		if (MuzzleEffect->IsValid() && Weapon && Weapon->GetSkeletalMeshComponent())

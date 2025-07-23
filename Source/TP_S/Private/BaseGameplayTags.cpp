@@ -41,6 +41,7 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_InAir, "Shared.Status.InAir");
 
 	// Shared Event(HitReact, Land)
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Death, "Shared.Event.Death");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit, "Shared.Event.Hit")
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Melee, "Shared.Event.Hit.Melee")
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Range, "Shared.Event.Hit.Range")
@@ -77,6 +78,7 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Movement_Crouch, "Player.Ability.Movement.Crouch");
 
 	// Player Ability(Attack)
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack, "Player.Ability.Attack");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee, "Player.Ability.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Light, "Player.Ability.Attack.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Melee_Heavy, "Player.Ability.Attack.Melee.Heavy");
