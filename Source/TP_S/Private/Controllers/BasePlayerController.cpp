@@ -230,25 +230,49 @@ void ABasePlayerController::GiveItems()
 {
 	if (APawn* MyPawn = GetPawn())
 	{
-		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, (TEXT("%s"), *MyPawn->GetActorNameOrLabel()));
 		if (UPlayerInventoryComponent* Inv = MyPawn->FindComponentByClass<UPlayerInventoryComponent>())
 		{
-			// Debug::Print(TEXT("Call GiveItems"));
-			
 			auto LoadItem = [](const TCHAR* Path)
 			{
 				return Cast<UItemDataAsset>(StaticLoadObject(UItemDataAsset::StaticClass(), nullptr, Path));
 			};
 
-			if (auto* Potion = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Consumable_ActionPotion.DA_Item_Consumable_ActionPotion")))
-			{
-				bool bAdded = Inv->AddItem(Potion, 3);
-				// Debug::Print(FString::Printf(TEXT("Potion add %s"), bAdded ? TEXT("OK") : TEXT("FAIL")));
-			}
+			// 아이템 경로 배열
+			TArray<const TCHAR*> ItemPaths = {
+				TEXT("/Game/Common/_BP/Items/DA_Item_Consumable_ActionPotion.DA_Item_Consumable_ActionPotion"),
+				TEXT("/Game/Common/_BP/Items/DA_Item_Consumable_HpPotion.DA_Item_Consumable_HpPotion")
+			};
 
-			if (auto* Potion2 = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Consumable_HpPotion.DA_Item_Consumable_HpPotion")))
+			// 랜덤 인덱스 선택
+			int32 RandomIndex = FMath::RandRange(0, ItemPaths.Num() - 1);
+			const TCHAR* SelectedPath = ItemPaths[RandomIndex];
+
+			// 아이템 로드
+			if (UItemDataAsset* SelectedItem = LoadItem(SelectedPath))
 			{
-				Inv->AddItem(Potion2, 5);
+				// 랜덤 개수 (1~3)
+				int32 Amount = FMath::RandRange(1, 2);
+
+				bool bAdded = Inv->AddItem(SelectedItem, Amount);
+				
+				// FString ItemName = SelectedItem->GetName();
+				// FString Msg = FString::Printf(TEXT("GiveItem: %s x%d (%s)"),
+				// 	*ItemName,
+				// 	Amount,
+				// 	bAdded ? TEXT("Added") : TEXT("Failed"));
+				//
+				// if (GEngine)
+				// {
+				// 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, Msg);
+				// }
+				
+				if (bAdded)
+				{
+					if (PlayerHUDWidget)
+					{
+						PlayerHUDWidget->NotifyItemAcquired(SelectedItem, Amount);
+					}
+				}
 			}
 		}
 	}

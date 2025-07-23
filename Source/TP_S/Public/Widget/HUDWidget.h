@@ -7,6 +7,8 @@
 #include "Blueprint/UserWidget.h"
 #include "HUDWidget.generated.h"
 
+class UItemDataAsset;
+class UItemAcquiredContainerWidget;
 class UWeaponHUDWidget;
 class UWeaponItemDataAsset;
 class UQuickSlotComponent;
@@ -30,6 +32,9 @@ public:
 	void OnCurrentHpChanged(const FOnAttributeChangeData& Data);
 	void OnMaxHpChanged(const FOnAttributeChangeData& Data);
 
+	UFUNCTION(BlueprintCallable)
+	void NotifyItemAcquired(UItemDataAsset* ItemAsset, int32 Amount);
+
 	UWeaponHUDWidget* GetWeaponHUDWidget() const { return WeaponHUDWidget; }
 	UQuickSlotWidget* GetQuickSlotWidget() const { return QuickSlotWidget; }
 	
@@ -42,6 +47,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UWeaponHUDWidget* WeaponHUDWidget;
+
+	UPROPERTY(meta = (BindWidget))
+	UItemAcquiredContainerWidget* ItemNotifyContainer;
 
 	UPROPERTY()
 	UBasePlayerCombatComponent* BoundCombatComponent;

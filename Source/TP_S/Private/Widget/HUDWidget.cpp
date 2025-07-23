@@ -7,6 +7,7 @@
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "Components/Inventory/QuickSlotComponent.h"
 #include "Items/Inventory/QuickSlotWidget.h"
+#include "Widget/ItemAcquiredContainerWidget.h"
 #include "Widget/StatusBarWidget.h"
 
 void UHUDWidget::BindToAttribute(UAbilitySystemComponent* ASC, UBaseAttributeSet* AttributeSet)
@@ -39,4 +40,12 @@ void UHUDWidget::OnMaxHpChanged(const FOnAttributeChangeData& Data)
 {
 	CachedMaxHp = Data.NewValue;
 	StatusBarWidget->UpdateHp(CachedCurrentHp, CachedMaxHp);
+}
+
+void UHUDWidget::NotifyItemAcquired(UItemDataAsset* ItemAsset, int32 Amount)
+{
+	if (ItemNotifyContainer)
+	{
+		ItemNotifyContainer->AddAcquiredItem(ItemAsset, Amount);
+	}
 }
