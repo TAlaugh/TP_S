@@ -62,7 +62,7 @@ protected:
 
 private:
 
-	void SetCurrentBoss06GameMode(EBoss06GameModeState InState);
+	
 	bool HasFinishedAllWaves() const;
 	void PreLoadNextWaveEnemies();
 	FBaseEnemyWaveSpawnerTableRow* GetCurrentWaveSpawnerTableRow() const;
@@ -71,7 +71,8 @@ private:
 
 	UFUNCTION()
 	void OnEnemyDestroyed(AActor* DestroyedActor);
-	
+	void OnEnemyDied(ABaseEnemyCharacter* Enemy);
+
 	UPROPERTY()
 	EBoss06GameModeState CurrentBoss06GameModeState;
 
@@ -102,7 +103,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category= "WaveDefinition", meta = (AllowPrivateAccess = "true"))
 	float SpawnNewWaveWaitTime = 5.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category= "WaveDefinition", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite,Category= "WaveDefinition", meta = (AllowPrivateAccess = "true"))
 	float SpawnEnemiesDelayTime = 2.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category= "WaveDefinition", meta = (AllowPrivateAccess = "true"))
@@ -114,6 +115,12 @@ private:
 public:
 	UFUNCTION(BlueprintCallable)
 	void RegisterSpawnedEnemies(const TArray<ABaseEnemyCharacter*>& InEnemiesToRegister);
+	void SetCurrentBoss06GameMode(EBoss06GameModeState InState);
+	UFUNCTION(BlueprintCallable)
+	void StartStage();
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Stage")
+	void OnStageTriggerActivated();
 };
 	
 

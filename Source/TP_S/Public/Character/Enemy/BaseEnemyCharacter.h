@@ -21,6 +21,9 @@ class UBoxComponent;
 /**
  * 
  */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDied, ABaseEnemyCharacter*, Enemy);
+
 UCLASS()
 class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterface 
 {
@@ -33,8 +36,10 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	virtual UBaseCombatComponent* GetBaseCombatComponent() const override;
 	virtual UBaseUIComponent* GetBaseUIComponent() const override;
 	virtual UEnemyUIComponent* GetEnemyUIComponent() const override;
+	virtual void Die();
 	
-	
+	UPROPERTY(BlueprintAssignable, Category="Enemy")
+    	FOnEnemyDied OnEnemyDied;
 	
 	protected:
 	virtual void BeginPlay() override;
@@ -77,11 +82,16 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UWidgetComponent* EnemyHealthWidgetComponent;
 
+	
+
+	virtual void HandleDeath();
+
 	UFUNCTION()
 	virtual void OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
 	void InitEnemyStartUpData();
+	
 
 public:
 	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const {return EnemyCombatComponent;}

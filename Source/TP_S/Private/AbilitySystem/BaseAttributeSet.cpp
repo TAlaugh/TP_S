@@ -6,6 +6,7 @@
 #include "BaseGamePlayTags.h"
 #include "DebugHelper.h"
 #include "GameplayEffectExtension.h"
+#include "Character/Enemy/BaseEnemyCharacter.h"
 #include "Components/UI/HeroUIComponent.h"
 #include "Components/UI/BaseUIComponent.h"
 #include "Interfaces/BaseUIInterface.h"
@@ -75,6 +76,11 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 		if (NewCurrentHp == 0.0f)
 		{
 			UBaseFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), BaseGamePlayTags::Shared_Status_Dead);
+
+			if (ABaseEnemyCharacter* Enemy = Cast<ABaseEnemyCharacter>(Data.Target.GetAvatarActor()))
+			{
+				Enemy->Die();  // 여기서 죽음 처리 시작!
+			}
 		}
 	}
 }
