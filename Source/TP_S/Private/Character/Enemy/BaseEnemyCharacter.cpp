@@ -22,6 +22,7 @@
 #include "Widget/WidgetBase.h"
 #include "Components/BoxComponent.h"
 #include "BaseFunctionLibrary.h"
+#include "Components/CapsuleComponent.h"
 
 #include "Misc/MapErrors.h"
 
@@ -73,6 +74,8 @@ void ABaseEnemyCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& P
 		RightHandCollisionBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, RightHandCollisionBoxAttachBoneName);
 	}
 }
+
+
 
 
 void ABaseEnemyCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -161,4 +164,22 @@ void ABaseEnemyCharacter::InitEnemyStartUpData()
 	 		}
 	 	)
 	);
+}
+
+void ABaseEnemyCharacter::Die()
+{
+	HandleDeath();
+}
+
+void ABaseEnemyCharacter::HandleDeath()
+{
+	OnEnemyDied.Broadcast(this);
+
+	// 기존 죽음 처리 (콜리전 비활성화, Dissolve, Ragdoll 등)
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+
+	// Dissolve 등 연출 유지 후 파괴
+	SetLifeSpan(7.f); // 7초 뒤 Destroy
 }
