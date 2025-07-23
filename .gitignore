@@ -79,6 +79,7 @@ DerivedDataCache/*
 
 # Google Drive로 관리하는 대형 콘텐츠
 Content/HeavyAssets/
+Content/Movies/
 
 # 개인 테스트·임시 자산
 Content/Temp/
