@@ -136,16 +136,20 @@ void UPGA_Attack_Range::HandleFire()
 
 		if (MuzzleEffect->IsValid() && Weapon && Weapon->GetSkeletalMeshComponent())
 		{
-			//FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(CachedPlayerCharacter->GetActorLocation(), Weapon->GetSkeletalMeshComponent()->GetSocketLocation(FName("muzzle_Socket")));
-			FRotator Rotation = Weapon->GetActorRotation();
-			//Rotation.Yaw -= 90.f;
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-				GetWorld(),
-				MuzzleEffect,
-				Weapon->GetSkeletalMeshComponent()->GetSocketLocation(FName("muzzle_Socket")),
-				Rotation,
-				FVector(0.1f, 0.1f, 0.1f));
-
+			FFXSystemSpawnParameters SpawnParams = FFXSystemSpawnParameters();
+			SpawnParams.AttachPointName = FName("muzzle_Socket");
+			SpawnParams.AttachToComponent = Weapon->GetSkeletalMeshComponent();
+			SpawnParams.bAutoDestroy = true;
+			SpawnParams.bAutoActivate = true;
+			SpawnParams.Location = FVector::ZeroVector;
+			SpawnParams.Rotation = FRotator::ZeroRotator;
+			SpawnParams.Scale = FVector(0.3f, 0.3f, 0.3f);
+			SpawnParams.SystemTemplate = MuzzleEffect;
+			SpawnParams.LocationType = EAttachLocation::Type::SnapToTarget;
+			SpawnParams.PoolingMethod = EPSCPoolMethod::None;
+			SpawnParams.bPreCullCheck = true;
+			UNiagaraFunctionLibrary::SpawnSystemAttachedWithParams(SpawnParams);
+			
 			if (IsValid(CameraShake))
 			{
 				GetPlayerControllerFromActorInfo()->ClientStartCameraShake(CameraShake);
