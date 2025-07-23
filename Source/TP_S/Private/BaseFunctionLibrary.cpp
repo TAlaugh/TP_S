@@ -129,6 +129,79 @@ bool UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToActor(AActor* InInstig
 	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
 }
 
+FGameplayTag UBaseFunctionLibrary::NativeComputeHitReactDirectionTag(const AActor* Attacker, const AActor* HitActor)
+{
+	check(Attacker && HitActor);
+
+	const FVector VictimForward = HitActor->GetActorForwardVector();
+	const FVector VictimToAttackerNormalized = (Attacker->GetActorLocation() - HitActor->GetActorLocation()).GetSafeNormal();
+
+	const float DotResult = FVector::DotProduct(VictimForward, VictimToAttackerNormalized);
+	float OutAngleDifference = UKismetMathLibrary::DegAcos(DotResult);
+
+	const FVector CrossResult = FVector::CrossProduct(VictimForward, VictimToAttackerNormalized);
+
+	if (CrossResult.Z < 0.f)
+	{
+		OutAngleDifference *= -1.f;
+	}
+ 
+	if (OutAngleDifference >= -45.f && OutAngleDifference <= 45.f)
+	{
+		return BaseGamePlayTags::Shared_Status_HitReact_Front;
+	}
+	else if (OutAngleDifference < -45.f && OutAngleDifference >= -135.f)
+	{
+		return BaseGamePlayTags::Shared_Status_HitReact_Left;
+	}
+	else if (OutAngleDifference < -135.f || OutAngleDifference > 135.f)
+	{
+		return BaseGamePlayTags::Shared_Status_HitReact_Back;
+	}
+	else if (OutAngleDifference > 45.f && OutAngleDifference <= 135.f)
+	{
+		return BaseGamePlayTags::Shared_Status_HitReact_Right;
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UBaseFunctionLibrary::BP_ComputeHitReactDirectionTag(const AActor* Attacker, const AActor* HitActor,
+                                                                  float& OutAngleDifference)
+{
+	check(Attacker && HitActor);
+
+	const FVector VictimForward = HitActor->GetActorForwardVector();
+	const FVector VictimToAttackerNormalized = (Attacker->GetActorLocation() - HitActor->GetActorLocation()).GetSafeNormal();
+
+	const float DotResult = FVector::DotProduct(VictimForward, VictimToAttackerNormalized);
+	OutAngleDifference = UKismetMathLibrary::DegAcos(DotResult);
+
+	const FVector CrossResult = FVector::CrossProduct(VictimForward, VictimToAttackerNormalized);
+
+	if (CrossResult.Z < 0.f)
+	{
+		OutAngleDifference *= -1.f;
+	}
+ 
+	if (OutAngleDifference >= -45.f && OutAngleDifference <= 45.f)
+	{
+		return BaseGamePlayTags::Shared_Status_HitReact_Front;
+	}
+	else if (OutAngleDifference < -45.f && OutAngleDifference >= -135.f)
+	{
+		return BaseGamePlayTags::Shared_Status_HitReact_Left;
+	}
+	else if (OutAngleDifference < -135.f || OutAngleDifference > 135.f)
+	{
+		return BaseGamePlayTags::Shared_Status_HitReact_Back;
+	}
+	else if (OutAngleDifference > 45.f && OutAngleDifference <= 135.f)
+	{
+		return BaseGamePlayTags::Shared_Status_HitReact_Right;
+	}
+	return FGameplayTag();
+}
+
 void UBaseFunctionLibrary::CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval,
 	float& OutRemainingTime, EBaseCountDownActionInput CountDownInput, EBaseCountDownActionOutput& CountDownOutput,
 	FLatentActionInfo LatentInfo)
@@ -175,42 +248,6 @@ float UBaseFunctionLibrary::GetScalableFloatValueAtLevel(const FScalableFloat& I
 	return InScalableFloat.GetValueAtLevel(InLevel);
 }
 
-FGameplayTag UBaseFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAttacker, AActor* InVictim,
-	float& OutAngleDifference)
-{
-	check(InAttacker && InVictim);
-
-	const FVector VictimForward = InVictim->GetActorForwardVector();
-	const FVector VictimToAttackerNormalized = (InAttacker->GetActorLocation() - InVictim->GetActorLocation()).GetSafeNormal();
-
-	const float DotResult = FVector::DotProduct(VictimForward, VictimToAttackerNormalized);
-	OutAngleDifference = UKismetMathLibrary::DegAcos(DotResult);
-
-	const FVector CrossResult = FVector::CrossProduct(VictimForward, VictimToAttackerNormalized);
-
-	if (CrossResult.Z < 0.f)
-	{
-		OutAngleDifference *= -1.f;
-	}
- 
-	if (OutAngleDifference >= -45.f && OutAngleDifference <= 45.f)
-	{
-		return BaseGamePlayTags::Shared_Status_HitReact_Front;
-	}
-	else if (OutAngleDifference < -45.f && OutAngleDifference >= -135.f)
-	{
-		return BaseGamePlayTags::Shared_Status_HitReact_Left;
-	}
-	else if (OutAngleDifference < -135.f || OutAngleDifference > 135.f)
-	{
-		return BaseGamePlayTags::Shared_Status_HitReact_Back;
-	}
-	else if (OutAngleDifference > 45.f && OutAngleDifference <= 135.f)
-	{
-		return BaseGamePlayTags::Shared_Status_HitReact_Right;
-	}
-	return FGameplayTag();
-}
 
 bool UBaseFunctionLibrary::IsValidBlock(AActor* InAttacker, AActor* InDefender)
 {

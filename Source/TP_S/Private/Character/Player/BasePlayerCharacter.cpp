@@ -24,6 +24,7 @@
 #include "DataAssets/Player/DataAsset_StartupBasePlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Items/Weapons/WeaponItemDataAsset.h"
 #include "PlayerState/BasePlayerState.h"
 
 ABasePlayerCharacter::ABasePlayerCharacter(const FObjectInitializer& ObjectInitializer)
@@ -106,9 +107,9 @@ void ABasePlayerCharacter::Landed(const FHitResult& Hit)
 	Super::Landed(Hit);
 
 	JumpCount = 0;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, BaseGamePlayTags::Shared_Event_Land, FGameplayEventData());
 	if (bAttackSlam)
 	{
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, BaseGamePlayTags::Shared_Event_Land, FGameplayEventData());
 		bAttackSlam = false;
 	}
 }
@@ -240,6 +241,21 @@ void ABasePlayerCharacter::OnDead()
 	Super::OnDead();
 	GetMesh()->bPauseAnims = true;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	if (ABasePlayerWeapon* Melee = GetPlayerCombatComponent()->GetPlayerCarriedWeaponByTypeTag(BaseGamePlayTags::Item_Equipable_Weapon_Melee))
+	{
+		// 근접무기 제거
+		GetPlayerCombatComponent()->RemoveSpawnedWeapon(Melee->GetWeaponData()->ItemTags, Melee, BaseGamePlayTags::Item_Equipable_Weapon_Melee);
+	}
+	if (ABasePlayerWeapon* Range = GetPlayerCombatComponent()->GetPlayerCarriedWeaponByTypeTag(BaseGamePlayTags::Item_Equipable_Weapon_Range))
+	{
+		// 원거리무기 제거
+		GetPlayerCombatComponent()->RemoveSpawnedWeapon(Range->GetWeaponData()->ItemTags, Range, BaseGamePlayTags::Item_Equipable_Weapon_Range);
+	}
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		GetController()->DisableInput(PlayerController);
+	}
+	GetWorld()->ServerTravel("/Game/HeavyAssets/MainMenuAsset/MainMenu", true);
 }
 
 void ABasePlayerCharacter::TryRestoreAfterReplication(ABasePlayerState* PS)

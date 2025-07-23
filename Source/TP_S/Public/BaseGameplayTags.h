@@ -44,6 +44,7 @@ namespace	BaseGamePlayTags
 
 	
 	// Shared Event(HitReact, Land)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Death);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Hit);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Hit_Melee);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Hit_Range);
@@ -83,6 +84,7 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Movement_Crouch);
 
 	// Player Ability(Attack)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee_Light);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Melee_Heavy);

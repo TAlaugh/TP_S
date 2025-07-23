@@ -248,7 +248,6 @@ void UBasePlayerCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 			
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_Hit, Data);
-			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGamePlayTags::Shared_Event_HitReact, FGameplayEventData());
 		}
 	}
 }
