@@ -117,6 +117,7 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_ActionPotion, "Item.Consumable.ActionPotion");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Melee, "Item.Equipable.Weapon.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Melee_PoleArm, "Item.Equipable.Weapon.Melee.PoleArm");
+	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Melee_Katana, "Item.Equipable.Weapon.Melee.Katana");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Range, "Item.Equipable.Weapon.Range");
 	UE_DEFINE_GAMEPLAY_TAG(Item_Equipable_Weapon_Range_MachineGun, "Item.Equipable.Weapon.Range.MachineGun");
 
