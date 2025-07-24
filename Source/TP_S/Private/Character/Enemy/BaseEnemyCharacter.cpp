@@ -21,8 +21,12 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Widget/WidgetBase.h"
 #include "Components/BoxComponent.h"
+#include "EngineUtils.h"
 #include "BaseFunctionLibrary.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Components/CapsuleComponent.h"
+#include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "Misc/MapErrors.h"
 
@@ -37,7 +41,7 @@ ABaseEnemyCharacter::ABaseEnemyCharacter(const FObjectInitializer& ObjectInitial
 
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 270.0f, 0.0f);
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.0f, 0.0f);
 	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 1000.0f;
 
@@ -94,6 +98,30 @@ void ABaseEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (!PhaseTwoPostProcessVolume)
+	{
+		for (TActorIterator<APostProcessVolume> It(GetWorld()); It; ++It)
+		{
+			PhaseTwoPostProcessVolume = *It;
+			UE_LOG(LogTemp, Warning, TEXT("✅ Auto-bound PostProcessVolume: %s"), *PhaseTwoPostProcessVolume->GetName());
+			break; // 첫 번째 찾은 것만 사용
+		}
+	}
+
+	if (!BaseAbilitySystemComponent)
+		return;
+
+	// ✅ Health Attribute 변화를 감지
+	BaseAbilitySystemComponent
+		->GetGameplayAttributeValueChangeDelegate(UBaseAttributeSet::GetCurrentHpAttribute())
+		.AddLambda([this](const FOnAttributeChangeData& Data)
+		{
+			const float NewHealth = Data.NewValue;
+			const float MaxHealth = GetBaseAttributeSet()->GetMaxHp(); 
+            
+			OnHealthChanged(NewHealth, MaxHealth);
+		});
+	
 	if (!EnemyUIComponent)
 	{
 		UE_LOG(LogTemp, Error, TEXT("EnemyUIComponent is null!"));
@@ -128,6 +156,111 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 	}
 
 	InitEnemyStartUpData();
+}
+
+void ABaseEnemyCharacter::PlayLightningEffect()
+{
+	UE_LOG(LogTemp, Warning, TEXT("⚡ Lightning strike!"));
+
+	// ✅ 번개 이펙트 스폰 (랜덤 위치)
+	if (LightningEffect)
+	{
+		// 번개 위치 랜덤 (보스 주변 2000~4000 범위)
+		FVector BossLocation = GetActorLocation();
+		FVector RandomOffset = FVector(
+			FMath::RandRange(-1500.f, 1500.f),
+			FMath::RandRange(-1500.f, 1500.f),
+			-200.f // 위쪽에서 떨어지는 느낌
+		);
+
+		UNiagaraComponent* LightningComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			LightningEffect,
+			BossLocation + RandomOffset,
+			FRotator::ZeroRotator,
+			FVector(1.0f, 1.0f, 5.0f)
+		);
+		if (LightningComp)
+		{
+			LightningComp->SetAutoDestroy(true); // ✅ 끝나면 자동 파괴
+		}
+	
+	}
+
+	if (ThunderSound)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), ThunderSound);
+	}
+}
+
+void ABaseEnemyCharacter::UpdatePhaseTwoDarkness()
+{
+	if (!PhaseTwoPostProcessVolume) return;
+
+	// ✅ 일정 비율로 증가 (0.05f씩 올림)
+	CurrentBlendWeight = FMath::FInterpTo(CurrentBlendWeight, TargetBlendWeight, 0.1f, 0.6f);
+	PhaseTwoPostProcessVolume->BlendWeight = CurrentBlendWeight;
+
+	// ✅ 거의 다 어두워지면 타이머 종료
+	if (FMath::IsNearlyEqual(CurrentBlendWeight, TargetBlendWeight, 0.02f))
+	{
+		PhaseTwoPostProcessVolume->BlendWeight = TargetBlendWeight;
+		GetWorldTimerManager().ClearTimer(SmoothDarkTimer);
+	}
+}
+
+void ABaseEnemyCharacter::OnHealthChanged(float NewHealth, float MaxHealth)
+{
+	if (bIsBoss && !bIsPhaseTwo && NewHealth <= MaxHealth * 0.5f)
+	{
+		bIsPhaseTwo = true;
+		EnterPhaseTwo();
+	}
+}
+
+	void ABaseEnemyCharacter::EnterPhaseTwo()
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s entered Phase 2!"), *GetName());
+
+	if (PhaseTwoPostProcessVolume)
+	{
+		CurrentBlendWeight = 0.0f; 
+		PhaseTwoPostProcessVolume->BlendWeight = 0.0f; // 0 → 1로 부드럽게도 가능
+
+		GetWorldTimerManager().SetTimer(
+		   SmoothDarkTimer,
+		   this,
+		   &ABaseEnemyCharacter::UpdatePhaseTwoDarkness,
+		   0.1f,
+		   true
+		   );
+	}
+	if (RainEffect)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			RainEffect,
+			FVector::ZeroVector, // 월드 전체 비면 0,0,0에 스폰
+			FRotator::ZeroRotator
+		);
+		UE_LOG(LogTemp, Warning, TEXT("🌧️ Rain effect spawned"));
+	}
+
+	// ✅ 빗소리 재생 (루프)
+	if (RainSound)
+	{
+		UGameplayStatics::SpawnSound2D(GetWorld(), RainSound);
+		UE_LOG(LogTemp, Warning, TEXT("🎵 Rain sound started"));
+	}
+
+	// ✅ 랜덤 번개 + 천둥 타이머 시작
+	GetWorldTimerManager().SetTimer(
+		LightningTimerHandle,
+		this,
+		&ABaseEnemyCharacter::PlayLightningEffect,
+		FMath::RandRange(3.f, 5.f), 
+		true
+	);
 }
 
 UBaseCombatComponent* ABaseEnemyCharacter::GetBaseCombatComponent() const

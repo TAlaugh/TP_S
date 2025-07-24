@@ -9,6 +9,7 @@
 #include "Character/Enemy/BaseEnemyCharacter.h"
 #include "Components/UI/HeroUIComponent.h"
 #include "Components/UI/BaseUIComponent.h"
+
 #include "Interfaces/BaseUIInterface.h"
 
 UBaseAttributeSet::UBaseAttributeSet()
@@ -63,6 +64,14 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 
 		const float NewCurrentHp = FMath::Clamp(BeforeHp - Damage, 0.0f, GetMaxHp());
 		SetCurrentHp(NewCurrentHp);
+
+		EnemyUIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+
+		// ✅ 여기서 보스 체력 변화 감지 → 2페이즈 체크!
+		if (ABaseEnemyCharacter* Enemy = Cast<ABaseEnemyCharacter>(Data.Target.GetAvatarActor()))
+		{
+			Enemy->OnHealthChanged(NewCurrentHp, GetMaxHp());
+		}
 
 
 		const FString DebugString =

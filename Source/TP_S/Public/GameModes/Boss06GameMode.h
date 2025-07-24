@@ -71,6 +71,7 @@ private:
 
 	UFUNCTION()
 	void OnEnemyDestroyed(AActor* DestroyedActor);
+	UFUNCTION()
 	void OnEnemyDied(ABaseEnemyCharacter* Enemy);
 
 	UPROPERTY()

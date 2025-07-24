@@ -10,6 +10,10 @@
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "Interfaces/BaseCombatInterface.h"
 #include "Interfaces/BaseUIInterface.h"
+#include "NiagaraSystem.h"        // UNiagaraSystem 타입 사용하려면 필요
+#include "NiagaraFunctionLibrary.h" // Niagara 스폰할 때 필요
+#include "Sound/SoundBase.h"
+	
 #include "BaseEnemyCharacter.generated.h"
 
 
@@ -37,13 +41,31 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	virtual UBaseUIComponent* GetBaseUIComponent() const override;
 	virtual UEnemyUIComponent* GetEnemyUIComponent() const override;
 	virtual void Die();
+	virtual void OnHealthChanged(float NewHealth, float MaxHealth);
+	// ✅ 보스인지 여부
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="BossPhase")
+	bool bIsBoss = false;
+
+	// ✅ 2페이즈 여부
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="BossPhase")
+	bool bIsPhaseTwo = false;
 	
 	UPROPERTY(BlueprintAssignable, Category="Enemy")
-    	FOnEnemyDied OnEnemyDied;
+	FOnEnemyDied OnEnemyDied;
+
+	FTimerHandle SmoothDarkTimer;
+	float CurrentBlendWeight = 0.0f;  // 시작값
+	float TargetBlendWeight = 1.0f; // 종료값
+	
+	
 	
 	protected:
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
+	void PlayLightningEffect();
+	void UpdatePhaseTwoDarkness();
+	// ✅ 2페이즈 진입 시 호출될 함수
+	virtual void EnterPhaseTwo();
 
 #if WITH_EDITOR
 	//게임내에서 캐릭터 본네임으로 바꾸는거
@@ -82,7 +104,22 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UWidgetComponent* EnemyHealthWidgetComponent;
 
+	UPROPERTY(EditAnywhere, Category="PhaseTwo")
+	APostProcessVolume* PhaseTwoPostProcessVolume;
+
+	UPROPERTY(EditAnywhere, Category="PhaseTwo|Effects")
+	UNiagaraSystem* RainEffect;
+
+	UPROPERTY(EditAnywhere, Category="PhaseTwo|Effects")
+	USoundBase* RainSound;
+
+	UPROPERTY(EditAnywhere, Category="PhaseTwo|Effects")
+	USoundBase* ThunderSound;
+
+	UPROPERTY(EditAnywhere, Category="PhaseTwo|Effects")
+	UNiagaraSystem* LightningEffect;
 	
+	FTimerHandle LightningTimerHandle;
 
 	virtual void HandleDeath();
 
