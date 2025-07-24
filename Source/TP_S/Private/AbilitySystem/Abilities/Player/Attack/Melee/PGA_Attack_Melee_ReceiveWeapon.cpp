@@ -14,8 +14,10 @@ UPGA_Attack_Melee_ReceiveWeapon::UPGA_Attack_Melee_ReceiveWeapon()
 {
 	AbilityTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_ReceiveWeapon);
 	ActivationRequiredTags.AddTag(BaseGamePlayTags::Player_Status_WeaponThrown);
-	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Movement);
+	ActivationBlockedTags.AddTag(BaseGamePlayTags::Shared_Status_InAir);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
+	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement);
 	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_ReceiveWeapon;
 }
 

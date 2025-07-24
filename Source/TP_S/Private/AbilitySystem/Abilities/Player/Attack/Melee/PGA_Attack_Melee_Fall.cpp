@@ -17,13 +17,13 @@ UPGA_Attack_Melee_Fall::UPGA_Attack_Melee_Fall()
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Movement_Dodge);
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Movement_Slide);
 	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_Fall;
+	WeaponSocketName = FName("hand_rSocket");
 }
 
 void UPGA_Attack_Melee_Fall::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                              const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                              const FGameplayEventData* TriggerEventData)
 {
-	WeaponSocketName = FName("hand_rSocket");
 	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_Fall;
 
 	GetPlayerCharacterFromActorInfo()->bAttackSlam = true;

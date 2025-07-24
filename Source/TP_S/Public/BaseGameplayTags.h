@@ -125,6 +125,7 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Melee);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Melee_PoleArm);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Melee_Katana);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Range);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Equipable_Weapon_Range_MachineGun);
 
