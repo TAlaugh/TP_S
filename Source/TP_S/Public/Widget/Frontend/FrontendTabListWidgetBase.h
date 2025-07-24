@@ -15,6 +15,9 @@ class TP_S_API UFrontendTabListWidgetBase : public UCommonTabListWidgetBase
 {
 	GENERATED_BODY()
 
+public:
+	void RequestRegisterTab(const FName& InTabID, const FText& InTabDisplayName);
+	
 private:
 	// UWidget Interface
 #if WITH_EDITOR

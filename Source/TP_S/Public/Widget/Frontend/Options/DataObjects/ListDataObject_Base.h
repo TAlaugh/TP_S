@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FrontendEnumType.h"
 #include "UObject/NoExportTypes.h"
 #include "ListDataObject_Base.generated.h"
 
@@ -13,12 +14,15 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class TP_S_API UListDataObject_Base : public UObject
 {
 	GENERATED_BODY()
 
 public:
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnListDataModifiedDelegate, UListDataObject_Base*, EOptionsListDataModifyReason)
+	FOnListDataModifiedDelegate OnListDataModified;
+	
 	// FORCEINLINE FName GetDataID() const { return DataID; }
 	// void SetDataID(FName InDataID) { DataID = InDataID; }
 	
@@ -35,9 +39,13 @@ public:
 	virtual TArray<UListDataObject_Base*> GetChildListData() const { return TArray<UListDataObject_Base*>(); }
 	virtual bool HasAnyChildListData() const { return false; }
 
+	void SetShouldApplySettingsImmediately(bool bShouldApplyRightAway) { bShouldApplyChangeImmediately = bShouldApplyRightAway; }
+
 protected:
 	// Empty in base class. The child classed should override it to handle the initialized needed accrodingly
 	virtual void OnDataObjectInitialized();
+
+	virtual void NotifyListDataModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason = EOptionsListDataModifyReason::DirectlyModified);
 	
 private:
 	FName DataID;
@@ -48,4 +56,6 @@ private:
 
 	UPROPERTY(Transient)
 	UListDataObject_Base* ParentData;
+
+	bool bShouldApplyChangeImmediately = false;
 };
