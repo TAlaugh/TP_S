@@ -23,7 +23,6 @@ void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle H
                                               const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                               const FGameplayEventData* TriggerEventData)
 {
-	WeaponSocketName = FName("hand_rSocket");
 	if (UBaseFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), BaseGamePlayTags::Shared_Status_Slide))
 	{
 		MontageToPlay = MontageByTag[BaseGamePlayTags::Shared_Status_Slide];
@@ -41,26 +40,26 @@ void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle H
 		this,
 		BaseGamePlayTags::Player_Event_Attack_Next
 		);
-		TaskToNext->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::SetNextSection);
+		TaskToNext->EventReceived.AddDynamic(this, &ThisClass::SetNextSection);
 		TaskToNext->ReadyForActivation();
 
 		UAbilityTask_WaitGameplayEvent* TaskToEquip_Left = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this,
 			BaseGamePlayTags::Player_Event_Attack_Equip_Left);
-		TaskToEquip_Left->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::EquipWeaponLeftFromEvent);
+		TaskToEquip_Left->EventReceived.AddDynamic(this, &ThisClass::EquipWeaponLeftFromEvent);
 		TaskToEquip_Left->ReadyForActivation();
 
 		UAbilityTask_WaitGameplayEvent* TaskToEquip_Right = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this,
 			BaseGamePlayTags::Player_Event_Attack_Equip_Right);
-		TaskToEquip_Right->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::EquipWeaponRightFromEvent);
+		TaskToEquip_Right->EventReceived.AddDynamic(this, &ThisClass::EquipWeaponRightFromEvent);
 		TaskToEquip_Right->ReadyForActivation();
 
 		UAbilityTask_WaitGameplayEvent* TaskToFinish = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this,
 			BaseGamePlayTags::Player_Event_Attack_Finish
 			);
-		TaskToFinish->EventReceived.AddDynamic(this, &UPGA_Attack_Melee_Light::StopAttack);
+		TaskToFinish->EventReceived.AddDynamic(this, &ThisClass::StopAttack);
 		TaskToFinish->ReadyForActivation();
 	}
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);

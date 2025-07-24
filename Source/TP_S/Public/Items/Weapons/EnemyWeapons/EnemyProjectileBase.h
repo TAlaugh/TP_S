@@ -58,4 +58,6 @@ protected:
 
 	private:
 	void HandleApplyProjectileDamage(APawn* ItHitPawn, const FGameplayEventData& InPayload);
+
+	TArray<AActor*> OverlappedActors;
 };

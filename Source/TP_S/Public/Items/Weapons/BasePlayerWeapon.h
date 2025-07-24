@@ -36,6 +36,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
 	FName CollisionSocketName;
 
+	// 장착x 소지했을 때의 무기 위치 소켓이름
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName CarriedSocketName;
+	// 왼손에 장착했을 때 소켓이름
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName EquippedLSocketName;
+	// 오른손에 장착했을 때 소켓이름
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName EquippedRSocketName;
+
 	// 플레이어에게 주입된 무기능력 초기화
 	UFUNCTION()
 	void AssignGrantedAbilitySpecHandles(const TArray<FGameplayAbilitySpecHandle>& SpecHandles);
@@ -59,6 +69,6 @@ public:
 	float DissolveTimeElapsed = 0.f;
 	float DissolveDuration = 0.7f;	
 
-private:
+public:
 	TArray<FGameplayAbilitySpecHandle> GrantedAbilitySpecHandles;
 };

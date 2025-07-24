@@ -84,9 +84,9 @@ void UBasePlayerCombatComponent::RemoveSpawnedWeapon(FGameplayTag WeaponTag, ABa
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
 		{
-			Subsystem->AddMappingContext(Weapon->PlayerWeaponData.WeaponInputMappingContext, 1);
+			Subsystem->RemoveMappingContext(Weapon->PlayerWeaponData.WeaponInputMappingContext);
 			UBaseAbilitySystemComponent* ASC = UBaseFunctionLibrary::NativeGetBaseASCFromActor(GetOwningPawn());
-			//ASC->RemoveGrantedPlayerWeaponAbilities(Weapon->GetGrantedAbilitySpecHandles());
+			ASC->RemoveGrantedPlayerWeaponAbilities(Weapon->GrantedAbilitySpecHandles);
 		}
 	}
 	

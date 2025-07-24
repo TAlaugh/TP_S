@@ -40,12 +40,12 @@ protected:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class UPlayerGameplayAbility> Ability;
+	TObjectPtr<UPlayerGameplayAbility> Ability;
 
 	UPROPERTY()
 	UBasePlayerCombatComponent* PlayerCombatComponent;
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName WeaponSocketName;
 
 	UPROPERTY()

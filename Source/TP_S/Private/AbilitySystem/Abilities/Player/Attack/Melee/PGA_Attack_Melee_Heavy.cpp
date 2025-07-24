@@ -17,7 +17,6 @@ UPGA_Attack_Melee_Heavy::UPGA_Attack_Melee_Heavy()
 	AbilityTags.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_Heavy);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement);
-	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Status_WeaponThrown);
 	//ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Movement);
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Shared_Status_InAir);
 	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_Heavy;
@@ -30,19 +29,11 @@ void UPGA_Attack_Melee_Heavy::ActivateAbility(const FGameplayAbilitySpecHandle H
 	MovementFix(true);
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	EquipWeapon();
-	ThrowWeapon(FGameplayEventData());
 }
 
 
 void UPGA_Attack_Melee_Heavy::ThrowWeapon(FGameplayEventData Data)
 {
-	Weapon = CachedPlayerCharacter->GetPlayerCombatComponent()->GetPlayerCurrentEquippedWeapon();
-	if (Weapon)
-	{
-		Task = UAT_Attack_Melee_ThrowWeapon::Init(this, BaseGamePlayTags::Player_Event_Attack_Throw);
-		Task->ReadyForActivation();
-		bUnEquipWhenEnd = false;
-	}
 }
 
 void UPGA_Attack_Melee_Heavy::EndAbility(const FGameplayAbilitySpecHandle Handle,
