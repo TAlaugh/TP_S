@@ -8,6 +8,8 @@ public class TP_S : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayTags", "GameplayAbilities", "GameplayTasks", "NavigationSystem", "AIModule", "AnimGraphRuntime", "MotionWarping","Niagara", "UMG", "CommonUI", "CommonInput", "PreLoadScreen" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayTags", "GameplayAbilities", "GameplayTasks", "NavigationSystem", "AIModule", "AnimGraphRuntime", "MotionWarping","Niagara", "UMG", "CommonUI", "CommonInput", "PreLoadScreen", "PropertyPath" });
+		
+		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 	}
 }
