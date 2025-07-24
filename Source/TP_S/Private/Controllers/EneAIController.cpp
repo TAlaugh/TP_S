@@ -30,13 +30,13 @@ AEneAIController::AEneAIController(const FObjectInitializer& ObjectInitializer)
 	AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
 
 	//시아 반경 설정
-	AISenseConfig_Sight->SightRadius = 3000.0f;
+	AISenseConfig_Sight->SightRadius = 5000.0f;
 
 	//대상을 잃는 시아 설정
 	AISenseConfig_Sight->LoseSightRadius = 0.f;
 
 	//주변 시아각
-	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 230.0f;
+	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 360.0f;
 
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
 
@@ -133,8 +133,6 @@ void AEneAIController::HandleDamageStimulus(AActor* Actor, FAIStimulus Stimulus)
 
 void AEneAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	//Update
-	//Debug::Print(Actor->GetActorLabel() + TEXT(" Was Sensed"), FColor::Green);
 
 	ETeamAttitude::Type Attitude = GetTeamAttitudeTowards(*Actor);
 	if (Attitude != ETeamAttitude::Hostile)
