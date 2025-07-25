@@ -18,6 +18,9 @@ class TP_S_API UFrontendCommonButtonBase : public UCommonButtonBase
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetButtonText(FText InText);
+
+	UFUNCTION(Blueprintable)
+	FText GetButtonDisplayText() const;
 	
 private:
 	// UUserWidget Interface

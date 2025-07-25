@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FrontendEnumType.h"
 #include "Widget/Frontend/Widget_ActivatableBase.h"
 #include "Widget_OptionsScreen.generated.h"
 
+class UListDataObject_Base;
+class UWidget_OptionsDetailsView;
 class UFrontendCommonListView;
 class UFrontendTabListWidgetBase;
 class UOptionsDataRegistry;
@@ -24,6 +27,10 @@ protected:
 	// UCommonActivatableWidget Interface
 	virtual void NativeOnActivated() override;
 	virtual void NativeOnDeactivated() override;
+	
+	FString TryGetEntryWidgetClassName(UObject* InOwningListItem) const;
+
+	void OnListViewListDataModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason);
 	
 private:
 	UOptionsDataRegistry* GetOrCreateDataRegistry();
@@ -44,6 +51,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	UFrontendCommonListView* CommonListView_OptionsList;
 
+	UPROPERTY(meta = (BindWidget))
+	UWidget_OptionsDetailsView* DetailsView_ListEntryInfo;
+
 	// Handle the creation of data in the options screen. direct access to this variable is forbidden
 	UPROPERTY(Transient)
 	UOptionsDataRegistry* CreatedOwningDataRegistry;
@@ -52,4 +62,9 @@ private:
 	FDataTableRowHandle ResetAction;
 
 	FUIActionBindingHandle ResetActionHandle;
+
+	UPROPERTY(Transient)
+	TArray<UListDataObject_Base*> ResettableDataArray;
+	
+	bool bIsResettingData = false;
 };

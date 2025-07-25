@@ -3,6 +3,12 @@
 
 #include "FrontendSettings/FrontendGameUserSettings.h"
 
+UFrontendGameUserSettings::UFrontendGameUserSettings()
+	: OverallVolume(1.f)
+{
+	
+}
+
 UFrontendGameUserSettings* UFrontendGameUserSettings::Get()
 {
 	if (GEngine)
@@ -11,4 +17,11 @@ UFrontendGameUserSettings* UFrontendGameUserSettings::Get()
 	}
 	
 	return nullptr;
+}
+
+void UFrontendGameUserSettings::SetOverallVolume(float InVolume)
+{
+	OverallVolume = InVolume;
+
+	// The Actual logic for controlling the volume goes here
 }
