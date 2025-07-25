@@ -10,7 +10,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "AbilitySystem/Abilities/Tasks/Player/AT_Attack_Melee_ThrowWeapon.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 
 UPGA_Attack_Melee_Heavy::UPGA_Attack_Melee_Heavy()
 {
@@ -18,6 +18,7 @@ UPGA_Attack_Melee_Heavy::UPGA_Attack_Melee_Heavy()
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement);
 	//ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Ability_Movement);
+	ActivationBlockedTags.AddTag(BaseGamePlayTags::Player_Status_HeavyCoolDown);
 	ActivationBlockedTags.AddTag(BaseGamePlayTags::Shared_Status_InAir);
 	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_Heavy;
 }
@@ -29,6 +30,15 @@ void UPGA_Attack_Melee_Heavy::ActivateAbility(const FGameplayAbilitySpecHandle H
 	MovementFix(true);
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	EquipWeapon();
+
+	UAbilityTask_WaitGameplayEvent* TaskToFinish = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+			this,
+			BaseGamePlayTags::Player_Event_Attack_Finish
+			);
+	TaskToFinish->EventReceived.AddDynamic(this, &ThisClass::StopAttack);
+	TaskToFinish->ReadyForActivation();
+	
+	CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo);
 }
 
 

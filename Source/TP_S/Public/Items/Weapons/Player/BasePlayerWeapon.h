@@ -46,6 +46,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName EquippedRSocketName;
 
+	// 무기데미지 커브테이블
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FScalableFloat Damage;
+
 	// 플레이어에게 주입된 무기능력 초기화
 	UFUNCTION()
 	void AssignGrantedAbilitySpecHandles(const TArray<FGameplayAbilitySpecHandle>& SpecHandles);

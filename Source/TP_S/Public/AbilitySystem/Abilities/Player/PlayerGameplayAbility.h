@@ -45,6 +45,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Section")
 	uint8 MaxSection = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Section")
 	uint8 CurrentSection = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
