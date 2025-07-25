@@ -23,8 +23,3 @@ void UPGA_Katana_Heavy::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	WaitTask->EventReceived.AddDynamic(this, &ThisClass::StopAttack);
 	WaitTask->ReadyForActivation();
 }
-
-void UPGA_Katana_Heavy::StopAttack(FGameplayEventData Data)
-{
-	K2_EndAbility();
-}

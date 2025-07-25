@@ -8,7 +8,7 @@
 #include "BaseGameplayTags.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UAT_Attack_Melee_ReceiveWeapon* UAT_Attack_Melee_ReceiveWeapon::Init(UGameplayAbility* OwningAbility)

@@ -57,12 +57,17 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	float CurrentBlendWeight = 0.0f;  // 시작값
 	float TargetBlendWeight = 1.0f; // 종료값
 	
-	
+	UPROPERTY(EditDefaultsOnly, Category="Boss|PhaseTwo|Lightning")
+    	TSubclassOf<class AEnemyLightningProjectile> LightningProjectileClass;
+    	
 	
 	protected:
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
 	void PlayLightningEffect();
+	FVector GetRandomLightningLocation();
+	void SpawnLightningWarning(const FVector& Location);
+	void SpawnSingleLightning(const FVector& Location);
 	void UpdatePhaseTwoDarkness();
 	// ✅ 2페이즈 진입 시 호출될 함수
 	virtual void EnterPhaseTwo();
@@ -104,6 +109,7 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UWidgetComponent* EnemyHealthWidgetComponent;
 
+	//////////////////////////////////////////////////////////////
 	UPROPERTY(EditAnywhere, Category="PhaseTwo")
 	APostProcessVolume* PhaseTwoPostProcessVolume;
 
@@ -113,14 +119,39 @@ class TP_S_API ABaseEnemyCharacter : public ABaseCharacter, public IBaseUIInterf
 	UPROPERTY(EditAnywhere, Category="PhaseTwo|Effects")
 	USoundBase* RainSound;
 
-	UPROPERTY(EditAnywhere, Category="PhaseTwo|Effects")
-	USoundBase* ThunderSound;
+	UPROPERTY(EditDefaultsOnly, Category="Boss|PhaseTwo|Lightning")
+	TSubclassOf<UGameplayEffect> LightningDamageEffectClass;  // 번개 데미지 GameplayEffect
 
-	UPROPERTY(EditAnywhere, Category="PhaseTwo|Effects")
-	UNiagaraSystem* LightningEffect;
+	// ✅ 사전에 Spec을 만들어 저장해둘 변수
+	FGameplayEffectSpecHandle LightningDamageSpecHandle;
 	
 	FTimerHandle LightningTimerHandle;
 
+	// 번개 경고 이펙트
+	UPROPERTY(EditDefaultsOnly, Category="Boss|Lightning")
+	UNiagaraSystem* LightningWarningEffect;
+
+	// 번개 경고 사운드 (선택)
+	UPROPERTY(EditDefaultsOnly, Category="Boss|Lightning")
+	USoundBase* LightningWarningSound;
+
+	// 경고 후 실제 번개가 떨어지기까지 딜레이
+	UPROPERTY(EditDefaultsOnly, Category="Boss|Lightning")
+	float LightningWarningDelay = 1.0f;
+
+
+	UPROPERTY(EditDefaultsOnly, Category="Boss|PhaseTwo|Animation")
+	UAnimMontage* PhaseTwoMontage;
+
+
+	// Phase 2 전용 BehaviorTree
+	UPROPERTY(EditDefaultsOnly, Category="Boss|PhaseTwo")
+	class UBehaviorTree* PhaseTwoBehaviorTree;
+
+	// Phase 2 Behavior Tree 실행 함수
+	void SwitchToPhaseTwoBehaviorTree();
+	
+	////////////////////////////////////////////////////
 	virtual void HandleDeath();
 
 	UFUNCTION()

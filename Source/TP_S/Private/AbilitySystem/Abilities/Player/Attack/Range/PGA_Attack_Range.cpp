@@ -17,6 +17,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Widget/AimWidget.h"
+#include "Widget/HUDWidget.h"
 
 UPGA_Attack_Range::UPGA_Attack_Range()
 {
@@ -30,6 +32,7 @@ UPGA_Attack_Range::UPGA_Attack_Range()
 	CancelAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_Jump);
 	CancelAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement_DoubleJump);
 	AttackType = BaseGamePlayTags::Player_Ability_Attack_Range;
+	WeaponSocketName = FName("hand_rRangeSocket");
 }
 
 void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -38,14 +41,13 @@ void UPGA_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	CachedPlayerCameraBoomSocket = GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->SocketOffset;
 	CachedPlayerCameraBoomLength = GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->TargetArmLength;
-	
+	CachedPlayerCharacter->GetController<ABasePlayerController>()->GetPlayerHUDWidget()->GetAimWidget()->SetVisibility(ESlateVisibility::Visible);
 	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->TargetArmLength = 100.0f;
 	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->SocketOffset = FVector(0.f, 55.f, 65.f);
 	DirectionFix(true);
 	RotationSetByAim(true);
 	PlayerCombatComponent = GetPlayerCombatComponentFromActorInfo();
 	WeaponType = BaseGamePlayTags::Item_Equipable_Weapon_Range;
-	WeaponSocketName = FName("hand_rRangeSocket");
 	bUnEquipWhenEnd = false;
 	EquipWeapon();
 	Weapon = PlayerCombatComponent->GetPlayerCurrentEquippedWeapon();
@@ -84,10 +86,10 @@ void UPGA_Attack_Range::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 	{
 		FireTask->StopFire();
 	}
+	CachedPlayerCharacter->GetController<ABasePlayerController>()->GetPlayerHUDWidget()->GetAimWidget()->SetVisibility(ESlateVisibility::Hidden);
 	DirectionFix(false);
 	GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->GravityScale = 1.5f;
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	GetPlayerCombatComponentFromActorInfo()->UpdateAnimLayer();
 	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->TargetArmLength = CachedPlayerCameraBoomLength;
 	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->SocketOffset = CachedPlayerCameraBoomSocket;
 }

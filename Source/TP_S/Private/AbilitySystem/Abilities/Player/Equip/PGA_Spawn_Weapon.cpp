@@ -7,7 +7,7 @@
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 #include "Items/Weapons/WeaponItemDataAsset.h"
 
 UPGA_Spawn_Weapon::UPGA_Spawn_Weapon()

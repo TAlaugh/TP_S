@@ -5,8 +5,9 @@
 
 #include "TP_S/Public/Character/Enemy/BaseEnemyCharacter.h"
 
+#include "AIController.h"
 #include "BaseFunctionLibrary.h"
-#include "DebugHelper.h"
+#include "BrainComponent.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/BaseAttributeSet.h"
 #include "Components/WidgetComponent.h"
@@ -16,19 +17,17 @@
 #include "DataAssets/DataAsset_StartupBase.h"
 #include "Engine/AssetManager.h"
 #include "MotionWarpingComponent.h"
-#include "MovieSceneTracksComponentTypes.h"
-#include "DataAssets/Enemy/DataAsset_StartupBaseEnemy.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Widget/WidgetBase.h"
 #include "Components/BoxComponent.h"
 #include "EngineUtils.h"
-#include "BaseFunctionLibrary.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Components/CapsuleComponent.h"
-#include "NiagaraComponent.h"
+#include "Items/Weapons/EnemyWeapons/EnemyLightningProjectile.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "Misc/MapErrors.h"
+#include "UObject/FastReferenceCollector.h"
 
 
 ABaseEnemyCharacter::ABaseEnemyCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -138,6 +137,12 @@ void ABaseEnemyCharacter::BeginPlay()
 	{
 		HealthWidget->InitEnemyCreateWidget(this);
 	}
+
+	if (BaseAbilitySystemComponent && LightningDamageEffectClass)
+	{
+		FGameplayEffectContextHandle Ctx = BaseAbilitySystemComponent->MakeEffectContext();
+		LightningDamageSpecHandle = BaseAbilitySystemComponent->MakeOutgoingSpec(LightningDamageEffectClass, 1.f, Ctx);
+	}
 }
 
 void ABaseEnemyCharacter::PossessedBy(AController* NewController)
@@ -151,7 +156,7 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 	if (BaseAbilitySystemComponent)
 	{
 		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
-		//UE_LOG(LogTemp, Error, TEXT("BaseAbilitySystemComponent is Exist on %s"), *GetName());
+		
 		
 	}
 
@@ -160,37 +165,117 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 
 void ABaseEnemyCharacter::PlayLightningEffect()
 {
-	UE_LOG(LogTemp, Warning, TEXT("⚡ Lightning strike!"));
+    UE_LOG(LogTemp, Warning, TEXT("⚡ Lightning strike!"));
 
-	// ✅ 번개 이펙트 스폰 (랜덤 위치)
-	if (LightningEffect)
+    if (!LightningProjectileClass) return;
+
+    // ✅ 이번 번개 소환 개수 (랜덤 3~5개)
+    int32 LightningCount = FMath::RandRange(3, 5);
+
+    for (int32 i = 0; i < LightningCount; i++)
+    {
+        // 0.3 ~ 0.8초 랜덤 딜레이
+        float RandomDelay = FMath::FRandRange(0.3f, 0.8f);
+
+        FTimerHandle TempHandle;
+        GetWorldTimerManager().SetTimer(
+            TempHandle,
+            FTimerDelegate::CreateLambda([this]()
+            {
+                FVector SpawnLocation = GetRandomLightningLocation();
+
+                // ✅ 경고 이펙트 먼저
+                SpawnLightningWarning(SpawnLocation);
+
+                // ✅ 경고 후 실제 번개 딜레이
+                float LightningWarningDelay = 1.0f;
+                FTimerHandle LightningHandle;
+                GetWorldTimerManager().SetTimer(
+                    LightningHandle,
+                    FTimerDelegate::CreateLambda([this, SpawnLocation]()
+                    {
+                        SpawnSingleLightning(SpawnLocation);
+                    }),
+                    LightningWarningDelay,
+                    false
+                );
+            }),
+            RandomDelay,
+            false
+        );
+    }
+}
+
+	void ABaseEnemyCharacter::SpawnSingleLightning(const FVector& Location)
 	{
-		// 번개 위치 랜덤 (보스 주변 2000~4000 범위)
-		FVector BossLocation = GetActorLocation();
-		FVector RandomOffset = FVector(
-			FMath::RandRange(-1500.f, 1500.f),
-			FMath::RandRange(-1500.f, 1500.f),
-			-200.f // 위쪽에서 떨어지는 느낌
-		);
-
-		UNiagaraComponent* LightningComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			GetWorld(),
-			LightningEffect,
-			BossLocation + RandomOffset,
-			FRotator::ZeroRotator,
-			FVector(1.0f, 1.0f, 5.0f)
-		);
-		if (LightningComp)
-		{
-			LightningComp->SetAutoDestroy(true); // ✅ 끝나면 자동 파괴
-		}
-	
+	if (!GetWorld())
+	{
+		UE_LOG(LogTemp, Error, TEXT("❌ World is NULL!"));
+		return;
 	}
 
-	if (ThunderSound)
+	if (!LightningProjectileClass)
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(), ThunderSound);
+		UE_LOG(LogTemp, Error, TEXT("❌ LightningProjectileClass is NULL!"));
+		return;
 	}
+
+	AEnemyLightningProjectile* LightningProj = GetWorld()->SpawnActor<AEnemyLightningProjectile>(
+		LightningProjectileClass,
+		Location,
+		FRotator::ZeroRotator
+	);
+
+	if (!LightningProj)
+	{
+		UE_LOG(LogTemp, Error, TEXT("❌ Failed to spawn LightningProjectile!"));
+		return;
+	}
+
+	if (LightningDamageSpecHandle.IsValid())
+	{
+		LightningProj->ProjectileDamageEffectSpecHandle = LightningDamageSpecHandle;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("⚠️ LightningDamageSpecHandle is NOT valid!"));
+	}
+
+	// Instigator가 이미 파괴 중이면 크래시 방지
+	if (!IsPendingKillPending() && IsValid(this))
+	{
+		LightningProj->SetInstigator(this);
+	}
+	}
+
+FVector ABaseEnemyCharacter::GetRandomLightningLocation()
+{
+    FVector FieldCenter = FVector(0.f, 0.f, 0.f);
+    FVector RandomOffset = FVector(
+        FMath::RandRange(-2500.f, 2500.f),
+        FMath::RandRange(-2500.f, 2500.f),
+        0.f
+    );
+    return FieldCenter + RandomOffset;
+}
+
+void ABaseEnemyCharacter::SpawnLightningWarning(const FVector& Location)
+{
+    if (LightningWarningEffect)
+    {
+        UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+            GetWorld(),
+            LightningWarningEffect,
+            Location,
+            FRotator::ZeroRotator,
+            FVector(10.f) // 크기
+        );
+    }
+
+    if (LightningWarningSound)
+    {
+        UGameplayStatics::PlaySoundAtLocation(GetWorld(), LightningWarningSound, Location);
+    }
 }
 
 void ABaseEnemyCharacter::UpdatePhaseTwoDarkness()
@@ -222,6 +307,54 @@ void ABaseEnemyCharacter::OnHealthChanged(float NewHealth, float MaxHealth)
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s entered Phase 2!"), *GetName());
 
+	bIsPhaseTwo = true;
+
+	// AnimInstance 체크
+	if (!PhaseTwoMontage)
+	{
+		UE_LOG(LogTemp, Error, TEXT("❌ PhaseTwoMontage is NULL!"));
+	}
+	if (!GetMesh())
+	{
+		UE_LOG(LogTemp, Error, TEXT("❌ Mesh is NULL!"));
+	}
+	else if (!GetMesh()->GetAnimInstance())
+	{
+		UE_LOG(LogTemp, Error, TEXT("❌ PhaseTwoMontage cannot be played!"));
+		// 몽타주가 없으면 바로 BT 전환
+		SwitchToPhaseTwoBehaviorTree();
+	}
+
+	// ✅ AI 멈추기
+	// ✅ AI 멈추기
+	if (AAIController* AICon = Cast<AAIController>(GetController()))
+	{
+		if (AICon->BrainComponent)
+		{
+			AICon->BrainComponent->StopLogic(TEXT("PhaseTwo Montage Playing"));
+		}
+	}
+
+	// ✅ Phase2 몽타주 실행
+	if (PhaseTwoMontage && GetMesh() && GetMesh()->GetAnimInstance())
+	{
+		float PlayedLen = GetMesh()->GetAnimInstance()->Montage_Play(PhaseTwoMontage, 1.0f);
+		UE_LOG(LogTemp, Warning, TEXT("▶ Phase2 Montage PlayedLen = %f"), PlayedLen);
+
+		FOnMontageEnded MontageEndDelegate;
+		MontageEndDelegate.BindLambda([this](UAnimMontage* Montage, bool bInterrupted)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("▶ Phase2 Montage Finished, Switching BT!"));
+			SwitchToPhaseTwoBehaviorTree();
+		});
+		GetMesh()->GetAnimInstance()->Montage_SetEndDelegate(MontageEndDelegate, PhaseTwoMontage);
+	}
+	else
+	{
+		// 몽타주 없으면 즉시 전환
+		SwitchToPhaseTwoBehaviorTree();
+	}
+	
 	if (PhaseTwoPostProcessVolume)
 	{
 		CurrentBlendWeight = 0.0f; 
@@ -243,14 +376,13 @@ void ABaseEnemyCharacter::OnHealthChanged(float NewHealth, float MaxHealth)
 			FVector::ZeroVector, // 월드 전체 비면 0,0,0에 스폰
 			FRotator::ZeroRotator
 		);
-		UE_LOG(LogTemp, Warning, TEXT("🌧️ Rain effect spawned"));
 	}
 
 	// ✅ 빗소리 재생 (루프)
 	if (RainSound)
 	{
 		UGameplayStatics::SpawnSound2D(GetWorld(), RainSound);
-		UE_LOG(LogTemp, Warning, TEXT("🎵 Rain sound started"));
+	
 	}
 
 	// ✅ 랜덤 번개 + 천둥 타이머 시작
@@ -258,7 +390,7 @@ void ABaseEnemyCharacter::OnHealthChanged(float NewHealth, float MaxHealth)
 		LightningTimerHandle,
 		this,
 		&ABaseEnemyCharacter::PlayLightningEffect,
-		FMath::RandRange(3.f, 5.f), 
+		FMath::RandRange(1.f, 5.f), 
 		true
 	);
 }
@@ -297,6 +429,31 @@ void ABaseEnemyCharacter::InitEnemyStartUpData()
 	 		}
 	 	)
 	);
+}
+
+void ABaseEnemyCharacter::SwitchToPhaseTwoBehaviorTree()
+{
+	AAIController* AICont = Cast<AAIController>(GetController());
+	if (!AICont)
+	{
+		UE_LOG(LogTemp, Error, TEXT("❌ No AIController for %s"), *GetName());
+		return;
+	}
+
+	if (!PhaseTwoBehaviorTree)
+	{
+		UE_LOG(LogTemp, Error, TEXT("❌ PhaseTwoBehaviorTree is NULL for %s"), *GetName());
+		return;
+	}
+
+	if (AICont->GetBrainComponent())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("🛑 Stopping old BT for %s"), *GetName());
+		AICont->GetBrainComponent()->StopLogic(TEXT("Switching to Phase 2"));
+	}
+
+	bool bSuccess = AICont->RunBehaviorTree(PhaseTwoBehaviorTree);
+	UE_LOG(LogTemp, Warning, TEXT("✅ RunBehaviorTree for PhaseTwo returned: %s"), bSuccess ? TEXT("TRUE") : TEXT("FALSE"));
 }
 
 void ABaseEnemyCharacter::Die()

@@ -17,6 +17,7 @@ UPGA_Attack_Melee_Light::UPGA_Attack_Melee_Light()
 	//BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee_ReceiveWeapon);
 	WeaponSocketName = FName("hand_rSocket");
 	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_Light;
+	bStopWhenAbilityEnd = true;
 }
 
 void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -116,7 +117,4 @@ void UPGA_Attack_Melee_Light::SetNextSection(FGameplayEventData Data)
 }
 
 
-void UPGA_Attack_Melee_Light::StopAttack(FGameplayEventData Data)
-{
-	K2_EndAbility();
-}
+

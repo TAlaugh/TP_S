@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 
 #include "BaseFunctionLibrary.h"
 #include "DebugHelper.h"

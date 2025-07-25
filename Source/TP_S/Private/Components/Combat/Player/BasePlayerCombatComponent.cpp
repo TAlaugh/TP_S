@@ -12,7 +12,7 @@
 #include "AnimInstances/Player/BasePlayerLinkedAnimLayer.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 #include "Items/Weapons/WeaponItemDataAsset.h"
 #include "Widget/HUDWidget.h"
 #include "Widget/WeaponHUDWidget.h"
@@ -41,7 +41,6 @@ void UBasePlayerCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, A
 		if (OwnerPlayer->GetMesh()->GetAnimInstance() && Weapon->PlayerWeaponData.WeaponAnimLayerLink != nullptr)
 		{
 			OwnerPlayer->GetMesh()->GetAnimInstance()->LinkAnimClassLayers(Weapon->PlayerWeaponData.WeaponAnimLayerLink);
-			CombatLayer = Weapon->PlayerWeaponData.WeaponAnimLayerLink;
 		}
 	}
 	
@@ -77,7 +76,6 @@ void UBasePlayerCombatComponent::RemoveSpawnedWeapon(FGameplayTag WeaponTag, ABa
 		if (OwnerPlayer->GetMesh()->GetAnimInstance() && Weapon->PlayerWeaponData.WeaponAnimLayerLink != nullptr)
 		{
 			OwnerPlayer->GetMesh()->GetAnimInstance()->UnlinkAnimClassLayers(Weapon->PlayerWeaponData.WeaponAnimLayerLink);
-			CombatLayer = nullptr;
 		}
 	}
 	if (ULocalPlayer* LocalPlayer = GetOwningPawn()->GetController<ABasePlayerController>()->GetLocalPlayer())
@@ -205,22 +203,24 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 	OverlappedActors.Empty();
 }
 
-// TODO::현재 장착중인 무기의 데미지를 가져옴
+// 현재 장착중인 무기의 데미지를 가져옴
 float UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel(float Level) const
 {
 	if (GetPlayerCurrentEquippedWeapon())
 	{
-		return GetPlayerCurrentEquippedWeapon()->ItemDataAsset->BaseDamage; //GetValueAtLevel(Level);
+		return GetPlayerCurrentEquippedWeapon()->Damage.GetValueAtLevel(Level);
 	}
 	return Level;
 
 }
 
+// 던져놓은 무기의 데미지 가져옴
 float UBasePlayerCombatComponent::GetPlayerCurrentThrownWeaponDamageAtLevel(float Level) const
 {
 	if (GetPlayerCurrentThrownWeapon())
 	{
-		return GetPlayerCurrentThrownWeapon()->ItemDataAsset->BaseDamage; //GetValueAtLevel(Level);
+		//return GetPlayerCurrentThrownWeapon()->ItemDataAsset->BaseDamage;
+		return GetPlayerCurrentThrownWeapon()->Damage.GetValueAtLevel(Level);
 	}
 	return Level;
 }
@@ -452,10 +452,6 @@ FGameplayTag UBasePlayerCombatComponent::GetEquippedRangeTag() const
 
 void UBasePlayerCombatComponent::UpdateAnimLayer()
 {
-	if (CombatLayer != nullptr)
-	{
-		OwnerPlayer->GetMesh()->GetAnimInstance()->LinkAnimClassLayers(CombatLayer);
-	}
 }
 
 ABasePlayerWeapon* UBasePlayerCombatComponent::GetEquippedRangeWeaponClass() const

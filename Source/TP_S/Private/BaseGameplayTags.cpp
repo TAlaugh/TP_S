@@ -111,6 +111,8 @@ namespace BaseGamePlayTags
 
 	// Player Status
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_WeaponThrown, "Player.Status.WeaponThrown");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_HeavyCoolDown, "Player.Status.HeavyCoolDown");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_HitCoolDown, "Player.Status.HitCoolDown");
 
 	// Item Tags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");
@@ -136,18 +138,24 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_1,"Enemy.Ability.Skill.1")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_2,"Enemy.Ability.Skill.2")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_3,"Enemy.Ability.Skill.3")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_PhaseTwo_1,"Enemy.Ability.Skill.PhaseTwo.1")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_PhaseTwo_2,"Enemy.Ability.Skill.PhaseTwo.2")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_PhaseTwo_3,"Enemy.Ability.Skill.PhaseTwo.3")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_PhaseTwo_4,"Enemy.Ability.Skill.PhaseTwo.4")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_SpawnSkill,"Enemy.Ability.Skill.Lianhuo.SpawnSkill")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_SpawnSkill2,"Enemy.Ability.Skill.Lianhuo.SpawnSkill2")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_SKill_Lianhuo_SpawnEnemy_Skeleton,"Enemy.Ability.Skill.Lianhuo.SpawnEnemy.Skeleton")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_Rage,"Enemy.Ability.Skill.Lianhuo.Rage")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_SpawnEnemy,"Enemy.Ability.SpawnEnemy")
-	 
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_JumpAttackSkill, "Enemy.Ability.Skill.Lianhuo.JumpAttackSkill")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_groggy, "Enemy.Ability.Skill.Lianhuo.groggy")
 
 
 	// Enemy Event
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnSkill, "Enemy.Event.SpawnSkill")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnEnemy, "Enemy.Event.SpawnEnemy")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_Rage, "Enemy.Event.Rage")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_JumpAttackSkill, "Enemy.Event.JumpAttackSkill")
 	
 	// Enemy Status
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_Strafing,"Enemy.Status.Strafing")

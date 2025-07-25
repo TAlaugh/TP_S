@@ -34,6 +34,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability", meta = (DisplayName = "Apply GameplayEffect Spec Handle To TargetActor", ExpandEnumAsExecs = "OutSuccessType"))
 	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle, EBaseSuccessType& OutSuccessType);
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	void ApplyGameplayEffectSpecHandleToHitResults(const FGameplayEffectSpecHandle& SpecHandle, const TArray<FHitResult>& HitResults);
+	
 protected:
 	
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
