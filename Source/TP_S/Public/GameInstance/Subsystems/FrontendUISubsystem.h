@@ -30,7 +30,8 @@ class TP_S_API UFrontendUISubsystem : public UGameInstanceSubsystem
 
 public:
 	static UFrontendUISubsystem* Get(const UObject* WorldContextObject);
-	
+
+	// USubsystem Interface
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 
 	UFUNCTION(BlueprintCallable)

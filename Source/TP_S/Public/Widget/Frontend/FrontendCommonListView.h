@@ -18,6 +18,7 @@ class TP_S_API UFrontendCommonListView : public UCommonListView
 protected:
 	// UCommonListView Interface
 	virtual UUserWidget& OnGenerateEntryWidgetInternal(UObject* Item, TSubclassOf<UUserWidget> DesiredEntryClass, const TSharedRef<STableViewBase>& OwnerTable) override;
+	virtual bool OnIsSelectableOrNavigableInternal(UObject* FirstSelectedItem) override;
 	
 private:
 	// UWidget Interface
