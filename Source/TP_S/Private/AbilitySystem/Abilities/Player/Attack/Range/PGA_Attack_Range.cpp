@@ -90,7 +90,6 @@ void UPGA_Attack_Range::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 	DirectionFix(false);
 	GetPlayerCharacterFromActorInfo()->GetCharacterMovement()->GravityScale = 1.5f;
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	GetPlayerCombatComponentFromActorInfo()->UpdateAnimLayer();
 	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->TargetArmLength = CachedPlayerCameraBoomLength;
 	GetPlayerCharacterFromActorInfo()->GetSpringArmComponent()->SocketOffset = CachedPlayerCameraBoomSocket;
 }

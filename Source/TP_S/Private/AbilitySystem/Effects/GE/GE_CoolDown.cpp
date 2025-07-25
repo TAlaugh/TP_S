@@ -2,13 +2,11 @@
 
 
 #include "AbilitySystem/Effects/GE/GE_CoolDown.h"
+
+#include "BaseGameplayTags.h"
 #include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
 
-UGE_CoolDown::UGE_CoolDown()
+UGE_CoolDown::UGE_CoolDown(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	DurationPolicy = EGameplayEffectDurationType::HasDuration;
-	DurationMagnitude = FGameplayEffectModifierMagnitude(FScalableFloat(5.f));
-	//UTargetTagsGameplayEffectComponent* Tags = NewObject<UTargetTagsGameplayEffectComponent>();
-	//Tags
-	//GEComponents.Add(Tags);
 }

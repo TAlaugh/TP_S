@@ -112,6 +112,7 @@ namespace BaseGamePlayTags
 	// Player Status
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_WeaponThrown, "Player.Status.WeaponThrown");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_HeavyCoolDown, "Player.Status.HeavyCoolDown");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_HitCoolDown, "Player.Status.HitCoolDown");
 
 	// Item Tags
 	UE_DEFINE_GAMEPLAY_TAG(Item_Consumable_HpPotion, "Item.Consumable.HpPotion");

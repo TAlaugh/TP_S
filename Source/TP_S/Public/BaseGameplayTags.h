@@ -118,6 +118,7 @@ namespace	BaseGamePlayTags
 	// Player Status
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_WeaponThrown);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_HeavyCoolDown);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_HitCoolDown);
 
 
 	// Item Tags

@@ -14,5 +14,5 @@ class TP_S_API UGE_CoolDown : public UGameplayEffect
 {
 	GENERATED_BODY()
 public:
-	UGE_CoolDown();
+	UGE_CoolDown(const FObjectInitializer& ObjectInitializer);
 };
