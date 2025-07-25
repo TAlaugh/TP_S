@@ -39,7 +39,7 @@ void UPGA_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 			MontageToPlay,
 			1.f,
 			GetNextSection(),
-			true);
+			bStopWhenAbilityEnd);
 	Task->OnCancelled.AddDynamic(this, &ThisClass::OnInterruptedCallback);
 	Task->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptedCallback);
 	Task->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
@@ -104,4 +104,10 @@ void UPGA_Attack_Melee::EquipWeaponRightFromEvent(FGameplayEventData Data)
 void UPGA_Attack_Melee::SetNextSection(FGameplayEventData Data)
 {
 
+}
+
+
+void UPGA_Attack_Melee::StopAttack(FGameplayEventData Data)
+{
+	K2_EndAbility();
 }

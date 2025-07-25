@@ -26,13 +26,14 @@ public:
 	virtual void EquipWeaponLeftFromEvent(FGameplayEventData Data);
 	UFUNCTION()
 	virtual void EquipWeaponRightFromEvent(FGameplayEventData Data);
-
-
-	
 	virtual void SetNextSection(FGameplayEventData Data) override;
 	
+	UFUNCTION(BlueprintCallable)
+	void StopAttack(FGameplayEventData Data);
 
 	bool HasNextComboInput = false;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool bStopWhenAbilityEnd = false;
 };

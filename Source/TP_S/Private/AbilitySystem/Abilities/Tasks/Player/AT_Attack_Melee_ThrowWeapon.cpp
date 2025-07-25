@@ -10,7 +10,7 @@
 #include "NiagaraVariant.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Components/Combat/Player/BasePlayerCombatComponent.h"
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 UAT_Attack_Melee_ThrowWeapon* UAT_Attack_Melee_ThrowWeapon::Init(UGameplayAbility* OwningAbility,

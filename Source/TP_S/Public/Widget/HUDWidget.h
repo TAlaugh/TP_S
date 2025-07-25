@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "HUDWidget.generated.h"
 
+class UAimWidget;
 class UItemDataAsset;
 class UItemAcquiredContainerWidget;
 class UWeaponHUDWidget;
@@ -37,6 +38,7 @@ public:
 
 	UWeaponHUDWidget* GetWeaponHUDWidget() const { return WeaponHUDWidget; }
 	UQuickSlotWidget* GetQuickSlotWidget() const { return QuickSlotWidget; }
+	UAimWidget* GetAimWidget() const { return AimWidget; }
 	
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -47,6 +49,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UWeaponHUDWidget* WeaponHUDWidget;
+
+	UPROPERTY(meta = (BindWidget))
+	UAimWidget* AimWidget;
 
 	UPROPERTY(meta = (BindWidget))
 	UItemAcquiredContainerWidget* ItemNotifyContainer;

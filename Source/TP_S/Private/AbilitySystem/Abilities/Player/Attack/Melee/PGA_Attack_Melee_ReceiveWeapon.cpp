@@ -19,6 +19,7 @@ UPGA_Attack_Melee_ReceiveWeapon::UPGA_Attack_Melee_ReceiveWeapon()
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Attack_Melee);
 	BlockAbilitiesWithTag.AddTag(BaseGamePlayTags::Player_Ability_Movement);
 	AttackType = BaseGamePlayTags::Player_Ability_Attack_Melee_ReceiveWeapon;
+	bStopWhenAbilityEnd = true;
 }
 
 void UPGA_Attack_Melee_ReceiveWeapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -36,7 +37,7 @@ void UPGA_Attack_Melee_ReceiveWeapon::ActivateAbility(const FGameplayAbilitySpec
 			MontageToPlay,
 			1.f,
 			FName("Default"),
-			false);
+			bStopWhenAbilityEnd);
 		ReceiveTask->OnBlendOut.AddDynamic(this, &ThisClass::OnCompleteCallback);
 		ReceiveTask->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
 		ReceiveTask->OnInterrupted.RemoveDynamic(this, &ThisClass::OnCompleteCallback);
@@ -46,6 +47,13 @@ void UPGA_Attack_Melee_ReceiveWeapon::ActivateAbility(const FGameplayAbilitySpec
 		UAT_Attack_Melee_ReceiveWeapon* Task = UAT_Attack_Melee_ReceiveWeapon::Init(this);
 		//Task->OnReceivedDelegate.AddDynamic(this, &ThisClass::OnCompleteCallback);
 		Task->ReadyForActivation();
+
+		UAbilityTask_WaitGameplayEvent* TaskToFinish = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+			this,
+			BaseGamePlayTags::Player_Event_Attack_Finish
+			);
+		TaskToFinish->EventReceived.AddDynamic(this, &ThisClass::StopAttack);
+		TaskToFinish->ReadyForActivation();
 	} else
 	{
 		K2_EndAbility();

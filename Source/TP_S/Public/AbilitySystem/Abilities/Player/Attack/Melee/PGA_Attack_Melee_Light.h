@@ -26,8 +26,7 @@ public:
 	UFUNCTION()
 	virtual void SetNextSection(FGameplayEventData Data) override;
 	
-	UFUNCTION(BlueprintCallable)
-	void StopAttack(FGameplayEventData Data);
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
 	TMap<FGameplayTag, UAnimMontage*> MontageByTag;
