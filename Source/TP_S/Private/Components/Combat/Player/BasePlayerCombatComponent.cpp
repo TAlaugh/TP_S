@@ -41,7 +41,6 @@ void UBasePlayerCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, A
 		if (OwnerPlayer->GetMesh()->GetAnimInstance() && Weapon->PlayerWeaponData.WeaponAnimLayerLink != nullptr)
 		{
 			OwnerPlayer->GetMesh()->GetAnimInstance()->LinkAnimClassLayers(Weapon->PlayerWeaponData.WeaponAnimLayerLink);
-			CombatLayer = Weapon->PlayerWeaponData.WeaponAnimLayerLink;
 		}
 	}
 	
@@ -77,7 +76,6 @@ void UBasePlayerCombatComponent::RemoveSpawnedWeapon(FGameplayTag WeaponTag, ABa
 		if (OwnerPlayer->GetMesh()->GetAnimInstance() && Weapon->PlayerWeaponData.WeaponAnimLayerLink != nullptr)
 		{
 			OwnerPlayer->GetMesh()->GetAnimInstance()->UnlinkAnimClassLayers(Weapon->PlayerWeaponData.WeaponAnimLayerLink);
-			CombatLayer = nullptr;
 		}
 	}
 	if (ULocalPlayer* LocalPlayer = GetOwningPawn()->GetController<ABasePlayerController>()->GetLocalPlayer())
@@ -205,7 +203,7 @@ void UBasePlayerCombatComponent::UnEquipWeapon(FGameplayTag WeaponType)
 	OverlappedActors.Empty();
 }
 
-// TODO::현재 장착중인 무기의 데미지를 가져옴
+// 현재 장착중인 무기의 데미지를 가져옴
 float UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel(float Level) const
 {
 	if (GetPlayerCurrentEquippedWeapon())
@@ -216,6 +214,7 @@ float UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel(fl
 
 }
 
+// 던져놓은 무기의 데미지 가져옴
 float UBasePlayerCombatComponent::GetPlayerCurrentThrownWeaponDamageAtLevel(float Level) const
 {
 	if (GetPlayerCurrentThrownWeapon())
@@ -453,10 +452,6 @@ FGameplayTag UBasePlayerCombatComponent::GetEquippedRangeTag() const
 
 void UBasePlayerCombatComponent::UpdateAnimLayer()
 {
-	if (CombatLayer != nullptr)
-	{
-		OwnerPlayer->GetMesh()->GetAnimInstance()->LinkAnimClassLayers(CombatLayer);
-	}
 }
 
 ABasePlayerWeapon* UBasePlayerCombatComponent::GetEquippedRangeWeaponClass() const
