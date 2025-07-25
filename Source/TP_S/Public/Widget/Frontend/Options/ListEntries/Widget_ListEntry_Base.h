@@ -26,12 +26,15 @@ public:
 protected:
 	// IUserObjectListEntry Interface
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
+	virtual void NativeOnEntryReleased() override;
 
 	// the child class should override this function to handle the initialization needed. Super call is expected
 	virtual void OnOwningListDataObjectSet(UListDataObject_Base* InOwningListDataObject);
 
 	// the child class should override this function to update the UO values after the data object has been modified. Super call is not needed
 	virtual void OnOwningListDataObjectModified(UListDataObject_Base* OwningModifiedData, EOptionsListDataModifyReason ModifyReason);
+
+	void SelectThisEntryWidget();
 	
 private:
 	// Bound Widget
