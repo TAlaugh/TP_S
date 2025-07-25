@@ -26,7 +26,10 @@ class TP_S_API AEnemyProjectileBase : public AActor
 public:	
 
 	AEnemyProjectileBase();
-
+	
+UPROPERTY( BlueprintReadOnly, Category="Projectile", meta = (ExposeOnSpawn = "true"))
+	FGameplayEffectSpecHandle ProjectileDamageEffectSpecHandle; 
+	
 protected:
 	
 	virtual void BeginPlay() override;
@@ -42,8 +45,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Projectile")
 	EProjectileDamagePolicy ProjectileDamagePolicy = EProjectileDamagePolicy::OnHit;
 
-	UPROPERTY( BlueprintReadOnly, Category="Projectile", meta = (ExposeOnSpawn = "true"))
-	FGameplayEffectSpecHandle ProjectileDamageEffectSpecHandle; 
 	
 	
 	UFUNCTION()
@@ -55,9 +56,12 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Spawn Projectile Hit FX"))
 	void BP_OnSpawnProjectileHitFX(const FVector& HitLocation);
 
-
-	private:
-	void HandleApplyProjectileDamage(APawn* ItHitPawn, const FGameplayEventData& InPayload);
-
 	TArray<AActor*> OverlappedActors;
+	
+	void HandleApplyProjectileDamage(APawn* ItHitPawn, const FGameplayEventData& InPayload);
+	
+	private:
+	
+
+	
 };
