@@ -3,7 +3,7 @@
 
 #include "AbilitySystem/Abilities/Player/Attack/Melee/Katana/PGA_Katana_Light.h"
 
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 
 UPGA_Katana_Light::UPGA_Katana_Light()
 {

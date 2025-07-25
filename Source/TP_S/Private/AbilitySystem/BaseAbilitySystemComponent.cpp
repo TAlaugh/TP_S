@@ -6,7 +6,7 @@
 #include "BaseGamePlayTags.h"
 #include "DebugHelper.h"
 #include "BaseType/Player/PlayerStructType.h"
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 
 void UBaseAbilitySystemComponent::GrantPlayerWeaponAbilities(const TArray<FPlayerAbilitiySet>& WeaponAbilities,
                                                              int32 Level, ABasePlayerWeapon* Weapon)

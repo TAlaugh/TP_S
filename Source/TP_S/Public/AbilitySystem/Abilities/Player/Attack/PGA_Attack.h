@@ -57,6 +57,9 @@ protected:
 	UPROPERTY()
 	ABasePlayerWeapon* Weapon;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FScalableFloat DamageFloat;
+
 	UPROPERTY()
 	bool bUnEquipWhenEnd = true;
 };

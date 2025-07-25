@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "BaseType/Player/PlayerStructType.h"
 #include "GameplayTagContainer.h"
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 #include "BaseAbilitySystemComponent.generated.h"
 
 /**

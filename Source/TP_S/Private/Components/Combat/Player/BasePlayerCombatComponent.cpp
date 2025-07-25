@@ -12,7 +12,7 @@
 #include "AnimInstances/Player/BasePlayerLinkedAnimLayer.h"
 #include "Character/Player/BasePlayerCharacter.h"
 #include "Controllers/BasePlayerController.h"
-#include "Items/Weapons/BasePlayerWeapon.h"
+#include "Items/Weapons/Player/BasePlayerWeapon.h"
 #include "Items/Weapons/WeaponItemDataAsset.h"
 #include "Widget/HUDWidget.h"
 #include "Widget/WeaponHUDWidget.h"
@@ -210,7 +210,7 @@ float UBasePlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel(fl
 {
 	if (GetPlayerCurrentEquippedWeapon())
 	{
-		return GetPlayerCurrentEquippedWeapon()->ItemDataAsset->BaseDamage; //GetValueAtLevel(Level);
+		return GetPlayerCurrentEquippedWeapon()->Damage.GetValueAtLevel(Level);
 	}
 	return Level;
 
@@ -220,7 +220,8 @@ float UBasePlayerCombatComponent::GetPlayerCurrentThrownWeaponDamageAtLevel(floa
 {
 	if (GetPlayerCurrentThrownWeapon())
 	{
-		return GetPlayerCurrentThrownWeapon()->ItemDataAsset->BaseDamage; //GetValueAtLevel(Level);
+		//return GetPlayerCurrentThrownWeapon()->ItemDataAsset->BaseDamage;
+		return GetPlayerCurrentThrownWeapon()->Damage.GetValueAtLevel(Level);
 	}
 	return Level;
 }
