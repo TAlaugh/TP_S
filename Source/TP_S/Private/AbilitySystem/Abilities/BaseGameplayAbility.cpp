@@ -5,9 +5,11 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "BaseFunctionLibrary.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "BaseType/BaseEnumType.h"
 #include "Components/Combat/BaseCombatComponent.h"
+#include "BaseGameplayTags.h"
 
 UBaseCombatComponent* UBaseGameplayAbility::GetBaseCombatComponentFromActorInfo() const
 {
@@ -45,6 +47,41 @@ FActiveGameplayEffectHandle UBaseGameplayAbility::BP_ApplyEffectSpecHandleToTarg
 	OutSuccessType = ActiveGameplayEffectHandle.WasSuccessfullyApplied() ? EBaseSuccessType::Successful : EBaseSuccessType::Failed;
 	
 	return ActiveGameplayEffectHandle;
+}
+
+void UBaseGameplayAbility::ApplyGameplayEffectSpecHandleToHitResults(const FGameplayEffectSpecHandle& SpecHandle,
+	const TArray<FHitResult>& HitResults)
+{
+	if (HitResults.IsEmpty())
+	{
+		return;
+	}
+
+	APawn* OwningPawn = CastChecked<APawn>(GetAvatarActorFromActorInfo());
+
+	for (const FHitResult& Hit : HitResults)
+	{
+		if (APawn* HitPawn = Cast<APawn>(Hit.GetActor()))
+		{
+			if(UBaseFunctionLibrary::IsTargetPawnHostile(OwningPawn, HitPawn))
+			{
+				FActiveGameplayEffectHandle ActiveGameplayEffectHandle = NativeApplyEffectSpecHandleToTarget(HitPawn, SpecHandle);
+
+				if (ActiveGameplayEffectHandle.WasSuccessfullyApplied())
+				{
+					FGameplayEventData Data;
+					Data.Instigator = OwningPawn;
+					Data.Target = HitPawn;
+					
+					UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+						HitPawn,
+						BaseGamePlayTags::Shared_Event_HitReact,
+						Data
+						);
+				}
+			}
+		}
+	}
 }
 
 void UBaseGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)

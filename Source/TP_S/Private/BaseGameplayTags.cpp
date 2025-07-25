@@ -141,13 +141,15 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_SKill_Lianhuo_SpawnEnemy_Skeleton,"Enemy.Ability.Skill.Lianhuo.SpawnEnemy.Skeleton")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_Rage,"Enemy.Ability.Skill.Lianhuo.Rage")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_SpawnEnemy,"Enemy.Ability.SpawnEnemy")
-	 
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_JumpAttackSkill, "Enemy.Ability.Skill.Lianhuo.JumpAttackSkill")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Skill_Lianhuo_groggy, "Enemy.Ability.Skill.Lianhuo.groggy")
 
 
 	// Enemy Event
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnSkill, "Enemy.Event.SpawnSkill")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnEnemy, "Enemy.Event.SpawnEnemy")
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_Rage, "Enemy.Event.Rage")
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_JumpAttackSkill, "Enemy.Event.JumpAttackSkill")
 	
 	// Enemy Status
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_Strafing,"Enemy.Status.Strafing")
