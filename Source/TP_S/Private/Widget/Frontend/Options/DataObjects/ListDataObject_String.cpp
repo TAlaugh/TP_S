@@ -128,6 +128,24 @@ bool UListDataObject_String::TryResetBackToDefaultValue()
 	return false;
 }
 
+bool UListDataObject_String::CanSetToForcedStringValue(const FString& InForcedValue) const
+{
+	return CurrentStringValue != InForcedValue;
+}
+
+void UListDataObject_String::OnSetToForcedStringValue(const FString& InForcedValue)
+{
+	CurrentStringValue = InForcedValue;
+	TrySetDisplayTextFromStringValue(CurrentStringValue);
+
+	if (DataDynamicSetter)
+	{
+		DataDynamicSetter->SetValueFromString(CurrentStringValue);
+
+		NotifyListDataModified(this, EOptionsListDataModifyReason::DependencyModified);
+	}
+}
+
 bool UListDataObject_String::TrySetDisplayTextFromStringValue(const FString& InStringValue)
 {
 	const int32 CurrentFoundIndex = AvailableOptionsStringArray.IndexOfByKey(InStringValue);
@@ -140,4 +158,92 @@ bool UListDataObject_String::TrySetDisplayTextFromStringValue(const FString& InS
 	}
 
 	return false;
+}
+
+// UListDataObject_StringBool
+
+void UListDataObject_StringBool::OverrideTrueDisplayText(const FText& InNewTrueDisplayText)
+{
+	if (!AvailableOptionsStringArray.Contains(TrueString))
+	{
+		AddDynamicOption(TrueString, InNewTrueDisplayText);
+	}
+}
+
+void UListDataObject_StringBool::OverrideFalseDisplayText(const FText& InNewFalseDisplayText)
+{
+	if (!AvailableOptionsStringArray.Contains(FalseString))
+	{
+		AddDynamicOption(FalseString, InNewFalseDisplayText);
+	}
+}
+
+void UListDataObject_StringBool::SetTrueAsDefaultValue()
+{
+	SetDefaultValueFromString(TrueString);
+}
+
+void UListDataObject_StringBool::SetFalseAsDefaultValue()
+{
+	SetDefaultValueFromString(FalseString);
+}
+
+void UListDataObject_StringBool::OnDataObjectInitialized()
+{
+	TryInitBoolValues();
+
+	Super::OnDataObjectInitialized();
+}
+
+void UListDataObject_StringBool::TryInitBoolValues()
+{
+	if (!AvailableOptionsStringArray.Contains(TrueString))
+	{
+		AddDynamicOption(TrueString, FText::FromString(TEXT("ON")));
+	}
+
+	if (!AvailableOptionsStringArray.Contains(FalseString))
+	{
+		AddDynamicOption(FalseString, FText::FromString(TEXT("OFF")));
+	}
+}
+
+// UListDataObject_StringInteger
+
+void UListDataObject_StringInteger::AddIntegerOption(int32 InIntegerValue, const FText& InDisplayText)
+{
+	AddDynamicOption(LexToString(InIntegerValue), InDisplayText);
+}
+
+void UListDataObject_StringInteger::OnDataObjectInitialized()
+{
+	Super::OnDataObjectInitialized();
+
+	if (!TrySetDisplayTextFromStringValue(CurrentStringValue))
+	{
+		CurrentDisplayText = FText::FromString(TEXT("Custom"));
+	}
+}
+
+void UListDataObject_StringInteger::OnEditDependencyDataModified(UListDataObject_Base* ModifiedDependencyData,
+	EOptionsListDataModifyReason ModifyReason)
+{
+	if (DataDynamicGetter)
+	{
+		if (CurrentStringValue == DataDynamicGetter->GetValueAsString())
+		{
+			return; 
+		}
+		
+		CurrentStringValue = DataDynamicGetter->GetValueAsString();
+
+		if (!TrySetDisplayTextFromStringValue(CurrentStringValue))
+		{
+			CurrentDisplayText = FText::FromString(TEXT("Custom"));
+		}
+
+		NotifyListDataModified(this, EOptionsListDataModifyReason::DependencyModified);
+	}
+
+	Super::OnEditDependencyDataModified(ModifiedDependencyData, ModifyReason);
 }

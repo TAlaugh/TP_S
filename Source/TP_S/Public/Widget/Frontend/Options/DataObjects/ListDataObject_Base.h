@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FrontendEnumType.h"
+#include "FrontendStructTypes.h"
 #include "UObject/NoExportTypes.h"
 #include "ListDataObject_Base.generated.h"
 
@@ -22,6 +23,7 @@ class TP_S_API UListDataObject_Base : public UObject
 public:
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnListDataModifiedDelegate, UListDataObject_Base*, EOptionsListDataModifyReason)
 	FOnListDataModifiedDelegate OnListDataModified;
+	FOnListDataModifiedDelegate OnDependencyModified;
 	
 	// FORCEINLINE FName GetDataID() const { return DataID; }
 	// void SetDataID(FName InDataID) { DataID = InDataID; }
@@ -45,12 +47,29 @@ public:
 	virtual bool HasDefaultValue() const { return false; }
 	virtual bool CanResetBackToDefaultValue() const { return false; }
 	virtual bool TryResetBackToDefaultValue() { return false; }
+
+	// Gets called from OptionsDataRegister for adding in edit conditions for the constructed list data object
+	void AddEditCondition(const FOptionsDataEditConditionDescriptor& InEditCondition);
+
+	// Gets called from OptionsDataRegistry to add in dependency data
+	void AddEditDependencyData(UListDataObject_Base* InDependencyData);
+	
+	bool IsDataCurrentlyEditable();
 	
 protected:
 	// Empty in base class. The child classed should override it to handle the initialized needed accrodingly
 	virtual void OnDataObjectInitialized();
 
 	virtual void NotifyListDataModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason = EOptionsListDataModifyReason::DirectlyModified);
+
+	// the child class should override this to allow the value be set to the forced string value
+	virtual bool CanSetToForcedStringValue(const FString& InForcedValue) const { return false; }
+
+	// the child class should override this to specify how to set the current value to the forced value
+	virtual void OnSetToForcedStringValue(const FString& InForcedValue) {}
+
+	// this function will be called when the value of the dependency data has changed. the child class can override this function to handle the custom logic needed. Super call is expected
+	virtual void OnEditDependencyDataModified(UListDataObject_Base* ModifiedDependencyData, EOptionsListDataModifyReason ModifyReason);
 	
 private:
 	FName DataID;
@@ -63,4 +82,7 @@ private:
 	UListDataObject_Base* ParentData;
 
 	bool bShouldApplyChangeImmediately = false;
+
+	UPROPERTY(Transient)
+	TArray<FOptionsDataEditConditionDescriptor> EditConditionDescArray;
 };

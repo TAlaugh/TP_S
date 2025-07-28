@@ -26,8 +26,14 @@ public:
 	static FCommonNumberFormattingOptions WithDecimal(int32 NumFracDigit);
 
 	float GetCurrentValue() const;
+	void SetCurrentValueFromSlider(float InNewValue);
 	
 private:
+	// UListDataObject_Base Interface
+	virtual bool CanResetBackToDefaultValue() const override;
+	virtual bool TryResetBackToDefaultValue() override;
+	virtual void OnEditDependencyDataModified(UListDataObject_Base* ModifiedDependencyData, EOptionsListDataModifyReason ModifyReason) override;
+	
 	float StringToFloat(const FString& InString) const;
 	
 	TRange<float> DisplayValueRange = TRange<float>(0.f, 1.f);
