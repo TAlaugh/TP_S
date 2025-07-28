@@ -101,35 +101,6 @@ void AEneAIController::HandleDamageStimulus(AActor* Actor, FAIStimulus Stimulus)
 	FRotator LookRotation = DamageDirection.Rotation();
 	GetPawn()->SetActorRotation(LookRotation);
 }
-//
-// void AEneAIController::AdjustPerceptionForState(EAIState State)
-// {
-// 	if (!AISenseConfig_Sight ) return;
-// 	switch (State)
-// 	{
-// 	case EAIState::Alert:
-// 		AISenseConfig_Sight->SightRadius = 1800.0f;
-// 	
-// 		break;
-//         
-// 	case EAIState::Combat:
-// 		AISenseConfig_Sight->SightRadius = 2000.0f;
-// 		
-// 		break;
-//         
-// 	case EAIState::Investigate:
-// 		AISenseConfig_Sight->SightRadius = 1200.0f;
-// 		
-// 		break;
-//         
-// 	default:
-// 		// 기본 설정으로 복원
-// 		AISenseConfig_Sight->SightRadius = 1500.0f;
-// 	
-// 		break;
-// 	}
-// 	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
-// }
 
 void AEneAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
