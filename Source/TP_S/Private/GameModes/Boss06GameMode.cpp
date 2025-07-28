@@ -55,11 +55,15 @@ void ABoss06GameMode::Tick(float DeltaTime)
 
 		if (TimePassedSinceStart >= SpawnEnemiesDelayTime)
 		{
-			CurrentSpawnedEnemiesCounter += TrySpawnWaveEnemies();
-
 			TimePassedSinceStart = 0.f;
-			SetCurrentBoss06GameMode(EBoss06GameModeState::Inprogress);
+
+			const int32 SpawnedThisFrame = TrySpawnWaveEnemies();
+			CurrentSpawnedEnemiesCounter += SpawnedThisFrame;
 			
+			if (!ShouldKeepSpawnEnemies())
+			{
+				SetCurrentBoss06GameMode(EBoss06GameModeState::Inprogress);
+			}
 		}
 		
 	}
@@ -195,10 +199,10 @@ int32 ABoss06GameMode::TrySpawnWaveEnemies()
 				EnemiesSpawnedThisTime++;
 				TotalSpawnedEnemiesThisWaveCounter++;
 			}
-			if (!ShouldKeepSpawnEnemies())
-			{
-				return EnemiesSpawnedThisTime;
-			}
+			// if (!ShouldKeepSpawnEnemies())
+			// {
+			// 	return EnemiesSpawnedThisTime;
+			// }
 		}
 	}
 	return EnemiesSpawnedThisTime;

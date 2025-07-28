@@ -254,7 +254,7 @@ FVector ABaseEnemyCharacter::GetRandomLightningLocation()
     FVector RandomOffset = FVector(
         FMath::RandRange(-2500.f, 2500.f),
         FMath::RandRange(-2500.f, 2500.f),
-        0.f
+        140.f
     );
     return FieldCenter + RandomOffset;
 }

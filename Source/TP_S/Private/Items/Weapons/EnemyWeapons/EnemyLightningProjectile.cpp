@@ -3,12 +3,18 @@
 
 #include "Items/Weapons/EnemyWeapons/EnemyLightningProjectile.h"
 #include "GameFramework/Pawn.h"
-#include "BaseFunctionLibrary.h"
+#include "Engine/EngineTypes.h"         // ✅ FOverlapResult 포함
+#include "Engine/World.h"
+#include "CollisionQueryParams.h"
+#include "CollisionShape.h"
+#include "Components/PrimitiveComponent.h"
+#include "Components/BoxComponent.h"
 #include "NiagaraComponent.h"
-#include "Components/BoxComponent.h"    
+#include "BaseFunctionLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Abilities/GameplayAbilityTypes.h"
-
-
 
 AEnemyLightningProjectile::AEnemyLightningProjectile()
 {
@@ -35,7 +41,9 @@ AEnemyLightningProjectile::AEnemyLightningProjectile()
 void AEnemyLightningProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	GetWorldTimerManager().SetTimerForNextTick(this, &AEnemyLightningProjectile::TryApplyInitialOverlapDamage);
+	
 	// ✅ 0.5초만 데미지 판정 후 충돌 꺼버림
 	GetWorldTimerManager().SetTimer(
 		CollisionDisableTimer,
@@ -46,7 +54,7 @@ void AEnemyLightningProjectile::BeginPlay()
 	);
 }
 		
-// ✅ Pawn만 처리하는 전용 Overlap
+    // ✅ Pawn만 처리하는 전용 Overlap
 void AEnemyLightningProjectile::OnProjectileBeginOverlap(
 	UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,
@@ -55,43 +63,112 @@ void AEnemyLightningProjectile::OnProjectileBeginOverlap(
 	bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	if (!OtherActor || OtherActor == this)
-		return;
-
-	// ✅ Pawn인지 확인 (플레이어 or AI)
+	
 	APawn* HitPawn = Cast<APawn>(OtherActor);
-	if (!HitPawn)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("⚡ Lightning overlapped NON-Pawn: %s"), *OtherActor->GetName());
+	if (!IsValid(HitPawn) || HitPawn || this || HitPawn->IsActorBeingDestroyed())
 		return;
-	}
 
-	// ✅ 중복 Overlap 방지
+	// ✅ Instigator 체크
+	APawn* InstigatorPawn = GetInstigator<APawn>();
+	if (!IsValid(InstigatorPawn) || InstigatorPawn->IsActorBeingDestroyed())
+		return;
+	
 	if (OverlappedActors.Contains(HitPawn))
 		return;
 	OverlappedActors.AddUnique(HitPawn);
 
-	// ✅ Instigator Pawn 안전 체크
-	APawn* InstigatorPawn = GetInstigator<APawn>();
-	if (!InstigatorPawn)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("⚠️ LightningProjectile has NO Instigator! Skipping Hostile check"));
-		return;	
-	}
-	
-	// ✅ Hostile 여부 체크 후 데미지
-	if (UBaseFunctionLibrary::IsTargetPawnHostile(InstigatorPawn, HitPawn))  // ✅ 여기서 InstigatorPawn 사용
-	{
+
+	if (!UBaseFunctionLibrary::IsTargetPawnHostile(GetInstigator<APawn>(), HitPawn))
+		return;
+
 		FGameplayEventData Data;
 		Data.Instigator = InstigatorPawn;
 		Data.Target = HitPawn;
 
 		HandleApplyProjectileDamage(HitPawn, Data);
-	}
+	
 }
 
 void AEnemyLightningProjectile::DisableCollision()
 {
 	UE_LOG(LogTemp, Warning, TEXT("⚡ Lightning collision disabled!"));
 	ProjectileCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+FGenericTeamId AEnemyLightningProjectile::GetGenericTeamId() const
+{
+	if (APawn* InstigatorPawn = GetInstigator<APawn>())
+	{
+		if (const IGenericTeamAgentInterface* InstigatorTeamAgent = Cast<IGenericTeamAgentInterface>(InstigatorPawn->GetController()))
+		{
+			return InstigatorTeamAgent->GetGenericTeamId();
+		}
+	}
+	// 기본적으로 중립 (팀 없음)
+	return FGenericTeamId::NoTeam;
+}
+
+void AEnemyLightningProjectile::TryApplyInitialOverlapDamage()
+{
+	TArray<AActor*> HitActors;
+
+	UKismetSystemLibrary::BoxOverlapActors(
+		GetWorld(),
+		ProjectileCollisionBox->GetComponentLocation(),
+		ProjectileCollisionBox->GetScaledBoxExtent(),
+		TArray<TEnumAsByte<EObjectTypeQuery>>{UEngineTypes::ConvertToObjectType(ECC_Pawn)},
+		APawn::StaticClass(),
+		TArray<AActor*>{this},
+		HitActors
+	);
+
+	for (AActor* Actor : HitActors)
+	{
+		APawn* HitPawn = Cast<APawn>(Actor);
+		if (!IsValid(HitPawn) || HitPawn->IsActorBeingDestroyed())
+			continue;
+
+		if (OverlappedActors.Contains(HitPawn))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("❗ %s 는 이미 OverlappedActors에 있음 → 스킵"), *HitPawn->GetName());
+			continue;
+		}
+
+		APawn* InstigatorPawn = GetInstigator<APawn>();
+		if (!IsValid(InstigatorPawn))
+			continue;
+
+		if (!UBaseFunctionLibrary::IsTargetPawnHostile(InstigatorPawn, HitPawn))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("🤝 %s 은 적이 아님 → 스킵"), *HitPawn->GetName());
+			continue;
+		}
+
+		UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitPawn);
+		if (!ASC)
+		{
+			UE_LOG(LogTemp, Error, TEXT("❌ ASC가 없음: %s"), *HitPawn->GetName());
+			continue;
+		}
+		if (!ASC->AbilityActorInfo.IsValid())
+		{
+			UE_LOG(LogTemp, Error, TEXT("❌ ASC 초기화 안됨: %s"), *HitPawn->GetName());
+			continue;
+		}
+
+		if (!ProjectileDamageEffectSpecHandle.IsValid())
+		{
+			UE_LOG(LogTemp, Error, TEXT("❌ SpecHandle 무효"));
+			continue;
+		}
+
+		OverlappedActors.Add(HitPawn);
+
+		FGameplayEventData Data;
+		Data.Instigator = InstigatorPawn;
+		Data.Target = HitPawn;
+
+		UE_LOG(LogTemp, Warning, TEXT("✅ 데미지 적용 시도: %s"), *HitPawn->GetName());
+		HandleApplyProjectileDamage(HitPawn, Data);
+	}
 }
