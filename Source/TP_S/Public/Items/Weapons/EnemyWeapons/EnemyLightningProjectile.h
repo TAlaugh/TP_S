@@ -6,10 +6,12 @@
 #include "Components/BoxComponent.h"
 #include "Items/Weapons/EnemyWeapons/EnemyProjectileBase.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "GenericTeamAgentInterface.h"
 #include "EnemyLightningProjectile.generated.h"
 
 class UNiagaraSystem;
 class UBoxComponent;
+
 /**
  *
  * 
@@ -27,6 +29,9 @@ public:
 	                              const FHitResult& SweepResult) override;
 	void DisableCollision();
 	
+	virtual FGenericTeamId GetGenericTeamId() const;
+	void TryApplyInitialOverlapDamage();
+
 	UPROPERTY(EditDefaultsOnly, Category="Lightning")
 	UNiagaraSystem* WarningNiagara;
 

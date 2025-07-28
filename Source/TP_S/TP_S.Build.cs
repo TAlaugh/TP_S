@@ -10,6 +10,6 @@ public class TP_S : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayTags", "GameplayAbilities", "GameplayTasks", "NavigationSystem", "AIModule", "AnimGraphRuntime", "MotionWarping","Niagara", "UMG", "CommonUI", "CommonInput", "PreLoadScreen", "PropertyPath" });
 		
-		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore", "SequencerCore" });
 	}
 }
