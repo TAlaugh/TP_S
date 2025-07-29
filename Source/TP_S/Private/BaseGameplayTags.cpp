@@ -112,6 +112,7 @@ namespace BaseGamePlayTags
 	// Player Status
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_WeaponThrown, "Player.Status.WeaponThrown");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_HeavyCoolDown, "Player.Status.HeavyCoolDown");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_FallCoolDown, "Player.Status.FallCoolDown");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_HitCoolDown, "Player.Status.HitCoolDown");
 
 	// Item Tags
@@ -166,8 +167,13 @@ namespace BaseGamePlayTags
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Base, "GameplayCue.FX.Hit.Base")
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Melee, "GameplayCue.FX.Hit.Melee")
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Melee_PoleArm, "GameplayCue.FX.Hit.Melee.PoleArm")
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Melee_Katana, "GameplayCue.FX.Hit.Melee.Katana")
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Range, "GameplayCue.FX.Hit.Range")
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Hit_Range_MachineGun, "GameplayCue.FX.Hit.Range.MachineGun")
+
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Attack_Ranged, "GameplayCue.FX.Attack.Ranged")
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Attack_Ranged_PoleArm, "GameplayCue.FX.Attack.Ranged.PoleArm")
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_FX_Attack_Ranged_Katana, "GameplayCue.FX.Attack.Ranged.Katana")
 }
 
 

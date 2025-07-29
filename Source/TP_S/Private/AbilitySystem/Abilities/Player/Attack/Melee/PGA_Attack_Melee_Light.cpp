@@ -64,6 +64,7 @@ void UPGA_Attack_Melee_Light::ActivateAbility(const FGameplayAbilitySpecHandle H
 		TaskToFinish->ReadyForActivation();
 	}
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	MovementFix(false);
 }
 
 void UPGA_Attack_Melee_Light::InputPressed(const FGameplayAbilitySpecHandle Handle,
@@ -88,13 +89,16 @@ void UPGA_Attack_Melee_Light::HandleApplyDamage(FGameplayEventData Data)
 
 	if (AActor* TargetActor = const_cast<AActor*>(Data.Target.Get()))
 	{
-		FGameplayCueParameters CueParams(Data.ContextHandle);
-		CueParams.Instigator = GetPlayerCharacterFromActorInfo();
-		CueParams.EffectCauser = TargetActor;
-		CueParams.Location = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->GetSocketLocation(FName("blade"));
-		CueParams.TargetAttachComponent = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent();
+		if (GameplayCueTag.IsValid())
+		{
+			FGameplayCueParameters CueParams(Data.ContextHandle);
+			CueParams.Instigator = GetPlayerCharacterFromActorInfo();
+			CueParams.EffectCauser = TargetActor;
+			CueParams.Location = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->GetSocketLocation(FName("blade"));
+			CueParams.TargetAttachComponent = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent();
 
-		K2_ExecuteGameplayCueWithParams(BaseGamePlayTags::GameplayCue_FX_Hit_Melee_PoleArm, CueParams);
+			K2_ExecuteGameplayCueWithParams(GameplayCueTag, CueParams);
+		}
 	}
 }
 FName UPGA_Attack_Melee_Light::GetNextSection()

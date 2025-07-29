@@ -60,8 +60,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "CharacterStateData")
 	float GroundDistance = -1.0f;
 	
-	// 왼발이 앞에 있는지, 오른발이 앞에 있는지 : 왼발 = 1, 오른발 = -1
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Movement")
+	// 왼발이 앞에 있는지, 오른발이 앞에 있는지 : 왼발 = -1, 오른발 = 1
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 	float FootPhase;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "AnimData|LocomotionData")
