@@ -51,6 +51,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage")
 	UAnimMontage* MontageToPlay;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+	FGameplayTag GameplayCueTag;
+
 	// End, Cancel 콜백
 	UFUNCTION()
 	void OnCompleteCallback();

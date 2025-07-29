@@ -44,12 +44,21 @@ void UPGA_Attack_Melee_Fall::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
-	UAbilityTask_WaitGameplayEvent* TaskToFinish = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+	UAbilityTask_WaitGameplayEvent* TaskToLand = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this,
 			BaseGamePlayTags::Shared_Event_Land
 			);
-	TaskToFinish->EventReceived.AddDynamic(this, &ThisClass::SetNextSection);
+	TaskToLand->EventReceived.AddDynamic(this, &ThisClass::SetNextSection);
+	TaskToLand->ReadyForActivation();
+
+	UAbilityTask_WaitGameplayEvent* TaskToFinish = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+			this,
+			BaseGamePlayTags::Player_Event_Attack_Finish
+			);
+	TaskToFinish->EventReceived.AddDynamic(this, &ThisClass::StopAttack);
 	TaskToFinish->ReadyForActivation();
+
+	CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo);
 }
 
 void UPGA_Attack_Melee_Fall::EndAbility(const FGameplayAbilitySpecHandle Handle,

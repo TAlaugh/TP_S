@@ -118,6 +118,7 @@ namespace	BaseGamePlayTags
 	// Player Status
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_WeaponThrown);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_HeavyCoolDown);
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_FallCoolDown);
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_HitCoolDown);
 
 
@@ -175,6 +176,11 @@ namespace	BaseGamePlayTags
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Base)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Melee)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Melee_PoleArm)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Melee_Katana)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Range)
 	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Hit_Range_MachineGun)
+
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Attack_Ranged)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Attack_Ranged_PoleArm)
+	TP_S_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FX_Attack_Ranged_Katana)
 }
