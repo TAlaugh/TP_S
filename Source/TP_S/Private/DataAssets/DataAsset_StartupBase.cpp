@@ -10,10 +10,11 @@
 void UDataAsset_StartupBase::GiveToAbilitySystemComponent(UBaseAbilitySystemComponent* ASC, int32 ApplyLevel)
 {
 	//check(ASC);
-	// if (!ASC)
-	// {
-	// 	return;
-	// }
+	 if (!ASC)
+	 {
+	 	UE_LOG(LogTemp, Error, TEXT("GiveToAbilitySystemComponent: ASC is null!"));
+	 	return;
+	 }
 	//
 	// if (!ASC->GetAvatarActor())
 	// {

@@ -47,6 +47,10 @@
 		{
 			"Name": "MediaMovieStreamer",
 			"Enabled": true
+		},
+		{
+			"Name": "WaveformEditor",
+			"Enabled": true
 		}
 	]
 }
