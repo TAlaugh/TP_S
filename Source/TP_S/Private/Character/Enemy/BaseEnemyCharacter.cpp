@@ -165,36 +165,39 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 
 void ABaseEnemyCharacter::PlayLightningEffect()
 {
-    UE_LOG(LogTemp, Warning, TEXT("⚡ Lightning strike!"));
 
     if (!LightningProjectileClass) return;
 
     // ✅ 이번 번개 소환 개수 (랜덤 3~5개)
     int32 LightningCount = FMath::RandRange(3, 5);
 
+	TWeakObjectPtr<ABaseEnemyCharacter> WeakThis(this);
+	
     for (int32 i = 0; i < LightningCount; i++)
     {
         // 0.3 ~ 0.8초 랜덤 딜레이
         float RandomDelay = FMath::FRandRange(0.3f, 0.8f);
 
-        FTimerHandle TempHandle;
-        GetWorldTimerManager().SetTimer(
-            TempHandle,
-            FTimerDelegate::CreateLambda([this]()
+    	FTimerHandle TempHandle;
+    	GetWorldTimerManager().SetTimer(
+			TempHandle,
+			FTimerDelegate::CreateLambda([WeakThis]()
             {
-                FVector SpawnLocation = GetRandomLightningLocation();
-
-                // ✅ 경고 이펙트 먼저
-                SpawnLightningWarning(SpawnLocation);
-
+            	if (!WeakThis.IsValid()) return;
+            	
+                FVector SpawnLocation = WeakThis->GetRandomLightningLocation();
+				WeakThis->SpawnLightningWarning(SpawnLocation);
+				
                 // ✅ 경고 후 실제 번개 딜레이
                 float LightningWarningDelay = 1.0f;
                 FTimerHandle LightningHandle;
-                GetWorldTimerManager().SetTimer(
+				
+				WeakThis->GetWorldTimerManager().SetTimer(
                     LightningHandle,
-                    FTimerDelegate::CreateLambda([this, SpawnLocation]()
+                    FTimerDelegate::CreateLambda([WeakThis, SpawnLocation]()
                     {
-                        SpawnSingleLightning(SpawnLocation);
+                    	if (!WeakThis.IsValid()) return;
+						WeakThis->SpawnSingleLightning(SpawnLocation);
                     }),
                     LightningWarningDelay,
                     false
@@ -212,35 +215,41 @@ void ABaseEnemyCharacter::PlayLightningEffect()
 	{
 		UE_LOG(LogTemp, Error, TEXT("❌ World is NULL!"));
 		return;
-	}
-
+	}	
+	
 	if (!LightningProjectileClass)
 	{
 		UE_LOG(LogTemp, Error, TEXT("❌ LightningProjectileClass is NULL!"));
 		return;
 	}
-
+	
 	AEnemyLightningProjectile* LightningProj = GetWorld()->SpawnActor<AEnemyLightningProjectile>(
 		LightningProjectileClass,
 		Location,
 		FRotator::ZeroRotator
 	);
-
+	
 	if (!LightningProj)
 	{
 		UE_LOG(LogTemp, Error, TEXT("❌ Failed to spawn LightningProjectile!"));
 		return;
 	}
-
+	
 	if (LightningDamageSpecHandle.IsValid())
 	{
-		LightningProj->ProjectileDamageEffectSpecHandle = LightningDamageSpecHandle;
+		if (!LightningDamageSpecHandle.Data.IsValid())
+		{
+			UE_LOG(LogTemp, Error, TEXT("❌ LightningDamageSpecHandle.Data is invalid!"));
+		}
+		else
+		{
+			LightningProj->ProjectileDamageEffectSpecHandle = LightningDamageSpecHandle;
+		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("⚠️ LightningDamageSpecHandle is NOT valid!"));
 	}
-
 	// Instigator가 이미 파괴 중이면 크래시 방지
 	if (!IsPendingKillPending() && IsValid(this))
 	{
@@ -386,13 +395,13 @@ void ABaseEnemyCharacter::OnHealthChanged(float NewHealth, float MaxHealth)
 	}
 
 	// ✅ 랜덤 번개 + 천둥 타이머 시작
-	GetWorldTimerManager().SetTimer(
-		LightningTimerHandle,
-		this,
-		&ABaseEnemyCharacter::PlayLightningEffect,
-		FMath::RandRange(1.f, 5.f), 
-		true
-	);
+	// GetWorldTimerManager().SetTimer(
+	// 	LightningTimerHandle,
+	// 	this,
+	// 	&ABaseEnemyCharacter::PlayLightningEffect,
+	// 	FMath::RandRange(1.f, 5.f), 
+	// 	true
+	// );
 }
 
 UBaseCombatComponent* ABaseEnemyCharacter::GetBaseCombatComponent() const

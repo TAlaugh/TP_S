@@ -8,17 +8,30 @@
 #include "Engine/TargetPoint.h"
 #include "NavigationSystem.h"
 #include  "DebugHelper.h"
+#include "EngineUtils.h"
 
 void ABoss06GameMode::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// checkf(EnemyWaveSpawnerDataTable, TEXT("Forgot to assign a valid data table in 06Game mode Blueprint"))
-	// SetCurrentBoss06GameMode(EBoss06GameModeState::WaitSpawnNewWave);
-	//
+	
 	TotalWavesToSpawn = EnemyWaveSpawnerDataTable->GetRowNames().Num();
-	//
-	//PreLoadNextWaveEnemies();
+	
+	if (!BossSpawnPoint)
+	{
+		for (TActorIterator<ATargetPoint> It(GetWorld()); It; ++It)
+		{
+			if (It->ActorHasTag(FName("BossSpawn")))
+			{
+				BossSpawnPoint = *It;
+				UE_LOG(LogTemp, Warning, TEXT("✅ BossSpawnPoint 자동 할당 (태그 기반): %s"), *BossSpawnPoint->GetName());
+				break;
+			}
+		}
+		if (!BossSpawnPoint)
+		{
+			UE_LOG(LogTemp, Error, TEXT("❌ BossSpawnPoint is not assigned"));
+		}
+	}
 }
 void ABoss06GameMode::StartStage()
 {
@@ -144,65 +157,68 @@ FBaseEnemyWaveSpawnerTableRow* ABoss06GameMode::GetCurrentWaveSpawnerTableRow() 
 
 	return FoundRow;
 }
-
 int32 ABoss06GameMode::TrySpawnWaveEnemies()
 {
-	if (TargetPointsArray.IsEmpty())
+	if (TargetPointsArray.IsEmpty() || !IsValid(TargetPointsArray[0]))
 	{
-		UGameplayStatics::GetAllActorsOfClass(this,ATargetPoint::StaticClass(),TargetPointsArray);		
+		TargetPointsArray.Empty();
+		UGameplayStatics::GetAllActorsOfClass(this, ATargetPoint::StaticClass(), TargetPointsArray);
 	}
-	checkf(!TargetPointsArray.IsEmpty(),TEXT("No valid Target point found in level: %s for spawning enemies"),*GetWorld()->GetName());
+	checkf(!TargetPointsArray.IsEmpty(), TEXT("No valid Target point found in level: %s for spawning enemies"), *GetWorld()->GetName());
 
 	uint32 EnemiesSpawnedThisTime = 0;
-	
+
 	FActorSpawnParameters SpawnParam;
 	SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	FBaseEnemyWaveSpawnerTableRow* WaveRow = GetCurrentWaveSpawnerTableRow();
-	if (!WaveRow)
-	{
-		return 0;
-	}
+	if (!WaveRow) return 0;
 
-	for (const FEnemyWaveSpawnerInfo& SpawnerInfo : GetCurrentWaveSpawnerTableRow()->EnemyWaveSpawnerDefinition)
+	for (const FEnemyWaveSpawnerInfo& SpawnerInfo : WaveRow->EnemyWaveSpawnerDefinition)
 	{
-		if (SpawnerInfo.SoftEnemyClassToSpawn.IsNull())continue;
+		if (SpawnerInfo.SoftEnemyClassToSpawn.IsNull()) continue;
+
 		UClass** FoundClass = PreLoadedEnemyClassMap.Find(SpawnerInfo.SoftEnemyClassToSpawn);
-		if (!FoundClass)
-		{
-			UE_LOG(LogTemp, Error, TEXT("[Boss06] ❌ Enemy class not found in PreLoadedEnemyClassMap: %s"),
-				*SpawnerInfo.SoftEnemyClassToSpawn.ToString());
-			continue; // 맵에 없으면 스폰 시도 안 함
-		}
-		UClass* LoadedEnemyClass = *FoundClass;
-		
-		const int32 NumToSpawn = FMath::RandRange(SpawnerInfo.MinPerSpawnCount,SpawnerInfo.MaxPerSpawnCount);
+		if (!FoundClass) continue;
 
-		//UClass* LoadedEnemyClass = PreLoadedEnemyClassMap.FindChecked(SpawnerInfo.SoftEnemyClassToSpawn);
+		UClass* LoadedEnemyClass = *FoundClass;
+		const int32 NumToSpawn = FMath::RandRange(SpawnerInfo.MinPerSpawnCount, SpawnerInfo.MaxPerSpawnCount);
 
 		for (int32 i = 0; i < NumToSpawn; i++)
 		{
-			const int32 RandomTargetPointIndex = FMath::RandRange(0,TargetPointsArray.Num() - 1);
-			const FVector SpawnOrigin = TargetPointsArray[RandomTargetPointIndex]->GetActorLocation();
-			const FRotator SpawnRotation = TargetPointsArray[RandomTargetPointIndex]->GetActorForwardVector().ToOrientationRotator();
+			FVector SpawnLocation;
+			FRotator SpawnRotation;
 
-			FVector RandomLocation;
-			UNavigationSystemV1::K2_GetRandomLocationInNavigableRadius(this,SpawnOrigin,RandomLocation,400.f);
+			if (SpawnerInfo.bIsBoss)
+			{
+				// ✅ 보스는 고정 위치에서만 스폰
+				if (!IsValid(BossSpawnPoint))
+				{
+					UE_LOG(LogTemp, Error, TEXT("BossSpawnPoint is not assigned!"));
+					continue;
+				}
+				SpawnLocation = BossSpawnPoint->GetActorLocation() + FVector(0.f, 0.f, 150.f);
+				SpawnRotation = BossSpawnPoint->GetActorRotation();
+			}
+			else
+			{
+				const int32 RandomTargetIndex = FMath::RandRange(0, TargetPointsArray.Num() - 1);
+				const FVector Origin = TargetPointsArray[RandomTargetIndex]->GetActorLocation();
 
-			RandomLocation += FVector(0.f,0.f,150.f);
+				UNavigationSystemV1::K2_GetRandomLocationInNavigableRadius(this, Origin, SpawnLocation, 400.f);
+				SpawnLocation += FVector(0.f, 0.f, 150.f);
+				SpawnRotation = TargetPointsArray[RandomTargetIndex]->GetActorForwardVector().ToOrientationRotator();
+			}
 
-			ABaseEnemyCharacter*SpawnedEnemy =  GetWorld()->SpawnActor<ABaseEnemyCharacter>(LoadedEnemyClass,RandomLocation,SpawnRotation,SpawnParam);
+			ABaseEnemyCharacter* SpawnedEnemy = GetWorld()->SpawnActor<ABaseEnemyCharacter>(
+				LoadedEnemyClass, SpawnLocation, SpawnRotation, SpawnParam);
 
 			if (SpawnedEnemy)
 			{
-				SpawnedEnemy->OnDestroyed.AddUniqueDynamic(this,&ThisClass::OnEnemyDestroyed);
+				SpawnedEnemy->OnDestroyed.AddUniqueDynamic(this, &ThisClass::OnEnemyDestroyed);
 				EnemiesSpawnedThisTime++;
 				TotalSpawnedEnemiesThisWaveCounter++;
 			}
-			// if (!ShouldKeepSpawnEnemies())
-			// {
-			// 	return EnemiesSpawnedThisTime;
-			// }
 		}
 	}
 	return EnemiesSpawnedThisTime;
@@ -212,42 +228,74 @@ bool ABoss06GameMode::ShouldKeepSpawnEnemies() const
 {
 	if (CurrentBoss06GameModeState != EBoss06GameModeState::Inprogress)
 		return false;
-	return TotalSpawnedEnemiesThisWaveCounter < GetCurrentWaveSpawnerTableRow()->TotalEnemyToSpawnThisWave;
+
+	FBaseEnemyWaveSpawnerTableRow* WaveRow = GetCurrentWaveSpawnerTableRow();
+	if (!WaveRow) return false;
+	return TotalSpawnedEnemiesThisWaveCounter < WaveRow->TotalEnemyToSpawnThisWave;
 }
 
 void ABoss06GameMode::OnEnemyDestroyed(AActor* DestroyedActor)
 {
 
-	if (CurrentBoss06GameModeState != EBoss06GameModeState::Inprogress)
-	{
+	if (!IsValid(DestroyedActor))
 		return;
-	}
+
+	if (!EnemyWaveSpawnerDataTable || HasFinishedAllWaves())
+		return;
+
+	FBaseEnemyWaveSpawnerTableRow* CurrentWaveRow = GetCurrentWaveSpawnerTableRow();
+	if (!CurrentWaveRow) return;
+	
+	if (!IsValid(this) || !EnemyWaveSpawnerDataTable || HasFinishedAllWaves())
+		return;
+
+	if (CurrentBoss06GameModeState != EBoss06GameModeState::Inprogress)
+		return;
+	
+	const int32 TargetToSpawn = CurrentWaveRow->TotalEnemyToSpawnThisWave;
+	const bool bNeedMoreEnemies = TotalSpawnedEnemiesThisWaveCounter < TargetToSpawn;
 	
 	CurrentSpawnedEnemiesCounter--;
-	
-	if (ShouldKeepSpawnEnemies())
+
+	if (bNeedMoreEnemies)
 	{
 		CurrentSpawnedEnemiesCounter += TrySpawnWaveEnemies();
 	}
-	const int32 TargetToSpawn = GetCurrentWaveSpawnerTableRow()->TotalEnemyToSpawnThisWave;
-	if (!ShouldKeepSpawnEnemies() && CurrentSpawnedEnemiesCounter == 0 && TotalSpawnedEnemiesThisWaveCounter >= TargetToSpawn)
+	if (!bNeedMoreEnemies && CurrentSpawnedEnemiesCounter <= 0)
 	{
 		TotalSpawnedEnemiesThisWaveCounter = 0;
 		CurrentSpawnedEnemiesCounter = 0;
 		SetCurrentBoss06GameMode(EBoss06GameModeState::WaveComplete);
 	}
+	
 }
 
 void ABoss06GameMode::OnEnemyDied(ABaseEnemyCharacter* Enemy)
 {
+	if (!IsValid(this) || !EnemyWaveSpawnerDataTable || HasFinishedAllWaves())
+		return;
+
+	if (CurrentBoss06GameModeState != EBoss06GameModeState::Inprogress)
+		return;
+
+	FBaseEnemyWaveSpawnerTableRow* CurrentWaveRow = GetCurrentWaveSpawnerTableRow();
+	if (!CurrentWaveRow) return;
+
+	const int32 TargetToSpawn = CurrentWaveRow->TotalEnemyToSpawnThisWave;
+	const bool bNeedMoreEnemies = TotalSpawnedEnemiesThisWaveCounter < TargetToSpawn;
+
 	CurrentSpawnedEnemiesCounter--;
-	
-	if (ShouldKeepSpawnEnemies())
+
+	if (bNeedMoreEnemies)
 	{
 		CurrentSpawnedEnemiesCounter += TrySpawnWaveEnemies();
 	}
-	const int32 TargetToSpawn = GetCurrentWaveSpawnerTableRow()->TotalEnemyToSpawnThisWave;
-	if (!ShouldKeepSpawnEnemies() && CurrentSpawnedEnemiesCounter == 0 && TotalSpawnedEnemiesThisWaveCounter >= TargetToSpawn)
+
+	const bool bWaveFinished = !bNeedMoreEnemies &&
+		CurrentSpawnedEnemiesCounter <= 0 &&
+		TotalSpawnedEnemiesThisWaveCounter >= TargetToSpawn;
+
+	if (bWaveFinished)
 	{
 		TotalSpawnedEnemiesThisWaveCounter = 0;
 		CurrentSpawnedEnemiesCounter = 0;
@@ -267,6 +315,37 @@ void ABoss06GameMode::RegisterSpawnedEnemies(const TArray<ABaseEnemyCharacter*>&
 			CurrentSpawnedEnemiesCounter++;
 			TotalSpawnedEnemiesThisWaveCounter++;
 			
+		}
+	}
+}
+
+void ABoss06GameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (!GetWorld()) return;
+	
+	for (TActorIterator<ABaseEnemyCharacter> It(GetWorld()); It; ++It)
+	{
+		ABaseEnemyCharacter* Enemy = *It;
+		if (Enemy && !Enemy->HasAnyFlags(RF_BeginDestroyed))
+		{
+			Enemy->OnDestroyed.RemoveDynamic(this, &ABoss06GameMode::OnEnemyDestroyed);
+		}
+	}
+}
+
+void ABoss06GameMode::CleanupBeforeMapChange()
+{
+	if (!GetWorld()) return;
+
+	for (TActorIterator<ABaseEnemyCharacter> It(GetWorld()); It; ++It)
+	{
+		ABaseEnemyCharacter* Enemy = *It;
+		if (Enemy && !Enemy->HasAnyFlags(RF_BeginDestroyed))
+		{
+			// ✅ Delegate 안전 해제
+			Enemy->OnDestroyed.RemoveDynamic(this, &ABoss06GameMode::OnEnemyDestroyed);
 		}
 	}
 }

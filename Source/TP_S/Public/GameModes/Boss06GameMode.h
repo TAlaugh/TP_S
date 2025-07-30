@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/Enemy/BaseEnemyCharacter.h"
+#include "Engine/TargetPoint.h"
 #include "GameModes/BaseGameMode.h"
 #include "Boss06GameMode.generated.h"
 
@@ -33,6 +34,9 @@ struct FEnemyWaveSpawnerInfo
 
 	UPROPERTY(EditAnywhere)
 	int32 MaxPerSpawnCount = 5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsBoss = false;
 };
 
 USTRUCT(BlueprintType)
@@ -116,12 +120,21 @@ private:
 public:
 	UFUNCTION(BlueprintCallable)
 	void RegisterSpawnedEnemies(const TArray<ABaseEnemyCharacter*>& InEnemiesToRegister);
+	void EndPlay(EEndPlayReason::Type EndPlayReason);
+
+	UFUNCTION(BlueprintCallable)
+	void CleanupBeforeMapChange();
+
 	void SetCurrentBoss06GameMode(EBoss06GameModeState InState);
 	UFUNCTION(BlueprintCallable)
 	void StartStage();
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Stage")
 	void OnStageTriggerActivated();
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Boss Spawning")
+	ATargetPoint* BossSpawnPoint;
+	
 };
 	
 
