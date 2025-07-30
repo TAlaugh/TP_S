@@ -25,12 +25,6 @@ public:
 
 protected:
 
-	UFUNCTION()
-	void OnOverlappedStatic(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* TargetPrimitiveComponent, int level, bool bBool, const FHitResult& Hits);
-
-	UFUNCTION()
-	void OnHitStatic(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* TargetPrimitiveComponent, FVector NormalImpulse, const FHitResult& Hit);
-
 	UPROPERTY()
 	ABasePlayerCharacter* Player;
 	UPROPERTY()
