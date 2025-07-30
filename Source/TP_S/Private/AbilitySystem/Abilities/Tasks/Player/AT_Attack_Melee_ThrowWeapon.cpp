@@ -51,8 +51,6 @@ void UAT_Attack_Melee_ThrowWeapon::Activate()
 			{
 				MyHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(Tag).AddUObject(this, &UAT_Attack_Melee_ThrowWeapon::GameplayEventCallback);
 			}
-			Weapon->GetWeaponCollisionBox()->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnOverlappedStatic);
-			Weapon->GetWeaponCollisionBox()->OnComponentHit.AddDynamic(this, &ThisClass::OnHitStatic);
 		}
 	}
 }
@@ -99,22 +97,4 @@ void UAT_Attack_Melee_ThrowWeapon::TickTask(float DeltaTime)
 			}
 		}
 	}
-}
-
-void UAT_Attack_Melee_ThrowWeapon::OnOverlappedStatic(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* TargetPrimitiveComponent, int level, bool bBool, const FHitResult& Hits)
-{
-	if (!bStop)
-	{
-		if (Hits.GetActor())
-		{
-			//Debug::Print(Hits.GetActor()->GetName());
-		}
-		
-		//bStop = true;
-	}
-}
-
-void UAT_Attack_Melee_ThrowWeapon::OnHitStatic(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
-	UPrimitiveComponent* TargetPrimitiveComponent, FVector NormalImpulse, const FHitResult& Hit)
-{
 }
