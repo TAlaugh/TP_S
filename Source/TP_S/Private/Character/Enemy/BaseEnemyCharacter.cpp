@@ -259,11 +259,11 @@ void ABaseEnemyCharacter::PlayLightningEffect()
 
 FVector ABaseEnemyCharacter::GetRandomLightningLocation()
 {
-    FVector FieldCenter = FVector(0.f, 0.f, 0.f);
+    FVector FieldCenter = FVector(780.0f, -140.0f, 0.f);
     FVector RandomOffset = FVector(
-        FMath::RandRange(-2500.f, 2500.f),
-        FMath::RandRange(-2500.f, 2500.f),
-        140.f
+        FMath::RandRange(-3500.f, 3500.f),
+        FMath::RandRange(-3500.f, 3500.f),
+        100.f
     );
     return FieldCenter + RandomOffset;
 }
@@ -394,14 +394,14 @@ void ABaseEnemyCharacter::OnHealthChanged(float NewHealth, float MaxHealth)
 	
 	}
 
-	// ✅ 랜덤 번개 + 천둥 타이머 시작
-	// GetWorldTimerManager().SetTimer(
-	// 	LightningTimerHandle,
-	// 	this,
-	// 	&ABaseEnemyCharacter::PlayLightningEffect,
-	// 	FMath::RandRange(1.f, 5.f), 
-	// 	true
-	// );
+	//✅ 랜덤 번개 + 천둥 타이머 시작
+	GetWorldTimerManager().SetTimer(
+		LightningTimerHandle,
+		this,
+		&ABaseEnemyCharacter::PlayLightningEffect,
+		FMath::RandRange(1.f, 5.f), 
+		true
+	);
 }
 
 UBaseCombatComponent* ABaseEnemyCharacter::GetBaseCombatComponent() const
