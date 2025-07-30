@@ -161,7 +161,7 @@ void UWidget_OptionsScreen::OnResetBoundActionTriggered()
 
 					if (DataToReset->TryResetBackToDefaultValue())
 					{
-						Debug::Print(DataToReset->GetDataDisplayName().ToString() + TEXT(" was reset"));
+						// Debug::Print(DataToReset->GetDataDisplayName().ToString() + TEXT(" was reset"));
 					}
 					else
 					{

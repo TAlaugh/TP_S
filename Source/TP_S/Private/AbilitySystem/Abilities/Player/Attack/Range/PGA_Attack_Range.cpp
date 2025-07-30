@@ -159,6 +159,18 @@ void UPGA_Attack_Range::HandleFire()
 			{
 				GetPlayerControllerFromActorInfo()->ClientStartCameraShake(CameraShake);
 			}
+
+			if (GameplayCueTag.IsValid())
+			{
+				FGameplayEffectContextHandle Data;
+				FGameplayCueParameters CueParams(Data);
+				CueParams.Instigator = GetPlayerCharacterFromActorInfo();
+				CueParams.EffectCauser = GetAvatarActorFromActorInfo();
+				CueParams.Location = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent()->GetSocketLocation(FName("muzzle_Socket"));
+				CueParams.TargetAttachComponent = GetPlayerCombatComponentFromActorInfo()->GetPlayerCurrentEquippedWeapon()->GetSkeletalMeshComponent();
+
+				K2_ExecuteGameplayCueWithParams(GameplayCueTag, CueParams);
+			}
 			
 		}
 		if (IsValid(Hit.GetActor()) && UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Hit.GetActor()))

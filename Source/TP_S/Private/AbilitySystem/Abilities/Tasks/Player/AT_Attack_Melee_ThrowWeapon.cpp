@@ -65,7 +65,6 @@ void UAT_Attack_Melee_ThrowWeapon::GameplayEventContainerCallback(FGameplayTag M
 	Weapon->DetachFromActor(Rule);
 	Weapon->SetOwner(Player);
 	Weapon->SetInstigator(Player);
-	Weapon->GetWeaponCollisionBox()->SetHiddenInGame(false);
 	
 	// 장착중인 무기를 던졌을 경우 태그랑 위치를 컴뱃 컴포넌트에 저장
 	Player->GetPlayerCombatComponent()->WeaponThrownLocation = TargetLocation;

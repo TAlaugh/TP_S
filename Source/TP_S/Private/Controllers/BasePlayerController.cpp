@@ -90,7 +90,7 @@ void ABasePlayerController::BeginPlay()
 		
 		if (auto* WeaponMelee = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Weapon_Katana.DA_Item_Weapon_Katana")))
 		{
-			//InventoryComponent->AddItem(WeaponMelee);
+			InventoryComponent->AddItem(WeaponMelee);
 		}
 
 		if (auto* WeaponRanged = LoadItem(TEXT("/Game/Common/_BP/Items/DA_Item_Weapon_Yinlang.DA_Item_Weapon_Yinlang")))
