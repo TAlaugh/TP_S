@@ -91,7 +91,6 @@ void AEnemyLightningProjectile::OnProjectileBeginOverlap(
 
 void AEnemyLightningProjectile::DisableCollision()
 {
-	UE_LOG(LogTemp, Warning, TEXT("⚡ Lightning collision disabled!"));
 	ProjectileCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -130,7 +129,6 @@ void AEnemyLightningProjectile::TryApplyInitialOverlapDamage()
 
 		if (OverlappedActors.Contains(HitPawn))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("❗ %s 는 이미 OverlappedActors에 있음 → 스킵"), *HitPawn->GetName());
 			continue;
 		}
 
@@ -140,25 +138,25 @@ void AEnemyLightningProjectile::TryApplyInitialOverlapDamage()
 
 		if (!UBaseFunctionLibrary::IsTargetPawnHostile(InstigatorPawn, HitPawn))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("🤝 %s 은 적이 아님 → 스킵"), *HitPawn->GetName());
+	
 			continue;
 		}
 
 		UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitPawn);
 		if (!ASC)
 		{
-			UE_LOG(LogTemp, Error, TEXT("❌ ASC가 없음: %s"), *HitPawn->GetName());
+			
 			continue;
 		}
 		if (!ASC->AbilityActorInfo.IsValid())
 		{
-			UE_LOG(LogTemp, Error, TEXT("❌ ASC 초기화 안됨: %s"), *HitPawn->GetName());
+		
 			continue;
 		}
 
 		if (!ProjectileDamageEffectSpecHandle.IsValid())
 		{
-			UE_LOG(LogTemp, Error, TEXT("❌ SpecHandle 무효"));
+
 			continue;
 		}
 
@@ -168,7 +166,7 @@ void AEnemyLightningProjectile::TryApplyInitialOverlapDamage()
 		Data.Instigator = InstigatorPawn;
 		Data.Target = HitPawn;
 
-		UE_LOG(LogTemp, Warning, TEXT("✅ 데미지 적용 시도: %s"), *HitPawn->GetName());
+
 		HandleApplyProjectileDamage(HitPawn, Data);
 	}
 }
